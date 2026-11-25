@@ -1,0 +1,9 @@
+# ONE permanent redirect of the whole old domain to the new site. OPENING DAY, last step.
+# Put these lines at the VERY TOP of the .htaccess on the OVH hosting
+# (cluster113, login clickcli, folder /www/ or the folder of the clickclickgraphics.com site), ABOVE the WordPress block.
+# Keep a copy of the old .htaccess first (download it, name it htaccess.before-redirect).
+# HTTPS keeps working because the OVH hosting already has the Let's Encrypt certificate.
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^(www\.)?clickclickgraphics\.com$ [NC]
+RewriteRule ^ https://clickclick.be/ [R=301,L]

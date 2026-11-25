@@ -1,0 +1,55 @@
+# /chat/ — customer-facing chatbot UI.
+# The clickclick.be root only 301s to the marketing site (no WordPress), so
+# there is nothing to opt out of — but keep rewriting off so a root rule added
+# later can never swallow this directory.
+DirectoryIndex index.html
+Options -Indexes
+
+# ─── Maintenance switch ───
+# While the file maintenance.on exists in the clickclick.be root, everyone gets
+# /chat/maintenance.html with status 503. WordPress creates/removes that file when
+# "Maintenance mode" is ticked in Settings → General. You can also create or delete
+# it by hand over SFTP. The password gate below still applies first.
+RewriteEngine On
+RewriteCond /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be/maintenance.on -f
+RewriteCond %{REQUEST_URI} !/maintenance\.html$
+RewriteRule ^ - [R=503,L]
+ErrorDocument 503 /chat/maintenance.html
+
+# ─── Password gate: ON (closed 19 Aug 2026) ───
+# Comment these 4 lines out again to reopen the chat to the public. The path is
+# the shared .htpasswd used by /flyers/, /calculator/ and /chat-api/ — one
+# credential for the estate, and no password file needed in this folder.
+# NOTE: this gates the UI only. /chat-api/ has its own .htaccess — check that
+# the API is closed too, or the bot is still reachable by posting to it directly.
+AuthType Basic
+AuthName "Click Click — Chat preview"
+AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/.htpasswd-ccg
+Require valid-user
+
+# Correct MIME types for the assets we ship.
+AddType application/javascript .js
+AddType font/woff2 .woff2
+AddType text/css               .css
+
+# Cache static assets briefly; HTML is always fresh.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html            "access plus 0 seconds"
+    ExpiresByType application/javascript "access plus 1 hour"
+
+    ExpiresByType font/woff2          "access plus 1 year"
+    ExpiresByType text/css             "access plus 1 hour"
+    ExpiresByType image/png            "access plus 7 days"
+    ExpiresByType image/svg+xml        "access plus 7 days"
+</IfModule>
+
+# Security headers.
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy        "strict-origin-when-cross-origin"
+    # Content-Security-Policy: allow inline styles/scripts (single-file UI),
+    # AJAX to our own /chat-api/ on the same origin. Fonts are self-hosted
+    # since 18 Aug 2026, so nothing external is allowed at all.
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://images.squarespace-cdn.com; connect-src 'self'; frame-ancestors 'self'"
+</IfModule>

@@ -1,0 +1,122 @@
+TEST DEPLOY — internal calculator, beside the live one
+======================================================
+Built 19 Aug 2026. Nothing here replaces anything: both live and test run at
+the same time, and the live one is untouched until you say so.
+
+WHAT GOES WHERE
+---------------
+  internal-print-calculator/dist-test/*   ->  clickclick.be/calculator-test/
+  Clickclick-flyer-calculator/
+      print-calculator-test/index.html    ->  clickclick.be/print-calculator-test/
+      print-calculator-test/.htaccess     ->  same folder  (DOT-FILE: password gate)
+
+Then open  https://clickclick.be/print-calculator-test/
+
+The live pair stays exactly as it is:
+  /print-calculator/  ->  /calculator/print.html
+
+DO NOT upload dist/ yet — that is the replacement for the LIVE path. Use it only
+once the test build has been checked.
+
+WHAT THE TEST BUILD SHARES WITH LIVE
+------------------------------------
+Its own JS, fonts and chunks come from /calculator-test/ — verified in a browser,
+no crossover. But two things stay absolute and therefore point at LIVE:
+
+  /calculator/data/print-calculator-values.xlsx   pricing (intended: you are
+                                                  testing against real prices)
+  /calculator/api-dashboard.php                   the Dashboard tab reads and
+                                                  WRITES live orders. Treat that
+                                                  tab as production even here.
+
+WHAT CHANGED IN THIS BUILD
+--------------------------
+  * GT Pressura self-hosted; the Google Fonts call is gone. No request leaves
+    clickclick.be any more (checked against the built output).
+  * "130 g/m2" -> "130 gsm". GT Pressura has no superscript-two glyph and <sup>
+    is illegal inside <option>, so the word is used instead — as the shop does.
+  * Weight column 100px -> 124px: GT Pressura is wider and was clipping.
+  * Press speed now read from the spreadsheet (machine_speed). It was a
+    hard-coded 4140, so speed changes reached the shop but not this tool.
+  * "Machine (incl. 25 min labor)" was a fixed string while the maths used the
+    real value. It now prints the actual minutes.
+  * public/print-calculator-values.xlsx deleted — it shipped in every build and
+    was never read.
+
+WHAT TO CHECK ON THE TEST COPY
+------------------------------
+  1. Headings are GT Pressura, not a fallback.
+  2. Weight dropdown reads "130 gsm" and is not clipped.
+  3. The machine row shows the labour minutes from the spreadsheet (15 today).
+  4. Change machine_speed in the Settings sheet, upload the xlsx, reload: the
+     machine cost must move. That is the link that did not exist before.
+  5. Compare a few quotes against /print-calculator/ — they should MATCH, since
+     both read the same spreadsheet.
+
+ADDED 20 AUG 2026
+-----------------
+  * The tall poster (300x600) now exists here too, priced by the same four rules
+    as calc.php. Checked against calc.php on six cases — identical to the cent.
+    Selecting it greys out RecyStar and Biotop, as the shop does.
+
+STILL NOT IN THIS BUILD
+-----------------------
+  * Click tiers still live in src/utils/constants.js, not the spreadsheet. This
+    is the last real divergence between the two calculators.
+
+
+────────────────────────────────────────────────────────────────────────────
+WHERE WE STOPPED — 19 Aug 2026, evening
+────────────────────────────────────────────────────────────────────────────
+The test copy is NOT working on the server yet. Everything local is verified;
+the open question is only where the files landed.
+
+What is known good:
+  · dist-test/ builds and was checked in a browser — its JS, chunks and fonts
+    resolve under /calculator-test/, with no crossover to /calculator/.
+  · Both .htaccess files pass `httpd -t`, and the gate was proven with a real
+    Apache: anonymous 401, correct password 200, on every file in the folder.
+  · The live pair (/print-calculator/ -> /calculator/print.html) is untouched
+    and still works.
+
+What happened:
+  1. First attempt: the wrapper at /print-calculator-test/ DID render (dark red
+     TEST BUILD bar), but the iframe showed the WordPress 404 page — meaning
+     /calculator-test/print.html was not being served.
+  2. After the next upload, /print-calculator-test/ itself returned Page Not
+     Found too.
+
+The useful inference: the site's WordPress .htaccess only rewrites paths that do
+NOT exist (the standard !-f / !-d conditions). So a WordPress 404 means the file
+is genuinely not at that path — this is a "where did the upload land" problem,
+not a rewrite or permissions problem.
+
+FIRST THING TO RUN TOMORROW
+
+  for u in /print-calculator-test/ /print-calculator-test/index.html \
+           /calculator-test/print.html /calculator-test/print.js \
+           /print-calculator/ /calculator/print.html; do
+    printf "%-38s %s\n" "$u" \
+      "$(curl -s -o /dev/null -w '%{http_code}' -u x:x "https://clickclick.be$u")"
+  done
+
+  401 = there and gated (correct).  404 = not at that path.  500 = .htaccess
+  rejected.  The last two lines are the control: they should be 401.
+
+Then check in FileZilla that the server root has these as siblings of
+calculator/ and print-calculator/:
+
+  calculator-test/        .htaccess  print.html  print.js  customer.html
+                          customer.js  chunks/  fonts/
+  print-calculator-test/  .htaccess  index.html
+
+Most likely cause: the upload landed one level deep, e.g.
+/calculator-test/dist-test/print.html — which looks right in the client and
+404s over HTTP. Second most likely: the hidden .htaccess files did not transfer
+(FileZilla: Server > Force showing hidden files).
+
+NOT a concern: the earlier warning that /calculator-test/print.html was publicly
+exposed was over-stated. WordPress was intercepting the path, so the file was
+never served. The .htaccess carries both RewriteEngine Off and the password
+gate, so they arrive together — there is no window where it is reachable
+without a password.

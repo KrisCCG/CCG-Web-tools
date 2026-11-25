@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Internal price calculator — Click Click Graphics</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root { --bar: 34px; --red: #c8102e; }
+    html, body { margin: 0; padding: 0; height: 100%; background: #fff; overflow: hidden; }
+
+    /* Standing warning. This tool shows cost prices and margins — it must never
+       be mistaken for the customer-facing shop, and it must be obvious in a
+       screen-share or a screenshot that what is on screen is internal. */
+    .internal-bar {
+      position: fixed; inset: 0 0 auto 0; height: var(--bar); z-index: 10;
+      background: var(--red); color: #fff;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      font: 700 12px/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: .14em; text-transform: uppercase;
+      box-shadow: 0 1px 0 rgba(0,0,0,.25);
+      user-select: none;
+    }
+    .internal-bar .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fff; opacity: .9; flex: none;
+    }
+    .internal-bar .sub {
+      letter-spacing: .04em; text-transform: none; font-weight: 400; opacity: .85;
+    }
+    iframe { width: 100%; height: calc(100vh - var(--bar)); margin-top: var(--bar); border: 0; display: block; }
+
+    @media (max-width: 640px) {
+      :root { --bar: 44px; }
+      .internal-bar { flex-direction: column; gap: 2px; justify-content: center; font-size: 11px; }
+      .internal-bar .sub { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="internal-bar" role="note" aria-label="Internal use only">
+    <span class="dot" aria-hidden="true"></span>
+    <span>Internal use only</span>
+    <span class="sub">— cost prices and margins. Not the customer shop.</span>
+  </div>
+  <iframe src="/calculator/print.html" title="Internal price calculator"></iframe>
+</body>
+</html>

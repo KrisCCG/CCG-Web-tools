@@ -1,0 +1,35 @@
+# /legal/ — public on purpose. This page must be readable by anyone BEFORE they
+# buy and before any login, so there is deliberately no auth here, unlike
+# /flyers/ and /tools/.
+#
+# Modelled on flyers/.htaccess, which is the configuration proven to work on
+# this host. Every directive below already runs there.
+
+# Stop WordPress from intercepting requests inside /legal/.
+# The site root's WordPress .htaccess would otherwise route everything to
+# index.php. Without this line the rewrite rules inherit down into this folder
+# and Apache answers 500. This is the single most important line in the file.
+RewriteEngine Off
+
+DirectoryIndex index.html
+Options -Indexes
+
+# Fonts are a LOCAL copy (fonts/*.woff2) rather than ../flyers/fonts/, because
+# /flyers/ is password-gated — a public page loading fonts from there gets a
+# 401 and silently falls back to a system face.
+AddType font/woff2 .woff2
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html   "access plus 0 seconds"
+  ExpiresByType font/woff2  "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Everything is same-origin. The page carries no script at all — the sample
+  # photos fall back to a CSS placeholder rather than a JS onerror handler,
+  # precisely so script-src can stay 'none'.
+  Header always set Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'none'; frame-ancestors 'self' https://clickclick.be https://*.clickclick.be"
+</IfModule>

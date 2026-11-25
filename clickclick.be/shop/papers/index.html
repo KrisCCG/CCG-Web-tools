@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The paper — Click Click Graphics</title>
+<meta name="description" content="MultiArt Silk, Biotop and RecyStar: what each paper feels like, what it does to your ink, and which one to pick.">
+<link rel="icon" href="data:,">
+<style>
+/* GT Pressura — the Click Click brand face, and the face tiegel.be is set in.
+   Italic is load-bearing, not decoration: the "!" in the wordmark and the "!!"
+   sign-off are italic glyphs. */
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700-italic.woff2) format('woff2')}
+
+/* Sampled off tiegel.be; identical to the restyled shop. */
+:root{--cream:#fff5ef;--peach:#ffe5d4;--ink:#000;--ink-dim:#4a4a4a;--indigo:#4200ff;--line:#e6d6c3}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
+  font-family:'GT Pressura',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+em{font-style:italic}
+a{color:var(--indigo)}
+
+/* ── Top bar — full-bleed indigo, cream wordmark ─────────────────────────── */
+.bar{background:var(--indigo);color:var(--cream);position:sticky;top:0;z-index:5}
+/* One line, always. The bar must never wrap: the FR labels are the longest
+   (Boutique / Papier / Conditions) and used to push the nav onto a second row
+   below ~500px. Instead of wrapping, the WORDMARK steps down — full, then
+   without "Graphics", then to the bare "!!" brand mark — which buys back the
+   width the longer language needs. */
+.bar .in{max-width:1280px;margin:0 auto;padding:14px 28px;display:flex;
+  justify-content:space-between;align-items:center;gap:20px;flex-wrap:nowrap}
+.bar a{color:var(--cream);text-decoration:none}
+.mark{font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;
+  white-space:nowrap;flex:none}
+.mark .mk-min{display:none}
+.bar nav{display:flex;align-items:center;gap:22px;font-size:15px;white-space:nowrap;flex:none}
+.bar nav a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.langs{display:flex;gap:2px;background:rgba(255,245,239,.16);border-radius:999px;padding:3px}
+.langs a{padding:4px 10px;border-radius:999px;opacity:.6;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase}
+.langs a.on{background:var(--cream);color:var(--indigo);opacity:1}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px}
+
+/* ── Hero ────────────────────────────────────────────────────────────────────
+   The page title takes the same rule-above / rule-below treatment as the
+   section headings, just larger. Sentence case, no "!!" mark. */
+.hero{padding:52px 0 44px}
+hr.r{border:0;border-top:1.5px solid var(--indigo);margin:0}
+h1{color:var(--indigo);font-weight:400;line-height:1.1;letter-spacing:-.015em;
+  font-size:clamp(34px,6vw,64px);margin:0;padding:12px 0 16px;text-wrap:balance}
+/* No `max-width` in ch anywhere in the body copy: the text fills whatever
+   column it is in and reflows with the viewport, rather than sitting in a
+   fixed block with dead space beside it. In the photo sections the grid
+   column is the measure; in full-width sections the page is. */
+.sub{font-size:clamp(17px,2vw,23px);line-height:1.35;margin:24px 0 22px}
+.back{margin:0;font-size:15px}
+.back a{text-decoration:none;border-bottom:1px solid var(--indigo);padding-bottom:1px}
+
+/* Pill button. Unused by /papers/ — kept because it is a real component of
+   this look (tiegel's "Order online"), and the next page will want it. */
+.pill{display:inline-block;background:var(--indigo);color:var(--cream);text-decoration:none;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 20px;border-radius:999px;margin:0 8px 14px 0}
+.pill:hover{background:#3300c1}
+.pill.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo)}
+.pill.ghost:hover{background:var(--indigo);color:var(--cream)}
+
+/* ── Contents + section headings — tiegel's rule/heading/rule sandwich ───── */
+nav.toc{margin:0 0 56px}
+nav.toc ol{list-style:none;margin:0;padding:14px 0 0;columns:2;column-gap:44px}
+nav.toc li{margin:0 0 9px;break-inside:avoid;font-size:16px}
+nav.toc li a{text-decoration:none;border-bottom:1px solid transparent}
+nav.toc li a:hover{border-bottom-color:var(--indigo)}
+nav.toc .n{opacity:.55;font-weight:700;font-size:12px;letter-spacing:.1em;margin-right:9px}
+nav.toc .lbl{display:block;padding:14px 0 0;color:var(--indigo);font-size:12px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+section{padding:0 0 68px;scroll-margin-top:76px}
+h2{color:var(--indigo);font-weight:400;font-size:clamp(25px,3.5vw,40px);line-height:1.15;
+  letter-spacing:-.01em;margin:0;padding:14px 0 16px;display:flex;gap:.6em;align-items:baseline}
+h2 .n{font-size:.42em;opacity:.55;font-weight:700;letter-spacing:.1em;flex:none}
+
+/* ── Section body ───────────────────────────────────────────────────────── */
+.body{padding-top:26px}
+.lede{font-size:clamp(18px,2.1vw,25px);line-height:1.3;letter-spacing:-.01em;
+  margin:0 0 26px;color:var(--ink)}
+/* h3 is the small label (/papers/: "How it feels"). h3.plain is a real
+   sentence-case subheading (/legal/: "Prices", "Your artwork"). */
+h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--indigo);
+  margin:24px 0 8px}
+h3.plain{font-size:18px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin:26px 0 8px}
+p,li{font-size:15.5px;line-height:1.6}
+p{margin:0 0 14px}
+sup{font-size:.68em;line-height:0;vertical-align:.45em}
+ul{padding-left:20px;margin:0 0 14px}
+li{margin-bottom:7px}
+dl{margin:0 0 18px;display:grid;grid-template-columns:210px 1fr;gap:9px 20px;font-size:15.5px}
+dt{color:var(--indigo)}
+dd{margin:0}
+.tw{overflow-x:auto;margin:0 0 18px;clear:both}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:480px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--indigo);
+  border-bottom:1.5px solid var(--indigo)}
+.note{background:var(--peach);padding:18px 22px;margin:0 0 20px;clear:both}
+.note p:last-child{margin:0}
+.note.warn{border-left:4px solid #ef3226}
+
+/* ── Photo pair ──────────────────────────────────────────────────────────────
+   Two columns: the photo pair holds the left, all prose runs down the right.
+   Explicit grid placement, NOT a float — a float plus `max-width` on <p>
+   squeezes the paragraph's line boxes to zero and drops every paragraph below
+   the image, which is exactly the bug this replaced.
+
+   The photo is a CSS background on a pseudo-element, NOT an <img>. These
+   directories ship `script-src 'none'`, so a JS onerror fallback would never
+   fire and a not-yet-uploaded photo would show a broken-image icon on a live
+   page. A background that 404s simply paints nothing and the pending label
+   underneath shows through. */
+.sec-photos .body{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);
+  column-gap:44px;align-items:start}
+.sec-photos .body > *{grid-column:2;min-width:0}
+.sec-photos .body > .shots{grid-column:1;grid-row:1/span 99}
+.shot{margin:0 0 14px}
+.shot .frame{position:relative;aspect-ratio:4/3;background:var(--peach)}
+.shot .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:11px;line-height:1.4;color:var(--indigo);
+  letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.shot .frame::after{content:"";position:absolute;inset:0;
+  background-image:var(--shot);background-size:cover;background-position:center;
+  background-repeat:no-repeat}
+.shot figcaption{font-size:12px;line-height:1.35;padding:7px 0 0;color:var(--ink-dim)}
+/* Pairs set inline between subheadings rather than beside a column of prose. */
+.inline-shots .shots{width:100%;margin:14px 0 18px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inline-shots .shot{margin:0}
+
+footer{background:var(--peach);margin-top:20px;padding:34px 0 40px}
+footer .in{max-width:1280px;margin:0 auto;padding:0 28px;font-size:13.5px;line-height:1.6;
+  color:var(--ink-dim)}
+.updated{color:var(--ink-dim);font-size:12.5px;margin:14px 0 0;opacity:.8}
+footer em{color:var(--indigo);font-style:italic;font-weight:700}
+
+@media(max-width:760px){
+  .sec-photos .body{display:block}
+  .shots{margin:0 0 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .shot{margin:0}
+  nav.toc ol{columns:1}
+  .bar .in{padding:11px 18px;gap:12px}
+  .mark{font-size:15px}
+  .mark .mk-long{display:none}
+  .bar nav{gap:14px;font-size:14px}
+  .wrap,footer .in{padding:0 18px}
+  dl{grid-template-columns:1fr;gap:2px 0}
+  dt{margin-top:10px}
+}
+@media(max-width:560px){
+  .bar .in{padding:10px 14px;gap:10px}
+  .bar nav{gap:10px;font-size:12.5px}
+  .langs{padding:2px}
+  .langs a{padding:3px 6px;font-size:10px;letter-spacing:.05em}
+}
+@media(max-width:460px){
+  .shots,.inline-shots .shots{grid-template-columns:1fr}
+  /* Below this the full wordmark cannot share a line with three nav labels
+     and the language pill, so it drops to the "!!" mark alone. */
+  .mark .mk-short{display:none}
+  .mark .mk-min{display:inline;font-size:20px}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="mark" href="https://tiegel.be/" aria-label="Click Click Graphics"><span class="mk-short">Cl<em>!</em>ck Cl<em>!</em>ck</span><span class="mk-long"> Graphics</span><span class="mk-min"><em>!!</em></span></a>
+  <nav><a class="" href="https://tiegel.be/">Services</a><a class="" href="/shop/">Shop</a><a class="cur" href="index.html">Paper</a><a class="" href="/legal/">Terms</a><span class="langs"><a class="on" href="index.html">EN</a><a class="" href="fr.html">FR</a><a class="" href="nl.html">NL</a></span></nav>
+</div></header>
+
+<div class="wrap">
+<div class="hero">
+  <hr class="r"><h1>The paper</h1><hr class="r">
+  <p class="sub">Three stocks in the shop. What each one feels like in the hand, and what it does to your ink.</p>
+  <p class="back"><a href="/shop/">&larr; Back to the shop</a></p>
+</div>
+
+<nav class="toc"><hr class="r"><span class="lbl">On this page</span><ol><li><a href="#choose"><span class="n">01</span>Choosing in ten seconds</a></li><li><a href="#multiart"><span class="n">02</span>MultiArt Silk — coated, bright white</a></li><li><a href="#biotop"><span class="n">03</span>Biotop — uncoated, warm natural</a></li><li><a href="#recystar"><span class="n">04</span>RecyStar — 100 % recycled, unbleached</a></li><li><a href="#gsm"><span class="n">05</span>What the weight means</a></li><li><a href="#colour"><span class="n">06</span>Colour, and why the sheet changes it</a></li><li><a href="#ask"><span class="n">07</span>Papers we keep, but do not sell online</a></li></ol><hr class="r"></nav>
+<section id="choose" class="sec">
+<hr class="r">
+<h2><span class="n">01</span>Choosing in ten seconds</h2>
+<hr class="r">
+<div class="body"><p class="lede">The three papers in the shop are not good, better and best. They are three
+different characters, and the right one depends on what the piece has to do.</p>
+<div class="tw"><table>
+<tr><th>If you want</th><th>Take</th><th>Because</th></tr>
+<tr><td>Photographs, deep blacks, precise colour</td><td><strong>MultiArt Silk</strong></td>
+    <td>It is coated, so the ink stays on the surface instead of sinking in</td></tr>
+<tr><td>A warm, natural page you can write on</td><td><strong>Biotop</strong></td>
+    <td>Uncoated and slightly cream — a pen, a stamp or a signature all work on it</td></tr>
+<tr><td>The lowest footprint, with visible character</td><td><strong>RecyStar</strong></td>
+    <td>100&nbsp;% recycled and unbleached; you can see the fibres it was made from</td></tr>
+</table></div></div>
+</section>
+<section id="multiart" class="sec sec-photos">
+<hr class="r">
+<h2><span class="n">02</span>MultiArt Silk — coated, bright white</h2>
+<hr class="r">
+<div class="body"><p class="lede">The workhorse. A silk-coated, bright white sheet that holds colour exactly
+where you put it.</p>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/multiart-silk-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/multiart-silk-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<h3>How it feels</h3>
+<p>Smooth and cool, with a very slight sheen. A silk coating sits between gloss and matt: it is
+not shiny, it does not throw a reflection back at you under a ceiling light, but you can feel that
+the surface has been closed. Run a nail across it and there is no tooth.</p>
+
+<h3>What it does to your ink</h3>
+<p>The coating stops the paper from drinking. Ink sits on top and dries there, so colours come out
+close to full strength, blacks are dense rather than grey, and 6&nbsp;pt type stays legible instead
+of blurring at the edges. If your design leans on photography, a gradient or a large flat colour,
+this is the sheet that will show it.</p>
+
+<h3>Where it works</h3>
+<p>Flyers with images. Posters that have to read across a room. Business cards that need punch.
+Anything where the print is the point and the paper should stay out of the way.</p>
+
+<h3>What to watch</h3>
+<p>It is not a writing paper — a ballpoint skates on it and ink pens smudge. On the heavy weights,
+a large dark solid will show fingerprints. And bright white is genuinely bright: on screen a warm
+photograph can look warmer than it will on this sheet.</p>
+
+<h3>Provenance</h3>
+<p>Wood-free coated, FSC-certified.</p></div>
+</section>
+<section id="biotop" class="sec sec-photos">
+<hr class="r">
+<h2><span class="n">03</span>Biotop — uncoated, warm natural</h2>
+<hr class="r">
+<div class="body"><p class="lede">The quiet one. Uncoated, faintly cream, and the only sheet here you can
+comfortably write on.</p>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/biotop-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/biotop-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<h3>How it feels</h3>
+<p>Dry and slightly warm, with a faint tooth you can feel under a fingertip. The shade is a natural
+off-white — it has not been bleached blue-white, so it reads warm next to a MultiArt sheet. It is
+also bulky for its weight: a 300&nbsp;gsm Biotop card feels thicker than a 300&nbsp;gsm coated one.</p>
+
+<h3>What it does to your ink</h3>
+<p>Uncoated paper absorbs. Colours settle a step quieter, blacks read as a deep charcoal rather
+than jet, and very fine detail softens a fraction as the ink spreads into the fibres. What you get
+back is a page that does not glare, is easy on the eye at reading distance, and looks made rather
+than manufactured.</p>
+
+<h3>Where it works</h3>
+<p>Text-led flyers. Invitations and wedding stationery. Letterheads. Business cards that will be
+written on — a name, a date, an appointment. Anything with a warm or editorial feel.</p>
+
+<h3>What to watch</h3>
+<p>Do not expect a photograph to pop. A large dark solid will look softer and less even than it
+does on screen, and the warm base shade tints everything very slightly — pale greys pick up a
+little cream, and there is no such thing as a brilliant white here.</p>
+
+<h3>Provenance</h3>
+<p>A totally chlorine-free (TCF) uncoated paper, carrying the EU Ecolabel and FSC
+certification.</p></div>
+</section>
+<section id="recystar" class="sec sec-photos">
+<hr class="r">
+<h2><span class="n">04</span>RecyStar — 100 % recycled, unbleached</h2>
+<hr class="r">
+<div class="body"><p class="lede">The honest one. Made entirely from recovered paper, left unbleached, and it
+does not pretend otherwise.</p>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/recystar-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/recystar-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<h3>How it feels</h3>
+<p>Close to Biotop in the hand — uncoated, dry, a little tooth — but greyer and warmer in shade,
+with tiny flecks of the fibres it was made from scattered through the sheet. Those flecks are the
+point. They are what tells someone, without a logo or a claim, that the paper had a life before
+this one.</p>
+
+<h3>What it does to your ink</h3>
+<p>It absorbs like Biotop, and then the darker base shade lowers everything by another step. The
+same file printed on MultiArt Silk and on RecyStar will look like two different designs: on
+RecyStar the whole range is compressed, quieter and softer, with less distance between the
+lightest and the darkest area.</p>
+
+<h3>Where it works</h3>
+<p>Anything where the material is part of the message. Zines and posters with a raw look, cards for
+makers and studios, and every job where the recycled content matters more than the punch.</p>
+
+<h3>What to watch</h3>
+<p>There is no white ink. Every area you leave white in your design comes out the colour of the
+paper — a warm grey — so a design built on crisp white space will read differently. Shade also
+varies a little from batch to batch, which is normal for a recycled stock and not a defect.</p>
+
+<h3>Provenance</h3>
+<p>100&nbsp;% recycled fibre, unbleached, carrying the Blue Angel and EU Ecolabel marks.</p></div>
+</section>
+<section id="gsm" class="sec">
+<hr class="r">
+<h2><span class="n">05</span>What the weight means</h2>
+<hr class="r">
+<div class="body"><p>Paper is sold by grammage — grams per square metre. It is a weight, not a thickness, but for a
+given family it works as one: the higher the number, the stiffer the sheet.</p>
+<div class="tw"><table>
+<tr><th>Weight</th><th>Feels like</th><th>Use it for</th></tr>
+<tr><td>115 – 135 gsm</td><td>A magazine page. Bends easily, stacks flat.</td>
+    <td>Flyers you hand out by the hundred</td></tr>
+<tr><td>160 – 170 gsm</td><td>Noticeably stiffer. Holds its shape when held at one corner.</td>
+    <td>Posters, and flyers meant to survive a pocket</td></tr>
+<tr><td>250 gsm</td><td>A light card. Stands up on its own.</td>
+    <td>Invitations, loyalty cards, a card on a budget</td></tr>
+<tr><td>300 gsm</td><td>The standard business-card weight.</td>
+    <td>Business cards, invitations, anything that should feel solid</td></tr>
+<tr><td>350 – 400 gsm</td><td>Thick. Makes a sound when it lands on a table.</td>
+    <td>Cards that have to be remembered</td></tr>
+</table></div>
+<p>Because Biotop and RecyStar are uncoated and bulky, they feel thicker than a coated sheet of the
+same weight. A 300&nbsp;gsm Biotop card and a 350&nbsp;gsm MultiArt Silk card are close cousins in
+the hand.</p></div>
+</section>
+<section id="colour" class="sec">
+<hr class="r">
+<h2><span class="n">06</span>Colour, and why the sheet changes it</h2>
+<hr class="r">
+<div class="body"><p>A screen is a lamp: it makes colour by shining light at you. Paper is not — it can only reflect
+the light already in the room. That difference alone means a print will never be an exact copy of
+what you approved on a monitor, and it is not a fault.</p>
+<p>The paper then adds its own accent on top. The same file on our three stocks gives three
+results: brightest and most contrasted on MultiArt Silk, a step quieter and warmer on Biotop,
+quieter and greyer again on RecyStar.</p>
+<ul>
+  <li><strong>We print CMYK.</strong> Very saturated screen colours — electric blues, fluorescent
+      greens — sit outside what four inks can reach and will come back a little more muted.</li>
+  <li><strong>There is no white ink.</strong> White in your artwork means "leave the paper bare",
+      so on Biotop it is cream and on RecyStar it is warm grey. Except on a coloured paper — there
+      we can print white ink.</li>
+  <li><strong>Large flat solids show the paper most.</strong> If a design is one big colour field,
+      choose the stock deliberately.</li>
+</ul></div>
+</section>
+<section id="ask" class="sec inline-shots">
+<hr class="r">
+<h2><span class="n">07</span>Papers we keep, but do not sell online</h2>
+<hr class="r">
+<div class="body"><p>The dropdown holds the three stocks we can price instantly. The workshop holds a good deal more.
+These are quoted by hand, because the price depends on the format and the run.</p>
+
+<h3>Colorplan</h3>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/colorplan-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/colorplan-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<p>GF Smith's coloured paper, made in the UK, in around fifty solid colours from 135 to
+700&nbsp;gsm. The colour is dyed right through the sheet, so a cut edge or a fold shows colour and
+not a white core — which is why it is the standard choice for a serious business card, an
+invitation or a cover. Two sheets can be bonded together for a card with a coloured edge.</p>
+
+<h3>The Fedrigoni collection</h3>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/fedrigoni-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/fedrigoni-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<p>Italian paper mill with an enormous collection of special papers.</p>
+
+<h3>Color 1802</h3>
+<div class="shots"><figure class="shot"><div class="frame" role="img" aria-label="The blank sheet" style="--shot:url(&#39;img/color-1802-blank.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The blank sheet</figcaption></figure><figure class="shot"><div class="frame" role="img" aria-label="The same stock, printed" style="--shot:url(&#39;img/color-1802-print.jpg&#39;)"><span class="ph">Photo to come</span></div><figcaption>The same stock, printed</figcaption></figure></div>
+<p>A coloured paper, and Colorplan's competitor. Well worth a look.</p>
+
+<h3>And in the racks</h3>
+<p>Arena in rough and smooth, Woodstock, Old Mill, Cotton Pure, Splendorgel, Splendorlux,
+Constellation Snow, Lessebo Design, Matrica kraft, and a 700&nbsp;gsm Sirio for when something has
+to be genuinely solid.</p>
+<div class="note"><p><strong>To order on any of these:</strong> use the quote request in the
+<a href="/shop/">shop</a>, or write to
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> with the size, the
+quantity and the paper. We answer with a price, not a form.</p></div></div>
+</section>
+</div>
+<footer><div class="in">Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> · +32 2 880 70 36 <em>!!</em>
+<p class="updated">Last updated 19 August 2026</p></div></footer>
+</body>
+</html>

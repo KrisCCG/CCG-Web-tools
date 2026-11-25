@@ -1,0 +1,129 @@
+# /calculator/ — server-side payment + upload endpoints.
+# Raise PHP upload limits so customers can post artwork up to 100 MB
+# (typical CMYK PDFs with bleed run 25–80 MB).
+
+<IfModule mod_php.c>
+  php_value upload_max_filesize 100M
+  php_value post_max_size       110M
+  php_value max_execution_time  300
+  php_value max_input_time      300
+  php_value memory_limit        128M
+</IfModule>
+
+# Some hosts (Infomaniak's PHP-FPM setup) don't expose mod_php.c to AllowOverride.
+# Mirror the same values via the .user.ini convention; PHP-FPM picks these up.
+# (Infomaniak PHP-FPM defaults to PHP_INI_PERDIR scanning of .user.ini in the
+# same directory — see https://www.php.net/manual/en/configuration.file.per-user.php)
+
+# Block directory listing
+Options -Indexes
+
+# Block direct HTTP access to secrets.php (Mollie key + kDrive token + GPG
+# passphrase live in there). PHP can still require() it server-side.
+<Files "secrets.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</Files>
+<Files "secrets.example.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</Files>
+
+# Block direct HTTP access to the lib/ helpers (require'd by entry-point scripts
+# only — there's no reason for them to be hit directly).
+<FilesMatch "^(audit|ratelimit)\.php$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# ── Cron-triggered scripts (basic-auth gated) ─────────────────────────────
+# Infomaniak's Task Scheduler fires HTTPS URLs (not CLI commands). These three
+# scripts must therefore be web-reachable, but no random visitor should be able
+# to trigger them. Gate them behind the same .htpasswd as /flyers/.
+#
+# In the Task Scheduler, tick "This URL is password protected" and supply the
+# .htpasswd credentials. CLI execution from SSH still works without auth.
+<FilesMatch "^(backup|retention|cleanup)\.php$">
+  AuthType Basic
+  AuthName "Click Click — cron"
+  AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be/flyers/.htpasswd
+  Require valid-user
+</FilesMatch>
+
+# ── api-dashboard.php — WAS WORLD-READABLE (found 17 Aug 2026) ───────────
+# ?action=orders returns every order JSON verbatim: customer names, emails,
+# phone numbers, postal addresses, VAT numbers and amounts. It shipped with no
+# authentication at all, so the full customer list was downloadable by anyone
+# who knew the URL. Gated behind the same .htpasswd as the rest of the estate.
+#
+# The dashboard UI at /print-calculator/ is already behind basic-auth, so the
+# browser will reuse those credentials — but this is a SEPARATE realm, so
+# expect one extra prompt the first time.
+<FilesMatch "^api-dashboard\.php$">
+  AuthType Basic
+  AuthName "Click Click — dashboard"
+  AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be/flyers/.htpasswd
+  Require valid-user
+
+  # The file also sets Access-Control-Allow-Origin: * — it never needed it, the
+  # dashboard calls it same-origin. Strip it so no other site can read the
+  # response even if the auth gate is ever loosened.
+  <IfModule mod_headers.c>
+    Header always unset Access-Control-Allow-Origin
+  </IfModule>
+</FilesMatch>
+
+# ── calc_log.jsonl — WAS WORLD-READABLE (found 17 Aug 2026) ─────────────
+# The calculator's browse log. No personal data (only paper/size/qty/price per
+# quote), so this is a pricing-intelligence leak rather than a GDPR one — a
+# competitor could read every price the calculator has ever produced. Blocked
+# outright: nothing needs it over HTTP, api-dashboard.php reads it from disk.
+<FilesMatch "\.jsonl$">
+  Require all denied
+</FilesMatch>
+
+# Spreadsheets hold the raw paper costs, margins and click tiers. data/ has
+# its own deny, but a copy anywhere else under /calculator/ was reachable —
+# which is exactly how Archive 15maart2026/print-calculator-values.xlsx ended
+# up downloadable. This covers the whole folder, not one directory.
+<FilesMatch "\.xlsx$">
+  Require all denied
+</FilesMatch>
+
+# ── print.html — the INTERNAL calculator, was reachable without auth ─────
+# /print-calculator/ is behind basic-auth, but it only iframes this file, and
+# the file itself sat open — so the gate could be walked straight around by
+# requesting /calculator/print.html directly. It shows cost and margin figures.
+# customer.html was deliberately left open — it was customer-facing. That
+# calculator was retired on 20 Aug 2026 (the shop at /flyers/ replaced it)
+# and the files were deleted from the server, so the exemption is gone: the
+# rule below now covers any .html in this folder that shows cost figures.
+<FilesMatch "^(print|customer)\.html$">
+  AuthType Basic
+  AuthName "Click Click — dashboard"
+  AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be/flyers/.htpasswd
+  Require valid-user
+</FilesMatch>
+
+# ── Security headers (apply to every response served from /calculator/) ──
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

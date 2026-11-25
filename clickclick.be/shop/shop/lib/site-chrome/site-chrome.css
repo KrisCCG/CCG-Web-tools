@@ -1,0 +1,65 @@
+/*
+ * Click Click site header + footer for the stand-alone apps (shop, chat).
+ * Same look as the WordPress theme "clickclick". Everything is prefixed .ccs-
+ * so it cannot clash with the app's own styles.
+ */
+@font-face{font-family:'GT Pressura Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-mono-regular.woff) format('woff')}
+@font-face{font-family:'GT Pressura Mono';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-mono-bold.woff) format('woff')}
+
+.ccs {
+	--ccs-blue: #4200ff;
+	--ccs-ink: #1a0066;
+	--ccs-cream: #fff5ef;
+	--ccs-cream-dark: #ffe5d4;
+	--ccs-line: #e6d6c3;
+	--ccs-mono: "GT Pressura Mono", ui-monospace, monospace;
+	--ccs-pad: clamp(30px, 5vw, 50px);
+	font-family: "GT Pressura", system-ui, sans-serif;
+	color: var(--ccs-ink);
+	-webkit-font-smoothing: antialiased;
+}
+.ccs *, .ccs *::before, .ccs *::after { box-sizing: border-box; }
+.ccs a { color: inherit; }
+.ccs-wrap { max-width: calc(1280px + 2 * var(--ccs-pad)); margin: 0 auto; padding: 0 var(--ccs-pad); }
+
+/* Info bar */
+.ccs-info { background: var(--ccs-blue); color: #fff; font-family: var(--ccs-mono); font-size: .8125rem; letter-spacing: .04em; text-transform: uppercase; line-height: 1.5; }
+.ccs-info .ccs-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; padding-top: 10px; padding-bottom: 10px; }
+.ccs-info p { margin: 0; }
+.ccs-info a { color: #fff; }
+/* Language switch: the apps' own code listens to .langs button[data-lang], so these are buttons. */
+.ccs .langs { display: inline-flex; align-items: center; gap: .45em; background: none; border-radius: 0; padding: 0; }
+.ccs .langs button { all: unset; cursor: pointer; color: #fff; font: inherit; letter-spacing: inherit; text-transform: uppercase; opacity: 1; padding: 0; }
+.ccs .langs button.on { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; background: none; color: #fff; }
+.ccs .langs button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Logo + menu */
+.ccs-main { background: var(--ccs-cream); border-bottom: 1px solid var(--ccs-line); }
+.ccs-main .ccs-wrap { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; padding-top: 20px; padding-bottom: 20px; position: relative; }
+.ccs-logo { display: block; flex: none; line-height: 0; }
+.ccs-logo img { width: 260px; max-width: 60vw; height: auto; display: block; }
+.ccs-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; justify-content: flex-end; }
+.ccs-nav a { font-weight: 700; font-size: 1.04rem; color: var(--ccs-ink); text-decoration: none; }
+.ccs-nav a:hover, .ccs-nav a:focus-visible { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.ccs-burger { all: unset; display: none; cursor: pointer; width: 40px; height: 40px; place-items: center; color: var(--ccs-ink); }
+.ccs-burger svg { width: 26px; height: 26px; }
+@media (max-width: 781px) {
+	.ccs-burger { display: grid; }
+	.ccs-nav { display: none; position: absolute; left: 0; right: 0; top: 100%; z-index: 30; background: var(--ccs-cream); border-bottom: 1px solid var(--ccs-line); padding: 1rem var(--ccs-pad) 1.5rem; }
+	.ccs-nav.is-open { display: block; }
+	.ccs-nav ul { flex-direction: column; gap: .9rem; }
+	.ccs-nav a { font-size: 1.25rem; }
+}
+
+/* Footer */
+.ccs-footer { background: var(--ccs-cream-dark); padding: clamp(40px, 6vw, 72px) 0 clamp(28px, 3vw, 40px); margin-top: 0; font-size: .875rem; line-height: 1.6; }
+.ccs-cols { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2rem; }
+.ccs-col img { height: 40px; width: auto; display: block; margin-bottom: 1rem; }
+.ccs-kicker { font-family: var(--ccs-mono); font-size: .875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ccs-blue); margin: 0 0 .8rem; }
+.ccs-col p { margin: 0; }
+.ccs-col a, .ccs-bottom a { color: var(--ccs-blue); text-decoration: underline; text-underline-offset: 2px; }
+.ccs-footer hr { border: 0; border-top: 1px solid var(--ccs-line); margin: 2rem 0 1.25rem; }
+.ccs-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; font-family: var(--ccs-mono); letter-spacing: .06em; text-transform: uppercase; font-size: .875rem; }
+.ccs-bottom p { margin: 0; }
+@media (max-width: 960px) { .ccs-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .ccs-cols { grid-template-columns: 1fr; } }

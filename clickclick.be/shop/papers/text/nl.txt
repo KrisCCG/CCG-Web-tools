@@ -1,0 +1,176 @@
+# ==========================================================================
+#  HET PAPIER — Nederlandse tekst
+#  Pas de tekst hieronder aan en voer daarna uit:  python3 build.py
+#
+#  [id]  Heading      opens a section. The body under it is HTML.
+#  {photos slug | caption A | caption B}   a pair of sample photos.
+#  Lines starting with # are notes and are never printed.
+# ==========================================================================
+
+title:          Het papier — Click Click Graphics
+desc:           MultiArt Silk, Biotop en RecyStar: hoe elk papier aanvoelt, wat het met je inkt doet, en welk papier je kiest.
+h1:             Het papier
+sub:            We hebben verschillende papieren. We leggen uit hoe elk papier in de hand voelt, wat het met de inkt doet en hoe het eruitziet
+back:           Terug naar de winkel
+updated:        Laatst bijgewerkt op 19 augustus 2026
+contents:       Op deze pagina
+nav:            Diensten > https://tiegel.be/ | Winkel > /flyers/ | Papier > SELF | Voorwaarden > /legal/nl.html
+footer:         Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> · +32 2 880 70 36 <em>!!</em>
+photo-pending:  Foto volgt
+
+# --------------------------------------------------------------------------
+[choose]  Kiezen in tien seconden
+
+<p class="lede">De papiersoorten hebben verschillende karakters, en welk papier het juiste is hangt af van wat het drukwerk moet doen.</p>
+<div class="tw"><table>
+<tr><th>Wil je</th><th>Neem dan</th><th>Omdat</th></tr>
+<tr><td>Foto’s, diepe zwarten, precieze kleur</td><td><strong>MultiArt Silk</strong></td>
+    <td>Het is gestreken: de inkt blijft aan de oppervlakte in plaats van weg te zakken</td></tr>
+<tr><td>Een warme, natuurlijke pagina om op te schrijven</td><td><strong>Biotop</strong></td>
+    <td>Ongestreken en licht crème — een pen, een stempel of een handtekening houdt erop</td></tr>
+<tr><td>De kleinste voetafdruk, met zichtbaar karakter</td><td><strong>RecyStar</strong></td>
+    <td>100&nbsp;% gerecycleerd en ongebleekt; je ziet de vezels waarvan het gemaakt is. Er zijn heel lichte grijze puntjes zichtbaar.</td></tr>
+</table></div>
+
+# --------------------------------------------------------------------------
+[multiart]  MultiArt Silk — gestreken, helder wit, half mat
+
+<p class="lede">Een zijdemat gestreken vel, helder wit, de gedrukte kleuren worden niet beinvloed.</p>
+{photos multiart-silk | Het blanco vel | Hetzelfde papier, bedrukt}
+<h3>Hoe het voelt</h3>
+<p>Glad en koel, met een heel lichte glans. Een zijdematte strijklaag ligt tussen glanzend en mat
+in: het blinkt niet, het kaatst het plafondlicht niet terug, maar je voelt dat het oppervlak
+gesloten is. Een nagel glijdt eroverheen zonder houvast.</p>
+
+<h3>Wat het met je inkt doet</h3>
+<p>De inkt blijft erbovenop liggen: de kleuren komen bijna op volle sterkte, de zwarten zijn dicht en de leesbaarheid is groot. </p>
+
+<h3>Waar het werkt</h3>
+<p>Flyers met beeld. Affiches die van ver moeten leesbaar zijn. Visitekaartjes die moeten knallen.</p>
+
+<h3>Waar je op let</h3>
+<p>Het is geen schrijfpapier — een balpen glijdt weg en inkt vlekt. Een helder wit is echt helder: op het scherm kan een warme
+foto warmer lijken dan ze op dit vel zal zijn.</p>
+
+<h3>Herkomst</h3>
+<p>Houtvrij gestreken, FSC-gecertificeerd.</p>
+
+# --------------------------------------------------------------------------
+[biotop]  Biotop — ongestreken, warm en naturel
+
+<p class="lede">Ongestreken, licht crème</p>
+{photos biotop | Het blanco vel | Hetzelfde papier, bedrukt}
+<h3>Hoe het voelt</h3>
+<p>Droog en licht warm, met een fijne korrel die je onder de vingertop voelt. De tint is een
+natuurlijk gebroken wit — het is niet blauwwit gebleekt, en oogt daardoor warm naast een
+MultiArt-vel. Het is ook volumineus: een Biotop-kaart van 300&nbsp;g/m<sup>2</sup> voelt dikker aan dan een
+gestreken kaart van hetzelfde gewicht.</p>
+
+<h3>Wat het met je inkt doet</h3>
+<p>De kleuren gaan een trapje stiller staan en heel fijne details verzacht een fractie. Wat je terugkrijgt is een pagina die niet verblindt, die op leesafstand rustig
+blijft, en die gemaakt oogt in plaats van geproduceerd.</p>
+
+<h3>Waar het werkt</h3>
+<p>Flyers die op tekst draaien. Uitnodigingen en huwelijksdrukwerk. Briefpapier. Visitekaartjes
+waar iets op geschreven zal worden — een naam, een datum, een afspraak. Alles met een warme of
+redactionele toon.</p>
+
+<h3>Waar je op let</h3>
+<p>Een groot donker vlak oogt zachter en minder egaal dan op het scherm, en de warme grondtint kleurt alles heel licht mee — lichte grijzen krijgen wat
+crème, en briljant wit bestaat hier niet.</p>
+
+<h3>Herkomst</h3>
+<p>Een volledig chloorvrij (TCF) ongestreken papier, met het EU-Ecolabel en
+FSC-certificering.</p>
+
+# --------------------------------------------------------------------------
+[recystar]  RecyStar — 100 % gerecycleerd, ongebleekt
+
+<p class="lede">Volledig gemaakt van teruggewonnen papier, ongebleekt gelaten, en het doet niet alsof dat niet zo is.</p>
+{photos recystar | Het blanco vel | Hetzelfde papier, bedrukt}
+<h3>Hoe het voelt</h3>
+<p>In de hand dicht bij Biotop — ongestreken, droog, een lichte korrel — maar grijzer van tint, met minuscule spikkels van de vezels waaruit het ontstond, verspreid door het vel. Die spikkels zijn juist de bedoeling. Ze vertellen iemand, zonder logo en zonder claim, dat dit papier een leven had vóór dit.</p>
+
+<h3>Wat het met je inkt doet</h3>
+<p>Hetzelfde bestand op MultiArt Silk en op RecyStar levert twee verschillende ontwerpen op: op
+RecyStar wordt het hele bereik samengedrukt, stiller en zachter, met minder afstand tussen het
+lichtste en het donkerste vlak.</p>
+
+<h3>Waar het werkt</h3>
+<p>Overal waar het materiaal deel is van de boodschap. Zines en affiches met een rauwe look, kaarten voor makers en studio’s, en elk werk waar het gerecycleerde gehalte zwaarder weegt dan de knal.</p>
+
+<h3>Waar je op let</h3>
+<p>Elk vlak dat je in je ontwerp wit laat, komt eruit in de kleur van het papier — een warm grijs — dus een ontwerp dat op strak wit gebouwd is, leest anders. De tint verschilt ook licht van partij tot partij; dat is normaal voor gerecycleerd papier en geen gebrek.</p>
+
+<h3>Herkomst</h3>
+<p>100&nbsp;% gerecycleerde vezels, ongebleekt, met de Blauer Engel en het EU-Ecolabel.</p>
+
+# --------------------------------------------------------------------------
+[gsm]  Wat het grammage betekent
+
+<p>Papier wordt verkocht per grammage — gram per vierkante meter. Het is een gewicht, geen dikte,
+maar binnen één familie werkt het als dikte: hoe hoger het getal, hoe stijver het vel.</p>
+<div class="tw"><table>
+<tr><th>Grammage</th><th>Voelt als</th><th>Gebruik het voor</th></tr>
+<tr><td>115 – 135 g/m<sup>2</sup></td><td>Een tijdschriftpagina. Buigt makkelijk, stapelt vlak.</td>
+    <td>Flyers die je per honderdtal uitdeelt</td></tr>
+<tr><td>160 – 170 g/m<sup>2</sup></td><td>Merkbaar stijver. Houdt zijn vorm als je het bij één hoek vasthoudt.</td>
+    <td>Affiches, en flyers die een broekzak moeten overleven</td></tr>
+<tr><td>250 g/m<sup>2</sup></td><td>Een lichte kaart. Blijft uit zichzelf rechtstaan.</td>
+    <td>Uitnodigingen, klantenkaarten, een kaart met een krap budget</td></tr>
+<tr><td>300 g/m<sup>2</sup></td><td>Het standaardgewicht van het visitekaartje.</td>
+    <td>Visitekaartjes, uitnodigingen, alles wat stevig moet aanvoelen</td></tr>
+<tr><td>350 – 400 g/m<sup>2</sup></td><td>Dik en buigt niet zo eenvoudig</td>
+    <td>Kaarten die onthouden moeten worden</td></tr>
+</table></div>
+<p>Omdat Biotop en RecyStar ongestreken en volumineus zijn, voelen ze dikker aan dan een gestreken
+vel van hetzelfde gewicht. Een Biotop-kaart van 300&nbsp;g/m<sup>2</sup> en een MultiArt Silk van
+350&nbsp;g/m<sup>2</sup> zijn in de hand naaste neven.</p>
+
+# --------------------------------------------------------------------------
+[colour]  Kleur, en waarom het papier ze verandert
+
+<p>Een scherm is een lamp: het maakt kleur door licht naar je toe te sturen. Papier niet — dat kan
+alleen het licht terugkaatsen dat al in de kamer is. Alleen al dat verschil maakt dat een druk
+nooit een exacte kopie is van wat je op een monitor goedkeurde, en dat is geen fout.</p>
+<p>Het papier legt er vervolgens zijn eigen accent bovenop. Hetzelfde bestand op onze drie papieren
+geeft drie resultaten: het helderst en contrastrijkst op MultiArt Silk, een trapje stiller en
+warmer op Biotop, nog stiller en grijzer op RecyStar.</p>
+<ul>
+  <li><strong>Wij drukken in CMYK.</strong> Zeer verzadigde schermkleuren — elektrisch blauw,
+      fluogroen — liggen buiten wat vier inkten bereiken en komen wat doffer terug.</li>
+  <li><strong>Er is geen witte inkt.</strong> Wit in je bestand betekent “laat het papier bloot”:
+      op Biotop is dat crème, op RecyStar warm grijs. Behalve als je een gekleurd papier kiest,
+      kunnen we er met witte inkt op drukken.</li>
+  <li><strong>Grote egale vlakken tonen het papier het meest.</strong> Is je ontwerp één groot
+      kleurvlak, kies het papier dan bewust.</li>
+</ul>
+
+# --------------------------------------------------------------------------
+[ask]  Papier dat wij hebben, maar niet online verkopen
+
+<p>De keuzelijst bevat de papieren die wij meteen kunnen prijzen. Het atelier bevat er heel
+wat meer. Die worden met de hand geoffreerd, want de prijs hangt af van het formaat en de oplage.</p>
+
+<h3>Colorplan</h3>
+{photos colorplan | Het blanco vel | Hetzelfde papier, bedrukt}
+<p>Het gekleurde papier van GF Smith, gemaakt in het Verenigd Koninkrijk, in een vijftigtal volle
+kleuren van 135 tot 700&nbsp;g/m<sup>2</sup>. De kleur is doorgeverfd tot in de kern, zodat een snede of een
+vouw kleur toont en geen witte kern — daarom is het de klassieke keuze voor een serieus
+visitekaartje, een uitnodiging of een omslag. </p>
+
+<h3>De Fedrigoni collectie</h3>
+{photos fedrigoni | Het blanco vel | Hetzelfde papier, bedrukt}
+<p>Italiaanse papierfabrikant met een enorme collectie aan speciale papieren.</p>
+
+<h3>Color 1802</h3>
+{photos color-1802 | Het blanco vel | Hetzelfde papier, bedrukt}
+<p>Een gekleurd papier en de concurrent van Colorplan. Zeker de moeite om eens te bekijken.</p>
+
+<h3>En in de rekken</h3>
+<p>Arena in rough en smooth, Woodstock, Old Mill, Cotton Pure, Splendorgel, Splendorlux,
+Constellation Snow, Lessebo Design, Matrica kraft en Sirio </p>
+<div class="note"><p><strong>Om op een van deze te bestellen:</strong> gebruik de offerteaanvraag in
+de <a href="/flyers/">winkel</a>, of schrijf naar
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> met het formaat, het
+aantal en het papier. Wij antwoorden met een prijs, niet met een formulier.</p></div>

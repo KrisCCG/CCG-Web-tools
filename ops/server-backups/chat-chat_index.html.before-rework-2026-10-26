@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat — Click Click Graphics</title>
+<meta name="description" content="Tell us about your print project. Instant pricing on standard products.">
+<link rel="icon" href="lib/site-chrome/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="lib/site-chrome/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="lib/site-chrome/favicon-180.png">
+<style>
+/* GT Pressura — the Click Click brand face, same files and same mapping as the
+   shop, so the two surfaces read as one product. Three real weights plus
+   italics; nothing is synthesised. Replaced Space Grotesk (18 Aug 2026). */
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/gt-pressura-300.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:300;font-display:swap;src:url(fonts/gt-pressura-300-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700-italic.woff2) format('woff2')}
+</style>
+<style>
+  :root{
+    --cream:#fff5ef;
+    --cream-2:#fff5ef;
+    --cream-3:#ffe5d4;
+    --ink:#1a0066;
+    --ink-2:#2a2a2a;
+    --ink-dim:#4a4a4a;
+    --ink-dimmer:#9a9287;
+    --indigo:#4200ff;
+    --indigo-dark:#3300c1;
+    --indigo-hi:#5311ff;
+    --line:#e6d6c3;
+    --line-hi:#d4c2ab;
+    --red:#ef3226;
+    --green:#19a26e;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--cream-2);color:var(--ink);font-family:'GT Pressura',system-ui,sans-serif;font-weight:400}
+  body{min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+  a{color:var(--ink);text-decoration:none}
+  em{font-style:italic}
+
+  /* ─────── Top bar ─────── */
+  /* Full-bleed indigo bar, cream wordmark — same as the shop, /papers/ and
+     /legal/. The wordmark is TEXT rather than logo.png: that PNG is an indigo
+     mark on transparency and vanishes on an indigo ground. */
+  .topbar{background:var(--indigo);color:var(--cream);position:sticky;top:0;z-index:10}
+  .topbar a{color:var(--cream);text-decoration:none}
+  .mark{font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;flex:none}
+  .mark em{font-style:italic}
+  .mark .mk-min{display:none}
+  nav.main{display:flex;gap:22px;align-items:center;font-size:15px;white-space:nowrap;flex:none}
+  nav.main a{color:var(--cream);font-weight:400;font-size:15px}
+  nav.main a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+  .topbar .inner{max-width:1280px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
+  .langs{display:flex;gap:2px;background:rgba(255,245,239,.16);border-radius:999px;padding:3px}
+  .langs button{background:transparent;border:0;color:var(--cream);opacity:.6;font:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:999px;cursor:pointer;text-transform:uppercase}
+  .langs button.on{background:var(--cream);color:var(--indigo);opacity:1}
+
+  @media (max-width:460px){
+    .mark .mk-short{display:none}
+    .mark .mk-min{display:inline;font-size:20px}
+    .topbar .inner{padding:10px 14px;gap:10px}
+    .langs{padding:2px}
+    .langs button{padding:3px 6px;font-size:10px;letter-spacing:.05em}
+  }
+
+  /* ─────── Shell ─────── */
+  .shell{max-width:980px;margin:0 auto;padding:40px 28px 80px;width:100%;flex:1;display:flex;flex-direction:column}
+
+  /* ─────── Hero ─────── */
+  .hero{margin-bottom:20px;color:var(--indigo)}
+  .hero h1{font-weight:700;font-size:clamp(38px,6vw,76px);line-height:.98;letter-spacing:-.02em;margin:0 0 14px;color:var(--indigo)}   /* like the site's page titles (26 Oct 2026) */
+  .hero h1 em{font-style:italic;color:var(--indigo)}
+  .hero p{font-size:16px;line-height:1.5;margin:0;max-width:none;color:var(--ink);font-weight:400;white-space:pre-line}
+
+  /* ─────── Page footer (alt-contact + privacy) ─────── */
+  .page-footer{margin:48px auto 0;max-width:720px;text-align:center}
+  .email-alt{margin:0 0 18px;font-size:17px;line-height:1.55;font-weight:400;color:var(--ink);white-space:pre-line}
+  .email-alt a{color:var(--indigo);font-weight:700;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+  .email-alt a:hover{color:var(--indigo-hi)}
+  .file-alt{margin:0 0 18px;font-size:15px;line-height:1.55;color:var(--ink)}
+  .file-alt a{color:var(--indigo);text-decoration:underline;text-underline-offset:3px}
+  .privacy-line{margin:0;font-size:11px;line-height:1.5;color:var(--ink-dimmer);font-weight:400;white-space:pre-line}
+
+  /* ─────── Chat card ─────── */
+  .chat-card{background:var(--cream);color:var(--ink);border:1px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);display:flex;flex-direction:column;min-height:540px;max-height:75vh;overflow:hidden}
+  .chat-card .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:0}
+  .chat-card .composer{border-top:1px solid var(--ink);padding:12px;background:var(--cream-2);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+  .chat-card .composer textarea{flex:1;background:var(--cream);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;font:inherit;font-size:15px;font-weight:400;color:var(--ink);resize:none;min-height:110px;max-height:220px;outline:none;line-height:1.45}
+  .chat-card .composer textarea:focus{background:var(--cream-3)}
+  .chat-card .composer textarea::placeholder{color:var(--ink-dim)}
+
+  .msg{max-width:80%;padding:12px 16px;border-radius:14px;border:2px solid var(--ink);font-size:15px;line-height:1.45;font-weight:400;white-space:pre-wrap;word-wrap:break-word}
+  .msg.bot{background:var(--cream-3);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:2px 2px 0 var(--ink)}
+  .msg.user{background:var(--indigo);color:var(--cream);align-self:flex-end;border-bottom-right-radius:4px;box-shadow:3px 3px 0 var(--ink)}
+  .msg strong{font-weight:700}
+  .msg.error{align-self:stretch;background:#fef2f2;color:#991b1b;border-color:#dc2626;font-size:14px;font-weight:400;box-shadow:2px 2px 0 #dc2626}
+
+  .thinking{align-self:flex-start;background:var(--cream-3);color:var(--ink-dim);border:2px solid var(--ink);border-radius:14px;border-bottom-left-radius:4px;padding:14px 16px;font-size:14px;font-weight:400;display:inline-flex;align-items:center;gap:8px;box-shadow:2px 2px 0 var(--ink)}
+  .thinking .dot{width:6px;height:6px;border-radius:50%;background:var(--ink);animation:blink 1.2s infinite}
+  .thinking .dot:nth-child(2){animation-delay:.2s}
+  .thinking .dot:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+  .btn-send{background:var(--indigo);color:var(--cream);border:1px solid var(--ink);border-radius:999px;padding:0 22px;height:48px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s}
+  .btn-send:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-send:disabled{background:var(--line-hi);color:var(--ink-dim);cursor:not-allowed}
+
+  /* ─────── Shop card — slim inline reference, not a CTA ─────── */
+  .shop-card{align-self:stretch;background:var(--cream);border:1.5px solid var(--ink);border-radius:12px;box-shadow:2px 2px 0 var(--ink);padding:10px 14px;margin:4px 0;display:flex;flex-direction:column;gap:6px}
+  .shop-card .badge{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--indigo);line-height:1}
+  .shop-card .price-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .shop-card .price{font-size:22px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1}
+  .shop-card .price .cents{font-size:14px;color:var(--ink-dim);font-weight:400}
+  .shop-card .vat{font-size:11px;font-weight:400;color:var(--ink-dim)}
+  .shop-card .ready{font-size:12px;color:var(--ink-dim);font-weight:400}
+  .shop-card .ready strong{color:var(--ink);font-weight:700}
+  .shop-card .specs{font-size:12px;color:var(--ink-dim);font-weight:400;line-height:1.4}
+  .shop-card .specs strong{color:var(--ink);font-weight:700}
+  .shop-card .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:2px}
+  .shop-card .btn-shop{background:var(--indigo);color:var(--cream);border:1.5px solid var(--ink);border-radius:999px;padding:5px 14px;font:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+  .shop-card .btn-shop:hover{background:var(--indigo-hi)}
+  .shop-card .btn-shop-secondary{background:transparent;color:var(--ink-dim);border:1.5px solid var(--line-hi);border-radius:999px;padding:4px 12px;font:inherit;font-size:11px;font-weight:400;cursor:pointer;transition:all .15s}
+  .shop-card .btn-shop-secondary:hover{background:var(--cream-3);border-color:var(--ink);color:var(--ink)}
+
+  /* ─────── Skip-and-send shortcut (subtle, appears after first reply) ─────── */
+  .skip-row{display:none;padding:0 12px 10px;background:var(--cream-2);justify-content:flex-end;align-items:center;gap:8px}
+  .skip-row.on{display:flex}
+  .skip-row .hint{font-size:11px;color:var(--ink-dim);font-weight:400}
+  .btn-skip{background:transparent;color:var(--ink-dim);border:1.5px solid var(--line-hi);border-radius:999px;padding:5px 14px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .12s}
+  .btn-skip:hover:not(:disabled){background:var(--cream-3);border-color:var(--ink);color:var(--ink)}
+  .btn-skip:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ─────── Submit panel ─────── */
+  .submit-panel{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:24px;margin-top:20px;box-shadow:5px 5px 0 var(--ink)}
+  .submit-panel h3{margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim)}
+  .submit-panel dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0 0 20px;font-size:14px}
+  .submit-panel dt{color:var(--ink-dim);font-weight:400}
+  .submit-panel dd{margin:0;color:var(--ink);font-weight:400;word-break:break-word}
+  .submit-panel .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-primary{background:var(--indigo);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:6px 22px 6px 6px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s;display:inline-flex;align-items:center;gap:10px}
+  .btn-primary:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-primary:disabled{background:var(--line-hi);color:var(--ink-dim);cursor:not-allowed}
+  .btn-primary .cart{width:36px;height:36px;border-radius:999px;background:var(--cream);color:var(--indigo);border:1.5px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
+  .btn-ghost{background:var(--cream-2);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:13px 22px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s}
+  .btn-ghost:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--cream-3)}
+
+  /* ─────── Success ─────── */
+  .success{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:48px 28px;margin-top:20px;box-shadow:5px 5px 0 var(--ink);text-align:center}
+  .success .checkmark{width:64px;height:64px;border-radius:999px;background:var(--indigo);color:var(--cream);border:2px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin-bottom:18px;box-shadow:3px 3px 0 var(--ink)}
+  .success h2{margin:0 0 8px;font-size:28px;font-weight:700;letter-spacing:-.02em}
+  .success p{margin:0 auto;color:var(--ink-dim);font-size:15px;font-weight:400;max-width:420px}
+
+  /* ─────── Honeypot ─────── */
+  .hp{position:absolute;left:-10000px;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  /* ─────── Mobile ─────── */
+  @media (max-width:720px){
+      /* The bar must never wrap: the wordmark steps down instead. */
+      .mark{font-size:15px}
+      .mark .mk-long{display:none}
+      nav.main{gap:14px}
+      nav.main a{font-size:13px}
+    .topbar .inner{padding:10px 16px;gap:12px}
+    .langs button{font-size:11px;padding:4px 8px}
+    .shell{padding:24px 16px 40px}
+    .hero{margin-bottom:20px}
+    .hero h1{font-size:34px;line-height:1.02;margin-bottom:10px}
+    .hero p{font-size:14px}
+    .chat-card{min-height:460px;max-height:72vh;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .chat-card .messages{padding:16px;gap:10px}
+    .chat-card .composer{padding:10px}
+    .chat-card .composer textarea{font-size:14px;padding:10px 12px;min-height:90px;max-height:180px}
+    .msg{font-size:14px;padding:10px 14px;border-radius:12px;max-width:88%}
+    .btn-send{height:42px;font-size:12px;padding:0 16px}
+    .submit-panel{padding:18px;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .submit-panel dl{font-size:13px;gap:5px 14px}
+    .btn-primary,.btn-ghost{font-size:13px}
+    .btn-primary{padding:5px 18px 5px 5px}
+    .btn-primary .cart{width:30px;height:30px;font-size:16px}
+    .btn-ghost{padding:11px 18px}
+    .success{padding:32px 20px;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .success .checkmark{width:52px;height:52px;font-size:26px}
+    .success h2{font-size:22px}
+  }
+
+  /* ─────── Site look (new clickclick.be, Oct 2026) — same as the shop ───────
+     Light rounded cards without the hard offset shadow, thin warm lines
+     instead of dark frames, blue only for what is clickable or selected. */
+  .chat-card,.submit-panel,.success{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:none}
+  .chat-card .composer{border-top:1px solid var(--line);background:var(--cream-2)}
+  .chat-card .composer textarea{border:1px solid var(--line-hi);background:var(--cream)}
+  .chat-card .composer textarea:focus{border-color:var(--indigo);outline:none;background:#fff}
+  .msg{border:0}
+  .msg.bot{background:var(--cream-3);box-shadow:none}
+  .msg.user{box-shadow:none}
+  .msg.error{background:var(--cream-3);color:var(--ink);border:1.5px solid var(--indigo);box-shadow:none}
+  .thinking{border:0;background:var(--cream-3);box-shadow:none}
+  .shop-card{border:1px solid var(--line-hi);box-shadow:none;background:var(--cream)}
+  .shop-card .btn-shop,.btn-send,.btn-primary{border-color:var(--indigo)}
+  .btn-send:hover:not(:disabled),.btn-primary:hover:not(:disabled),.btn-ghost:hover{transform:none;box-shadow:none}
+  .btn-primary .cart{border:0}
+  .btn-ghost{border:1px solid var(--line-hi)}
+  .btn-ghost:hover{border-color:var(--indigo)}
+  .success .checkmark{border:0}
+  .submit-panel h3{text-transform:none;letter-spacing:0;font-size:22px;font-weight:400;color:var(--indigo)}
+  @media (max-width:720px){.chat-card,.submit-panel,.success{box-shadow:none}}
+
+  /* ─────── Open conversation (Oct 2026) ───────
+     The conversation reads like a page, not a box: no frame and no inner
+     scrollbar — the page itself scrolls. Click Click's answers are plain text
+     (like an article), the customer's messages are soft cream blocks on the
+     right, and the typing field stays at the bottom of the screen. */
+  .chat-card{background:transparent;border:0;border-radius:0;min-height:0;max-height:none;overflow:visible}
+  .chat-card .messages{overflow:visible;padding:8px 0 24px;gap:22px}
+  .chat-card .messages > *{scroll-margin-bottom:150px}
+  .msg{font-size:17px;line-height:1.6}
+  .msg.bot{background:none;padding:0;max-width:none;border-radius:0}
+  .msg.bot:first-child::before,.msg.user + .msg.bot::before,.shop-card + .msg.bot::before{content:"Click Click";display:block;margin-bottom:4px;font-family:"GT Pressura Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+  .msg.user{background:var(--cream-3);color:var(--ink);max-width:min(70%,560px);border-radius:16px;border-bottom-right-radius:4px;padding:12px 18px}
+  .thinking{background:none;padding:4px 0;box-shadow:none}
+  .shop-card{max-width:560px;background:#fff;border:1px solid var(--line-hi);border-radius:14px;padding:16px 18px}
+  .chat-card .composer{position:sticky;bottom:0;z-index:5;background:var(--cream);border-top:1px solid var(--line);padding:14px 0 18px;margin-top:8px}
+  .chat-card .composer textarea{min-height:64px;background:#fff}
+  .skip-row{background:transparent;padding:0 0 10px}
+  @media (max-width:720px){
+    .msg{font-size:16px}
+    .msg.user{max-width:85%}
+    .chat-card .composer{padding:10px 0 12px}
+  }
+</style>
+<link rel="stylesheet" href="lib/site-chrome/site-chrome.css?v=20261026">
+</head>
+<body>
+
+<div id="ccs-header"></div>
+<script src="lib/site-chrome/site-chrome.js?v=20261026"></script>
+
+<div class="shell">
+
+  <section class="hero">
+    <h1 id="intro-heading"></h1>
+    <p id="intro-body"></p>
+  </section>
+
+  <div class="chat-card">
+    <div class="messages" id="messages" aria-live="polite"></div>
+    <div class="skip-row" id="skip-row">
+      <span class="hint" id="skip-hint"></span>
+      <button type="button" class="btn-skip" id="skip-btn"></button>
+    </div>
+    <form class="composer" id="composer" autocomplete="off">
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <textarea id="input" rows="1" required maxlength="4000"></textarea>
+      <button type="submit" class="btn-send" id="send-btn"></button>
+    </form>
+  </div>
+
+  <div id="submit-area"></div>
+
+  <footer class="page-footer">
+    <p class="email-alt">
+      <span id="email-alt-text"></span>
+      <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a>
+    </p>
+    <p class="file-alt" id="file-alt-text"></p>
+    <p class="privacy-line" id="privacy-notice"></p>
+  </footer>
+
+</div>
+
+<div id="ccs-footer"></div>
+
+<script src="lib/i18n.js?v=20261026b"></script>
+<script>
+(function () {
+  'use strict';
+
+  const state = {
+    lang: window.detectLanguage(),
+    langPinned: false,      // true once the customer picks a language by hand
+    pageLoadedAt: Date.now(),
+    conversationToken: null,
+    history: [],
+    awaitingReply: false,
+    submitting: false,
+    submitted: false,
+    lastDraft: null,
+    lastShopQuote: null,    // populated when bot calls check_shop_pricing
+  };
+
+  const API = {
+    start:  '/chat-api/start.php',
+    chat:   '/chat-api/chat.php',
+    submit: '/chat-api/submit.php',
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const messagesEl = $('messages');
+  const submitArea = $('submit-area');
+  const composer   = $('composer');
+  const inputEl    = $('input');
+  const sendBtn    = $('send-btn');
+  const skipRow    = $('skip-row');
+  const skipBtn    = $('skip-btn');
+  const skipHint   = $('skip-hint');
+
+  function t(key) { return (window.I18N[state.lang] || window.I18N.en)[key] || key; }
+
+  // The CONVERSATION language can differ from the UI language. Once the bot
+  // has spoken, we trust its detected_language (in the latest draft) over
+  // the UI default. Used for in-chat messages like the edit prompt.
+  function tChat(key) {
+    const lang = (state.lastDraft && state.lastDraft.detected_language)
+                 || state.lang;
+    return (window.I18N[lang] || window.I18N.en)[key] || key;
+  }
+
+  function applyLang() {
+    document.documentElement.lang = state.lang;
+    document.title = t('page_title');
+    $('intro-heading').textContent  = t('intro_heading');
+    $('intro-body').textContent     = t('intro_body');
+    $('email-alt-text').textContent = t('email_alt');
+    // Files: point to a transfer platform; the brand name becomes a link.
+    const fa = $('file-alt-text');
+    if (fa) {
+      const parts = t('file_alt').split('SwissTransfer');
+      fa.textContent = parts[0];
+      if (parts.length > 1) {
+        const a = document.createElement('a');
+        a.href = 'https://www.swisstransfer.com/';
+        a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'SwissTransfer';
+        fa.appendChild(a);
+        fa.appendChild(document.createTextNode(parts.slice(1).join('SwissTransfer')));
+      }
+    }
+    $('privacy-notice').textContent = t('privacy_notice');
+    inputEl.placeholder             = t('placeholder');
+    sendBtn.textContent             = t('send');
+    skipBtn.textContent             = t('skip_button');
+    skipHint.textContent            = t('skip_hint');
+    // Top-bar nav: the same four links as the shop, pointing at the file for
+    // whichever language is being read.
+    const P = { en:(window.CC_SITE||'')+'/en/paper-guide/', fr:(window.CC_SITE||'')+'/fr/guide-des-papiers/', nl:(window.CC_SITE||'')+'/nl/papiergids/' };
+    const L = { en:(window.CC_SITE||'')+'/en/legal/', fr:(window.CC_SITE||'')+'/fr/mentions-legales/', nl:(window.CC_SITE||'')+'/nl/juridisch/' };
+    const navMap = {
+      navServices: ['nav_services', null],
+      navShop:     ['nav_shop',     '/shop/'],
+      navPaper:    ['nav_paper',    P[state.lang] || P.en],
+      navTerms:    ['nav_terms',    L[state.lang] || L.en],
+    };
+    for (const id of Object.keys(navMap)) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      el.textContent = t(navMap[id][0]);
+      if (navMap[id][1]) el.href = navMap[id][1];
+    }
+    document.querySelectorAll('.langs button').forEach(b => {
+      b.classList.toggle('on', b.dataset.lang === state.lang);
+    });
+    if (state.lastDraft && !state.submitted) renderSubmitPanel(state.lastDraft);
+  }
+  applyLang();
+
+  // Move the whole UI to the language the bot detected the customer writing in.
+  // Skipped once the customer has picked a language by hand — an explicit
+  // choice outranks detection, otherwise their click would keep being undone.
+  function syncLangToConversation(lang) {
+    if (!lang || state.langPinned) return;
+    if (!window.I18N[lang] || lang === state.lang) return;
+    state.lang = lang;
+    applyLang();
+  }
+
+  document.querySelectorAll('.langs button').forEach(b => {
+    b.addEventListener('click', () => {
+      state.lang = b.dataset.lang;
+      state.langPinned = true;
+      applyLang();
+    });
+  });
+
+  function addMessage(text, role) {
+    if (!text || !text.trim()) return null;
+    // The bot is told to write plain text, but Haiku sometimes adds **bold** —
+    // shown literally as asterisks, so strip the markers (Kris, 17 Oct).
+    if (role === 'bot') text = text.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/__([^_]+)__/g, '$1');
+    const el = document.createElement('div');
+    el.className = 'msg ' + role;
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    return el;
+  }
+
+  function addError(text) {
+    const el = document.createElement('div');
+    el.className = 'msg error';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  let thinkingEl = null;
+  function showThinking() {
+    if (thinkingEl) return;
+    thinkingEl = document.createElement('div');
+    thinkingEl.className = 'thinking';
+    thinkingEl.innerHTML = '<span>' + t('thinking') + '</span><span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    messagesEl.appendChild(thinkingEl);
+    thinkingEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+  function hideThinking() {
+    if (thinkingEl) { thinkingEl.remove(); thinkingEl = null; }
+  }
+
+  function renderSubmitPanel(draft) {
+    state.editing = false;
+    submitArea.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'submit-panel';
+
+    const heading = document.createElement('h3');
+    heading.textContent = t('summary_heading');
+    wrap.appendChild(heading);
+
+    const rows = [
+      ['Product',  draft.product],
+      ['Quantity', draft.quantity],
+      ['Size',     draft.size],
+      ['Sides',    draft.sides],
+      ['Paper',    draft.paper_preference],
+      ['Finish',   (draft.finishings || []).join(', ')],
+      ['Binding',  draft.binding],
+      ['Deadline', draft.deadline],
+      ['File',     draft.files_ready ? (draft.file_link ? draft.file_link : 'Ready') : 'Not ready / unsure'],
+      ['Competitor quote', draft.competitor_quote_info],
+      ['Shop visit', draft.requested_visit_time],
+      ['Name',     draft.contact && draft.contact.name],
+      ['Email',    draft.contact && draft.contact.email],
+      ['Phone',    draft.contact && draft.contact.phone],
+      ['Address',  draft.contact && draft.contact.address],
+      ['Company',  draft.contact && draft.contact.company],
+      ['VAT',      draft.contact && draft.contact.vat],
+    ];
+    const dl = document.createElement('dl');
+    rows.forEach(([k, v]) => {
+      if (!v) return;
+      const dt = document.createElement('dt'); dt.textContent = k;
+      const dd = document.createElement('dd'); dd.textContent = String(v);
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+    wrap.appendChild(dl);
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const sendIt = document.createElement('button');
+    sendIt.className = 'btn-primary';
+    sendIt.innerHTML = '<span class="cart">→</span><span>' + (state.submitting ? t('submit_sending') : t('submit_button')) + '</span>';
+    sendIt.disabled = state.submitting;
+    sendIt.addEventListener('click', () => submitRequest());
+    const editIt = document.createElement('button');
+    editIt.className = 'btn-ghost';
+    editIt.textContent = t('edit_request');
+    editIt.addEventListener('click', () => {
+      // Keep the summary on screen (so nothing looks lost) and only hide the buttons;
+      // the next bot reply with an updated draft replaces it.
+      state.editing = true;
+      actions.style.display = 'none';
+      // Remove the last bot bubble — it usually said something like
+      // "I'm sending this now" or contained the summary text, which is
+      // misleading once the customer wants to change something.
+      const lastBot = messagesEl.querySelector('.msg.bot:last-of-type');
+      if (lastBot) lastBot.remove();
+      // Drop a fresh bot-style prompt asking what to change, in the
+      // CONVERSATION language (not the UI language).
+      addMessage(tChat('edit_prompt'), 'bot');
+      inputEl.focus();
+    });
+    actions.appendChild(sendIt);
+    actions.appendChild(editIt);
+    wrap.appendChild(actions);
+
+    submitArea.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  function renderSuccess() {
+    submitArea.innerHTML = '';
+    document.querySelector('.chat-card').style.display = 'none';
+    const wrap = document.createElement('div');
+    wrap.className = 'success';
+    const heading = (t('success_heading') || '').replace(/\s*✓\s*$/, '').trim();
+    wrap.innerHTML = '<div class="checkmark">✓</div><h2>' + (heading || 'Request sent') + '</h2><p>' + t('success_body') + '</p>';
+    submitArea.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function postJSON(url, payload) {
+    let res;
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        credentials: 'same-origin',
+      });
+    } catch (e) {
+      throw { kind: 'network', message: t('err_network') };
+    }
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) {
+      const msg = (data && data.error) ? data.error : t('err_generic');
+      throw { kind: 'http', status: res.status, message: msg };
+    }
+    return data || {};
+  }
+
+  async function sendMessage(text) {
+    if (state.awaitingReply) return;
+    addMessage(text, 'user');
+    inputEl.value = '';
+    autoresize();
+    state.awaitingReply = true;
+    sendBtn.disabled = true;
+    showThinking();
+
+    const honeypot = composer.elements['website'].value;
+
+    try {
+      let data;
+      if (state.conversationToken === null) {
+        data = await postJSON(API.start, {
+          message: text,
+          honeypot: honeypot,
+          page_loaded_at: state.pageLoadedAt,
+          page_lang: state.lang,
+          lang_pinned: !!state.langPinned,
+        });
+        state.conversationToken = data.conversation_token;
+      } else {
+        data = await postJSON(API.chat, {
+          conversation_token: state.conversationToken,
+          history: state.history,
+          message: text,
+          page_lang: state.lang,
+          lang_pinned: !!state.langPinned,
+        });
+      }
+      hideThinking();
+      state.history = data.history || [];
+      // Follow the conversation. state.lang starts from the BROWSER (or the URL
+      // hash), and used to stay there forever — applyLang() only ever ran on
+      // load and on a manual button click. So a Dutch customer typing Dutch got
+      // Dutch answers wrapped in English chrome. Whenever the bot tells us the
+      // language it detected, move the whole UI to match.
+      // The server decides the reply language (page language, or the language the
+      // customer clearly switched to). The page follows, so buttons and answers match.
+      syncLangToConversation(data.lang);
+      // Bot called check_shop_pricing one or more times. Render one card
+      // per quote (customer can ask about multiple products in a single
+      // message). Falls back to the singular `shop_quote` field for back-
+      // compat with older server responses.
+      const quotes = (data.shop_quotes && data.shop_quotes.length)
+                     ? data.shop_quotes
+                     : (data.shop_quote ? [data.shop_quote] : []);
+      if (data.assistant && data.assistant.trim()) {
+        addMessage(data.assistant, 'bot');
+      } else if (quotes.some(q => q && q.ok)) {
+        // The bot sometimes sends only the tool call, no text (Kris, 17 Oct):
+        // a bare card with nothing above it. Put the standard intro there.
+        const ql = (quotes.find(q => q && q.ok) || {}).lang || conversationLang();
+        addMessage(((window.I18N[ql] || window.I18N.en).shop_intro) || window.I18N.en.shop_intro, 'bot');
+      }
+      if (quotes.length) {
+        state.lastShopQuote = quotes[quotes.length - 1];
+        quotes.forEach(renderShopCard);
+      }
+      if (data.ready_to_submit && data.draft) {
+        state.lastDraft = data.draft;
+        renderSubmitPanel(data.draft);
+      } else if (!state.editing) {
+        submitArea.innerHTML = '';
+      }
+      // After the first bot reply, surface the skip-and-send option so
+      // the customer can bail out of further questions at any time.
+      if (state.history.length >= 2) skipRow.classList.add('on');
+    } catch (err) {
+      hideThinking();
+      addError(err.message || t('err_generic'));
+    } finally {
+      state.awaitingReply = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  async function submitRequest() {
+    if (state.submitting || !state.lastDraft) return;
+    // The team needs a name and a valid email to reply; the server refuses without them.
+    const c = state.lastDraft.contact || {};
+    const hasMail  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(c.email || '').trim());
+    const hasPhone = String(c.phone || '').replace(/\D/g, '').length >= 8;
+    if (!hasMail && !(String(c.name || '').trim() && hasPhone)) {
+      addError(t('err_contact'));
+      return;
+    }
+    state.submitting = true;
+    renderSubmitPanel(state.lastDraft);
+    try {
+      await postJSON(API.submit, {
+        conversation_token: state.conversationToken,
+        history: state.history,
+        draft:   state.lastDraft,
+      });
+      state.submitted = true;
+      renderSuccess();
+    } catch (err) {
+      addError(err.message || t('err_generic'));
+      state.submitting = false;
+      renderSubmitPanel(state.lastDraft);
+    }
+  }
+
+  function autoresize() {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 220) + 'px';
+  }
+  inputEl.addEventListener('input', autoresize);
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      composer.requestSubmit();
+    }
+  });
+
+  composer.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = inputEl.value.trim();
+    if (!text) return;
+    if (text.length > 4000) { addError(t('err_long_msg')); return; }
+    sendMessage(text);
+  });
+
+  // Skip → send a "just submit what you have" message in the conversation's
+  // language; the bot's customer-led-shortcut rule will pick it up.
+  skipBtn.addEventListener('click', () => {
+    if (state.awaitingReply) return;
+    sendMessage(tChat('skip_message'));
+  });
+
+  // ─────────────────────────────────────────────────────────────────────
+  // SHOP CARD — rendered when chat.php returns a shop_quote in the response
+  // (the bot called the check_shop_pricing tool and the server proxied to
+  // calc.php on clickclick.be).
+  // ─────────────────────────────────────────────────────────────────────
+
+  function renderShopCard(quote) {
+    if (!quote || !quote.ok) return;
+    // Card language = whatever the bot passed in the tool call (sticky to
+    // the conversation language), then conversation language as a fallback,
+    // then English as a last-resort fallback for any missing key.
+    const cardLang = quote.lang || conversationLang();
+    const tShop = (key) =>
+      ((window.I18N[cardLang] || {})[key])
+      || ((window.I18N.en || {})[key])
+      || key;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'shop-card';
+
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.textContent = tShop('shop_badge');
+    wrap.appendChild(badge);
+
+    const inclVat   = Number(quote.inclVat || 0);
+    const euros     = Math.floor(inclVat);
+    const cents     = String(Math.round((inclVat - euros) * 100)).padStart(2, '0');
+    const priceRow  = document.createElement('div');
+    priceRow.className = 'price-row';
+    priceRow.innerHTML =
+      '<div class="price">€' + euros + '<span class="cents">,' + cents + '</span></div>' +
+      '<div class="vat">' + tShop('shop_incl_vat') + '</div>';
+    wrap.appendChild(priceRow);
+
+    if (quote.readyDate) {
+      const ready = document.createElement('div');
+      ready.className = 'ready';
+      ready.innerHTML = tShop('shop_ready') + ' <strong>' + quote.readyDate + '</strong>';
+      wrap.appendChild(ready);
+    }
+    // Express is pickup only — always on the card, not left to the bot (Kris, 17 Oct).
+    if (quote.express) {
+      const pk = document.createElement('div');
+      pk.className = 'ready';
+      pk.textContent = tShop('shop_express_pickup');
+      wrap.appendChild(pk);
+    }
+
+    // Holiday closure — fixed line while the holiday mode runs (26 Oct 2026).
+    if (quote.holiday && quote.holiday.from) {
+      const hol = document.createElement('div');
+      hol.className = 'ready';
+      hol.textContent = tShop('shop_holiday').replace('{from}', quote.holiday.from).replace('{to}', quote.holiday.to).replace('{back}', quote.holiday.back);
+      wrap.appendChild(hol);
+    }
+
+    if (quote.summary) {
+      const specs = document.createElement('div');
+      specs.className = 'specs';
+      specs.textContent = quote.summary;
+      wrap.appendChild(specs);
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const shopBtn = document.createElement('a');
+    shopBtn.className = 'btn-shop';
+    // No bare-shop fallback. A link without the prefill params drops the
+    // customer on the DEFAULT configuration (flyer / MultiArt Silk 130) while
+    // the price card above still shows what they actually asked for — they
+    // would order the wrong thing believing it was the quote. No deep link,
+    // no button. (Found 17 Aug 2026.)
+    shopBtn.href = quote.shopUrl || '';
+    shopBtn.target = '_blank';
+    shopBtn.rel = 'noopener noreferrer';
+    shopBtn.textContent = tShop('shop_order_button') + ' →';
+    const keepBtn = document.createElement('button');
+    keepBtn.type = 'button';
+    keepBtn.className = 'btn-shop-secondary';
+    keepBtn.textContent = tShop('shop_change_button');
+    keepBtn.addEventListener('click', () => {
+      wrap.remove();
+      inputEl.focus();
+    });
+    if (quote.shopUrl) actions.appendChild(shopBtn);
+    actions.appendChild(keepBtn);
+    wrap.appendChild(actions);
+
+    messagesEl.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  function conversationLang() {
+    return (state.lastDraft && state.lastDraft.detected_language) || state.lang;
+  }
+
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>

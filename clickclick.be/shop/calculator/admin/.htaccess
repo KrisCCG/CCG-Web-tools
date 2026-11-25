@@ -1,0 +1,13 @@
+# /calculator/admin/ — internal admin endpoints (currently just erase.php for
+# GDPR right-to-erasure). Always gated by HTTP basic-auth.
+#
+# Reuses the same .htpasswd as /flyers/ so there's only one credential to
+# manage. If /flyers/ auth is ever removed for go-live, this stays.
+
+AuthType Basic
+AuthName "Click Click — admin"
+AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/.htpasswd-ccg
+Require valid-user
+
+# No directory listing.
+Options -Indexes

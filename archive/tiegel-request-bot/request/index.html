@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Request — Click Click Graphics</title>
+<meta name="description" content="Tell us about your print project. Brussels print shop.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fef3ea;
+    --cream-2:#f7e9dc;
+    --cream-3:#eedfc8;
+    --ink:#0a0a0a;
+    --ink-2:#2a2a2a;
+    --ink-dim:#6c645b;
+    --ink-dimmer:#9a9287;
+    --indigo:#3211fc;
+    --indigo-dark:#2408c4;
+    --indigo-hi:#5336ff;
+    --line:#e6d6c3;
+    --line-hi:#d4c2ab;
+    --red:#ef3226;
+    --green:#19a26e;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--cream-2);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+  a{color:var(--ink);text-decoration:none}
+  em{font-style:italic}
+
+  /* ─────── Top bar ─────── */
+  .topbar{background:var(--cream);color:var(--indigo);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--ink)}
+  .topbar .inner{max-width:1280px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo img{display:block;height:28px;width:auto}
+  .langs{display:flex;gap:2px;background:rgba(50,17,252,.08);border-radius:999px;padding:3px}
+  .langs button{background:transparent;border:0;color:var(--indigo);opacity:.55;font:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;padding:5px 10px;border-radius:999px;cursor:pointer;text-transform:uppercase}
+  .langs button.on{background:var(--indigo);color:var(--cream);opacity:1}
+
+  /* ─────── Shell ─────── */
+  .shell{max-width:980px;margin:0 auto;padding:40px 28px 80px;width:100%;flex:1;display:flex;flex-direction:column}
+
+  /* ─────── Hero ─────── */
+  .hero{margin-bottom:28px;color:var(--ink)}
+  .hero h1{font-weight:700;font-size:clamp(38px,6vw,68px);line-height:1;letter-spacing:-.025em;margin:0 0 14px;color:var(--ink)}
+  .hero h1 em{font-style:italic;color:var(--indigo)}
+  .hero p{font-size:16px;line-height:1.5;margin:0;max-width:620px;color:var(--ink-dim);font-weight:500}
+
+  /* ─────── Page footer (alt-contact + privacy) ─────── */
+  .page-footer{margin:48px auto 0;max-width:720px;text-align:center}
+  .email-alt{margin:0 0 18px;font-size:17px;line-height:1.55;font-weight:600;color:var(--ink);white-space:pre-line}
+  .email-alt a{color:var(--indigo);font-weight:700;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+  .email-alt a:hover{color:var(--indigo-hi)}
+  .privacy-line{margin:0;font-size:11px;line-height:1.5;color:var(--ink-dimmer);font-weight:500;white-space:pre-line}
+
+  /* ─────── Chat card ─────── */
+  .chat-card{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);display:flex;flex-direction:column;min-height:540px;max-height:75vh;overflow:hidden}
+  .chat-card .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:0}
+  .chat-card .composer{border-top:2px solid var(--ink);padding:12px;background:var(--cream-2);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+  .chat-card .composer textarea{flex:1;background:var(--cream);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;font:inherit;font-size:15px;font-weight:500;color:var(--ink);resize:none;min-height:110px;max-height:220px;outline:none;line-height:1.45}
+  .chat-card .composer textarea:focus{background:var(--cream-3)}
+  .chat-card .composer textarea::placeholder{color:var(--ink-dim)}
+
+  .msg{max-width:80%;padding:12px 16px;border-radius:14px;border:2px solid var(--ink);font-size:15px;line-height:1.45;font-weight:500;white-space:pre-wrap;word-wrap:break-word}
+  .msg.bot{background:var(--cream-3);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:2px 2px 0 var(--ink)}
+  .msg.user{background:var(--indigo);color:var(--cream);align-self:flex-end;border-bottom-right-radius:4px;box-shadow:3px 3px 0 var(--ink)}
+  .msg strong{font-weight:700}
+  .msg.error{align-self:stretch;background:#fef2f2;color:#991b1b;border-color:#dc2626;font-size:14px;font-weight:600;box-shadow:2px 2px 0 #dc2626}
+
+  .thinking{align-self:flex-start;background:var(--cream-3);color:var(--ink-dim);border:2px solid var(--ink);border-radius:14px;border-bottom-left-radius:4px;padding:14px 16px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;box-shadow:2px 2px 0 var(--ink)}
+  .thinking .dot{width:6px;height:6px;border-radius:50%;background:var(--ink);animation:blink 1.2s infinite}
+  .thinking .dot:nth-child(2){animation-delay:.2s}
+  .thinking .dot:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+  .btn-send{background:var(--indigo);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:0 22px;height:48px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s}
+  .btn-send:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-send:disabled{background:var(--line-hi);color:var(--ink-dim);cursor:not-allowed}
+
+  /* ─────── Skip-and-send shortcut (subtle, appears after first reply) ─────── */
+  .skip-row{display:none;padding:0 12px 10px;background:var(--cream-2);justify-content:flex-end;align-items:center;gap:8px}
+  .skip-row.on{display:flex}
+  .skip-row .hint{font-size:11px;color:var(--ink-dim);font-weight:500}
+  .btn-skip{background:transparent;color:var(--ink-dim);border:1.5px solid var(--line-hi);border-radius:999px;padding:5px 14px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .12s}
+  .btn-skip:hover:not(:disabled){background:var(--cream-3);border-color:var(--ink);color:var(--ink)}
+  .btn-skip:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ─────── Submit panel ─────── */
+  .submit-panel{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:24px;margin-top:20px;box-shadow:5px 5px 0 var(--ink)}
+  .submit-panel h3{margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim)}
+  .submit-panel dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0 0 20px;font-size:14px}
+  .submit-panel dt{color:var(--ink-dim);font-weight:600}
+  .submit-panel dd{margin:0;color:var(--ink);font-weight:600;word-break:break-word}
+  .submit-panel .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-primary{background:var(--indigo);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:6px 22px 6px 6px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s;display:inline-flex;align-items:center;gap:10px}
+  .btn-primary:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-primary:disabled{background:var(--line-hi);color:var(--ink-dim);cursor:not-allowed}
+  .btn-primary .cart{width:36px;height:36px;border-radius:999px;background:var(--cream);color:var(--indigo);border:1.5px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
+  .btn-ghost{background:var(--cream-2);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:13px 22px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:transform .1s}
+  .btn-ghost:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--cream-3)}
+
+  /* ─────── Success ─────── */
+  .success{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:48px 28px;margin-top:20px;box-shadow:5px 5px 0 var(--ink);text-align:center}
+  .success .checkmark{width:64px;height:64px;border-radius:999px;background:var(--indigo);color:var(--cream);border:2px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin-bottom:18px;box-shadow:3px 3px 0 var(--ink)}
+  .success h2{margin:0 0 8px;font-size:28px;font-weight:700;letter-spacing:-.02em}
+  .success p{margin:0 auto;color:var(--ink-dim);font-size:15px;font-weight:500;max-width:420px}
+
+  /* ─────── Honeypot ─────── */
+  .hp{position:absolute;left:-10000px;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  /* ─────── Mobile ─────── */
+  @media (max-width:720px){
+    .topbar .inner{padding:10px 16px;gap:12px}
+    .logo img{height:22px}
+    .langs button{font-size:11px;padding:4px 8px}
+    .shell{padding:24px 16px 40px}
+    .hero{margin-bottom:20px}
+    .hero h1{font-size:34px;line-height:1.02;margin-bottom:10px}
+    .hero p{font-size:14px}
+    .chat-card{min-height:460px;max-height:72vh;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .chat-card .messages{padding:16px;gap:10px}
+    .chat-card .composer{padding:10px}
+    .chat-card .composer textarea{font-size:14px;padding:10px 12px;min-height:90px;max-height:180px}
+    .msg{font-size:14px;padding:10px 14px;border-radius:12px;max-width:88%}
+    .btn-send{height:42px;font-size:12px;padding:0 16px}
+    .submit-panel{padding:18px;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .submit-panel dl{font-size:13px;gap:5px 14px}
+    .btn-primary,.btn-ghost{font-size:13px}
+    .btn-primary{padding:5px 18px 5px 5px}
+    .btn-primary .cart{width:30px;height:30px;font-size:16px}
+    .btn-ghost{padding:11px 18px}
+    .success{padding:32px 20px;border-radius:16px;box-shadow:3px 3px 0 var(--ink)}
+    .success .checkmark{width:52px;height:52px;font-size:26px}
+    .success h2{font-size:22px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inner">
+    <a href="https://tiegel.be" class="logo"><img src="logo.png" alt="Click Click Graphics"></a>
+    <div class="langs" role="tablist">
+      <button data-lang="fr">FR</button>
+      <button data-lang="nl">NL</button>
+      <button data-lang="en" class="on">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <section class="hero">
+    <h1 id="intro-heading"></h1>
+    <p id="intro-body"></p>
+  </section>
+
+  <div class="chat-card">
+    <div class="messages" id="messages" aria-live="polite"></div>
+    <div class="skip-row" id="skip-row">
+      <span class="hint" id="skip-hint"></span>
+      <button type="button" class="btn-skip" id="skip-btn"></button>
+    </div>
+    <form class="composer" id="composer" autocomplete="off">
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <textarea id="input" rows="1" required maxlength="4000"></textarea>
+      <button type="submit" class="btn-send" id="send-btn"></button>
+    </form>
+  </div>
+
+  <div id="submit-area"></div>
+
+  <footer class="page-footer">
+    <p class="email-alt">
+      <span id="email-alt-text"></span>
+      <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a>
+    </p>
+    <p class="privacy-line" id="privacy-notice"></p>
+  </footer>
+
+</div>
+
+<script src="lib/i18n.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const state = {
+    lang: window.detectLanguage(),
+    pageLoadedAt: Date.now(),
+    conversationToken: null,
+    history: [],
+    awaitingReply: false,
+    submitting: false,
+    submitted: false,
+    lastDraft: null,
+  };
+
+  const API = {
+    start:  '/request-api/start.php',
+    chat:   '/request-api/chat.php',
+    submit: '/request-api/submit.php',
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const messagesEl = $('messages');
+  const submitArea = $('submit-area');
+  const composer   = $('composer');
+  const inputEl    = $('input');
+  const sendBtn    = $('send-btn');
+  const skipRow    = $('skip-row');
+  const skipBtn    = $('skip-btn');
+  const skipHint   = $('skip-hint');
+
+  function t(key) { return (window.I18N[state.lang] || window.I18N.en)[key] || key; }
+
+  // The CONVERSATION language can differ from the UI language. Once the bot
+  // has spoken, we trust its detected_language (in the latest draft) over
+  // the UI default. Used for in-chat messages like the edit prompt.
+  function tChat(key) {
+    const lang = (state.lastDraft && state.lastDraft.detected_language)
+                 || state.lang;
+    return (window.I18N[lang] || window.I18N.en)[key] || key;
+  }
+
+  function applyLang() {
+    document.documentElement.lang = state.lang;
+    document.title = t('page_title');
+    $('intro-heading').textContent  = t('intro_heading');
+    $('intro-body').textContent     = t('intro_body');
+    $('email-alt-text').textContent = t('email_alt');
+    $('privacy-notice').textContent = t('privacy_notice');
+    inputEl.placeholder             = t('placeholder');
+    sendBtn.textContent             = t('send');
+    skipBtn.textContent             = t('skip_button');
+    skipHint.textContent            = t('skip_hint');
+    document.querySelectorAll('.langs button').forEach(b => {
+      b.classList.toggle('on', b.dataset.lang === state.lang);
+    });
+    if (state.lastDraft && !state.submitted) renderSubmitPanel(state.lastDraft);
+  }
+  applyLang();
+
+  document.querySelectorAll('.langs button').forEach(b => {
+    b.addEventListener('click', () => {
+      state.lang = b.dataset.lang;
+      applyLang();
+    });
+  });
+
+  function addMessage(text, role) {
+    if (!text || !text.trim()) return null;
+    const el = document.createElement('div');
+    el.className = 'msg ' + role;
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    return el;
+  }
+
+  function addError(text) {
+    const el = document.createElement('div');
+    el.className = 'msg error';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  let thinkingEl = null;
+  function showThinking() {
+    if (thinkingEl) return;
+    thinkingEl = document.createElement('div');
+    thinkingEl.className = 'thinking';
+    thinkingEl.innerHTML = '<span>' + t('thinking') + '</span><span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    messagesEl.appendChild(thinkingEl);
+    thinkingEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+  function hideThinking() {
+    if (thinkingEl) { thinkingEl.remove(); thinkingEl = null; }
+  }
+
+  function renderSubmitPanel(draft) {
+    submitArea.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'submit-panel';
+
+    const heading = document.createElement('h3');
+    heading.textContent = t('summary_heading');
+    wrap.appendChild(heading);
+
+    const rows = [
+      ['Product',  draft.product],
+      ['Quantity', draft.quantity],
+      ['Size',     draft.size],
+      ['Sides',    draft.sides],
+      ['Paper',    draft.paper_preference],
+      ['Finish',   (draft.finishings || []).join(', ')],
+      ['Binding',  draft.binding],
+      ['Deadline', draft.deadline],
+      ['File',     draft.files_ready ? (draft.file_link ? draft.file_link : 'Ready') : 'Not ready / unsure'],
+      ['Competitor quote', draft.competitor_quote_info],
+      ['Shop visit', draft.requested_visit_time],
+      ['Name',     draft.contact && draft.contact.name],
+      ['Email',    draft.contact && draft.contact.email],
+      ['Phone',    draft.contact && draft.contact.phone],
+      ['Address',  draft.contact && draft.contact.address],
+      ['Company',  draft.contact && draft.contact.company],
+      ['VAT',      draft.contact && draft.contact.vat],
+    ];
+    const dl = document.createElement('dl');
+    rows.forEach(([k, v]) => {
+      if (!v) return;
+      const dt = document.createElement('dt'); dt.textContent = k;
+      const dd = document.createElement('dd'); dd.textContent = String(v);
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+    wrap.appendChild(dl);
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const sendIt = document.createElement('button');
+    sendIt.className = 'btn-primary';
+    sendIt.innerHTML = '<span class="cart">→</span><span>' + (state.submitting ? t('submit_sending') : t('submit_button')) + '</span>';
+    sendIt.disabled = state.submitting;
+    sendIt.addEventListener('click', () => submitRequest());
+    const editIt = document.createElement('button');
+    editIt.className = 'btn-ghost';
+    editIt.textContent = t('edit_request');
+    editIt.addEventListener('click', () => {
+      submitArea.innerHTML = '';
+      // Remove the last bot bubble — it usually said something like
+      // "I'm sending this now" or contained the summary text, which is
+      // misleading once the customer wants to change something.
+      const lastBot = messagesEl.querySelector('.msg.bot:last-of-type');
+      if (lastBot) lastBot.remove();
+      // Drop a fresh bot-style prompt asking what to change, in the
+      // CONVERSATION language (not the UI language).
+      addMessage(tChat('edit_prompt'), 'bot');
+      inputEl.focus();
+    });
+    actions.appendChild(sendIt);
+    actions.appendChild(editIt);
+    wrap.appendChild(actions);
+
+    submitArea.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
+
+  function renderSuccess() {
+    submitArea.innerHTML = '';
+    document.querySelector('.chat-card').style.display = 'none';
+    const wrap = document.createElement('div');
+    wrap.className = 'success';
+    const heading = (t('success_heading') || '').replace(/\s*✓\s*$/, '').trim();
+    wrap.innerHTML = '<div class="checkmark">✓</div><h2>' + (heading || 'Request sent') + '</h2><p>' + t('success_body') + '</p>';
+    submitArea.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function postJSON(url, payload) {
+    let res;
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        credentials: 'same-origin',
+      });
+    } catch (e) {
+      throw { kind: 'network', message: t('err_network') };
+    }
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) {
+      const msg = (data && data.error) ? data.error : t('err_generic');
+      throw { kind: 'http', status: res.status, message: msg };
+    }
+    return data || {};
+  }
+
+  async function sendMessage(text) {
+    if (state.awaitingReply) return;
+    addMessage(text, 'user');
+    inputEl.value = '';
+    autoresize();
+    state.awaitingReply = true;
+    sendBtn.disabled = true;
+    showThinking();
+
+    const honeypot = composer.elements['website'].value;
+
+    try {
+      let data;
+      if (state.conversationToken === null) {
+        data = await postJSON(API.start, {
+          message: text,
+          honeypot: honeypot,
+          page_loaded_at: state.pageLoadedAt,
+        });
+        state.conversationToken = data.conversation_token;
+      } else {
+        data = await postJSON(API.chat, {
+          conversation_token: state.conversationToken,
+          history: state.history,
+          message: text,
+        });
+      }
+      hideThinking();
+      state.history = data.history || [];
+      if (data.assistant) addMessage(data.assistant, 'bot');
+      if (data.ready_to_submit && data.draft) {
+        state.lastDraft = data.draft;
+        renderSubmitPanel(data.draft);
+      } else {
+        submitArea.innerHTML = '';
+      }
+      // After the first bot reply, surface the skip-and-send option so
+      // the customer can bail out of further questions at any time.
+      if (state.history.length >= 2) skipRow.classList.add('on');
+    } catch (err) {
+      hideThinking();
+      addError(err.message || t('err_generic'));
+    } finally {
+      state.awaitingReply = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  async function submitRequest() {
+    if (state.submitting || !state.lastDraft) return;
+    state.submitting = true;
+    renderSubmitPanel(state.lastDraft);
+    try {
+      await postJSON(API.submit, {
+        conversation_token: state.conversationToken,
+        history: state.history,
+        draft:   state.lastDraft,
+      });
+      state.submitted = true;
+      renderSuccess();
+    } catch (err) {
+      addError(err.message || t('err_generic'));
+      state.submitting = false;
+      renderSubmitPanel(state.lastDraft);
+    }
+  }
+
+  function autoresize() {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 220) + 'px';
+  }
+  inputEl.addEventListener('input', autoresize);
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      composer.requestSubmit();
+    }
+  });
+
+  composer.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = inputEl.value.trim();
+    if (!text) return;
+    if (text.length > 4000) { addError(t('err_long_msg')); return; }
+    sendMessage(text);
+  });
+
+  // Skip → send a "just submit what you have" message in the conversation's
+  // language; the bot's customer-led-shortcut rule will pick it up.
+  skipBtn.addEventListener('click', () => {
+    if (state.awaitingReply) return;
+    sendMessage(tChat('skip_message'));
+  });
+
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>

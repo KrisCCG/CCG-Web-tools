@@ -1,0 +1,17 @@
+# Paste into the ROOT .htaccess of /sites/clickclick.be/ ABOVE the "# BEGIN WordPress" block, at cutover.
+# Old static legal and paper pages (folders /legal/ and /papers/) -> the new WordPress pages.
+RewriteEngine On
+RewriteRule ^legal/?$            /en/legal/ [R=301,L]
+RewriteRule ^legal/index\.html$  /en/legal/ [R=301,L]
+RewriteRule ^legal/fr\.html$     /fr/mentions-legales/ [R=301,L]
+RewriteRule ^legal/nl\.html$     /nl/juridisch/ [R=301,L]
+RewriteRule ^papers/?$           /en/paper-guide/ [R=301,L]
+RewriteRule ^papers/index\.html$ /en/paper-guide/ [R=301,L]
+RewriteRule ^papers/fr\.html$    /fr/guide-des-papiers/ [R=301,L]
+RewriteRule ^papers/nl\.html$    /nl/papiergids/ [R=301,L]
+# Old shop address (the folder /flyers/ is archived at cutover, its own redirect goes with it):
+RewriteRule ^flyers/?$           /shop/ [R=301,L]
+
+# The old folders /legal/ and /papers/ are CANCELLED (decision 22 Oct 2026): delete both folders at cutover, after a backup
+# (ops/server-backups/). The rules above then keep old links alive. They are optional: remove them later when no old link is left.
+# The folders' own .htaccess ("RewriteEngine Off") disappears with them, so these rules can run.

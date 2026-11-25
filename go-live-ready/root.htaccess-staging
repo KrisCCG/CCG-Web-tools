@@ -1,0 +1,47 @@
+# clickclick.be — site root (merged 22 Oct 2026): WordPress at the root, the apps in their own folders.
+# Each app under /shop/, /chat/, /calculator-v2/ etc. carries its own .htaccess (logins, rules).
+# STAGING: WordPress is closed by the Password Protected plugin; robots.txt blocks search engines.
+
+# BEGIN HTTPS Redirection Plugin
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+# END HTTPS Redirection Plugin
+
+SetOutputFilter DEFLATE
+AddOutputFilterByType DEFLATE "application/atom+xml" "application/javascript" "application/json" "application/ld+json" "application/manifest+json" "application/rdf+xml" "application/rss+xml" "application/schema+json" "application/vnd.geo+json" "application/vnd.ms-fontobject" "application/x-font-ttf" "application/x-javascript" "application/x-web-app-manifest+json" "application/xhtml+xml" "application/xml" "font/eot" "font/opentype" "image/bmp" "image/svg+xml" "image/vnd.microsoft.icon" "image/x-icon" "text/cache-manifest" "text/css" "text/html" "text/javascript" "text/plain" "text/vcard" "text/vnd.rim.location.xloc" "text/vtt" "text/x-component" "text/x-cross-domain-policy" "text/xml"
+
+# Never serve version-control internals, wherever they end up.
+RedirectMatch 404 /\.git
+
+# Block directory listing everywhere the apps don't override it.
+Options -Indexes
+
+# OPENING DAY ONLY: remove the leading "# " of the next lines (old addresses of this domain -> the new pages)
+# RewriteEngine On
+# RewriteRule ^flyers/?$           /shop/ [R=301,L]
+# RewriteRule ^legal/?$            /en/legal/ [R=301,L]
+# RewriteRule ^legal/fr\.html$     /fr/mentions-legales/ [R=301,L]
+# RewriteRule ^legal/nl\.html$     /nl/juridisch/ [R=301,L]
+# RewriteRule ^papers/?$           /en/paper-guide/ [R=301,L]
+# RewriteRule ^papers/fr\.html$    /fr/guide-des-papiers/ [R=301,L]
+# RewriteRule ^papers/nl\.html$    /nl/papiergids/ [R=301,L]
+
+# BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress

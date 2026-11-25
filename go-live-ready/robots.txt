@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Disallow: /shop/api/
+Disallow: /chat-api/
+
+Sitemap: https://clickclick.be/sitemaps.xml

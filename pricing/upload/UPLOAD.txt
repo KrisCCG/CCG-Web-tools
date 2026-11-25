@@ -1,0 +1,11 @@
+Prices: print-calculator-values_2026-10-14.xlsx, checked 2026-10-22 18:28
+
+In FileZilla: open /sites/clickclick.be/ on the server (right side),
+then drag the folder  shop  from this folder onto it.
+Choose Overwrite. Only the price files are replaced; nothing else changes.
+
+  shop/api/data/price-data.xlsx + selftest.json -> the shop, the chat AND calculator-v2
+  (one price file on the server since 25 Oct 2026: calculator-v2 reads the shop's copy)
+
+selftest.json holds 8760 prices calculated by this script. The shop and the
+internal calculator recalculate them and stop (instead of showing a wrong price) if one differs.

@@ -1,0 +1,2342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="lib/site-chrome/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="lib/site-chrome/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="lib/site-chrome/favicon-180.png">
+<title>Fast Quote — Click Click Graphics</title>
+<meta name="description" content="Instant print quote. Flyers, cards, posters. Brussels.">
+<style>
+/* GT Pressura — the Click Click brand face. Licensed webfont, self-hosted.
+   Three real weights (300/400/700) plus italics, subsetted to Latin + Latin-Ext
+   and the punctuation the shop and the legal pages use. Nothing is synthesised:
+   the browser never has to fake a weight, which is what smears a typeface.
+   Replaced Space Grotesk (Google Fonts) — see task #1. */
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/gt-pressura-300.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:300;font-display:swap;src:url(fonts/gt-pressura-300-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700-italic.woff2) format('woff2')}
+</style>
+<style>
+  :root{
+    --cream:#fff5ef;
+    --cream-2:#fff5ef;
+    --cream-3:#ffe5d4;
+    --ink:#1a0066;
+    --ink-2:#2a2a2a;
+    --ink-dim:#4a4a4a;
+    --ink-dimmer:#9a9287;
+    --indigo:#4200ff;
+    --indigo-dark:#3300c1;
+    --indigo-hi:#5311ff;
+    --line:#e6d6c3;
+    --line-hi:#d4c2ab;
+    --indigo-mute:#cdc0ff;   /* disabled buttons — a muted indigo, not the brown line colour */
+    --indigo-mute-ink:#6a56cc;
+    --red:#ef3226;
+    --green:#19a26e;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);font-family:'GT Pressura',system-ui,sans-serif;font-weight:400}
+  body{min-height:100vh;overflow-x:hidden}
+  a{color:var(--ink);text-decoration:none}
+  a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+  em{font-style:italic}
+
+  /* ─────── Top bar — full-bleed indigo, cream wordmark (tiegel.be) ───────
+     The wordmark is TEXT, not logo.png: that PNG is an indigo mark on
+     transparency, which disappears on an indigo bar. GT Pressura 700 with the
+     "!" in italic reproduces it exactly, stays crisp at any zoom, and lets the
+     mark step down on narrow screens instead of the nav wrapping to a second
+     row. Same treatment as /papers/ and /legal/. */
+  .topbar{background:var(--indigo);color:var(--cream);position:sticky;top:0;z-index:10}
+  .topbar .inner{max-width:1280px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
+  .topbar a{color:var(--cream);text-decoration:none}
+  .mark{font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;flex:none}
+  .mark em{font-style:italic}
+  .mark .mk-min{display:none}
+  nav.main{display:flex;gap:22px;align-items:center;font-size:15px;white-space:nowrap;flex:none}
+  nav.main a{color:var(--cream);font-weight:400;font-size:15px}
+  nav.main a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+  .langs{display:flex;gap:2px;background:rgba(255,245,239,.16);border-radius:999px;padding:3px}
+  .langs button{background:transparent;border:0;color:var(--cream);opacity:.6;font:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:999px;cursor:pointer;text-transform:uppercase}
+  .langs button.on{background:var(--cream);color:var(--indigo);opacity:1}
+
+  @media (max-width:460px){
+    .mark .mk-short{display:none}
+    .mark .mk-min{display:inline;font-size:20px}
+    .topbar .inner{padding:10px 14px;gap:10px}
+    .langs{padding:2px}
+    .langs button{padding:3px 6px;font-size:10px;letter-spacing:.05em}
+  }
+
+  /* ─────── Shell ─────── */
+  .shell{max-width:1280px;margin:0 auto;padding:14px 28px 120px}
+
+  /* ─────── Hero (cream text on indigo) ─────── */
+  /* Hero is a bounded blue BAND, not the page. tiegel.be alternates full-bleed
+     colour blocks down the page; the blue reads as a section, and everything
+     below it gets a quiet cream ground so the selected states and the Order
+     button are the only blue left — which is what makes them carry. */
+  /* Cream ground under an indigo bar — tiegel's arrangement. The bar only
+     reads as a header if what sits below it is a different colour. */
+  .hero-band{background:var(--cream);color:var(--ink)}
+  .hero-inner{max-width:1280px;margin:0 auto;padding:34px 28px 18px}
+  /* Same side margins as the site header/footer (WordPress theme gutter). */
+  .shell,.hero-inner{max-width:calc(1280px + 2 * clamp(30px,5vw,50px));padding-left:clamp(30px,5vw,50px);padding-right:clamp(30px,5vw,50px)}
+  .shell{padding-bottom:56px}
+  .hero{margin-bottom:0;max-width:1000px;color:var(--indigo)}
+  .hero h1{font-weight:700;font-size:clamp(42px,6vw,76px);line-height:.98;letter-spacing:-.02em;margin:0 0 20px}   /* like the site's page titles (26 Oct 2026) */
+  .hero h1 em{font-style:italic;color:var(--indigo)}
+  .hero h1 .bangs{display:inline-flex;align-items:center;gap:.04em;margin-left:.02em;vertical-align:baseline}
+  .hero h1 .bangs svg{height:.92em;width:auto;color:currentColor}
+  .hero p{font-size:17px;line-height:1.5;margin:0;max-width:620px;color:var(--ink);font-weight:400}
+  /* Plain line, deliberately not a pill or a button — it is reassurance, not
+     something to press. Replaces the orphaned .hero .badges rules, which had
+     no markup using them at all. */
+  .hero-note{margin:14px 0 0;font-size:14px;letter-spacing:.02em;color:var(--ink-dim);opacity:1}
+
+  /* ─────── Grid ─────── */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;align-items:start}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+  /* ─────── Steps (cream cards on indigo body) ─────── */
+  .step{background:var(--cream);color:var(--ink);border: 1px solid var(--ink);border-radius:20px;padding:28px;margin-bottom:16px;box-shadow:5px 5px 0 var(--ink)}
+  /* Rules above and below, heading in blue: tiegel.be's section-heading
+     device. The bracket is what makes it read as that site. */
+  /* Blue heading with the key word in black, bracketed by hairline rules —
+     tiegel.be's section device, kept to a single line. */
+  .step .head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    border-top:1px solid var(--indigo);border-bottom:1px solid var(--indigo);
+    padding:13px 0;margin:0 0 22px}
+  .step .num{font-weight:400;font-size:15px;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:999px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:none}
+  /* tiegel.be sets every heading at weight 400 with no tracking and lets size
+     do the work — there is no bold anywhere on that site. Matching that voice
+     here means a bigger, lighter heading rather than a smaller, heavier one. */
+  .step h2{font-weight:400;font-size:29px;margin:0;letter-spacing:0;line-height:1;
+    color:var(--indigo);text-transform:uppercase}
+  .step h2 em{color:var(--ink);font-style:normal}
+  .step .hint{color:var(--ink-dim);font-size:13px;margin-left:auto;font-weight:400}
+
+  /* ─────── Product tiles ─────── */
+  .products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media (max-width:640px){.products{grid-template-columns:1fr}}
+  .tile{background:var(--cream-2);border: 1px solid var(--ink);border-radius:14px;padding:14px;cursor:pointer;transition:all .15s;text-align:left;color:var(--ink);font-family:inherit;position:relative;display:flex;gap:12px;align-items:center}
+  .tile:hover{background:var(--cream-3);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .tile.on{background:var(--indigo);color:var(--cream);box-shadow:4px 4px 0 var(--ink)}
+  .tile .img{flex-shrink:0;width:72px;height:72px;border-radius:10px;background:var(--cream);overflow:hidden;border: 1px solid var(--ink)}
+  .tile .img svg{width:100%;height:100%;display:block}
+  .tile .body{min-width:0;flex:1}
+  .tile h3{margin:0 0 2px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .tile p{margin:0 0 4px;font-size:12px;line-height:1.35;font-weight:400;color:var(--ink-dim)}
+  .tile.on p{color:var(--cream)}
+  .tile .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700}
+  .tile.on .tag{color:var(--cream)}
+
+  /* ─────── Quantity ─────── */
+  .qty-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .qtys{display:contents}
+  .qty{background:var(--cream-2);border: 1px solid var(--ink);border-radius:999px;padding:8px 16px;font:inherit;color:var(--ink);cursor:pointer;transition:all .1s;text-align:center;font-weight:700;font-size:15px;letter-spacing:-.01em;min-width:56px}
+  .qty:hover{background:var(--cream-3);transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+  .qty.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+  .qty-custom{background:var(--cream-2);border: 1px solid var(--ink);border-radius:999px;padding:0 14px;font:inherit;color:var(--ink);text-align:center;font-weight:700;font-size:15px;letter-spacing:-.01em;width:88px;height:38px;outline:none;-moz-appearance:textfield}
+  .qty-custom::-webkit-outer-spin-button,
+  .qty-custom::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .qty-custom:focus{background:var(--cream-3)}
+  .qty-custom::placeholder{color:var(--ink-dim);font-weight:400;font-size:13px}
+  .qty-custom.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+  .qty-custom.on::placeholder{color:rgba(255,245,239,.65)}
+
+  .testbar{background:#ef3226;color:#fff5ef;text-align:center;font-weight:700;font-size:13px;padding:8px 12px;letter-spacing:.02em}
+  .folds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .fold{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px 10px;border:1px solid var(--ink);border-radius:14px;background:var(--cream-2);color:var(--ink);font:inherit;cursor:pointer;text-align:center;transition:background .15s,color .15s}
+  .fold svg{width:72px;height:44px;display:block}
+  .fold .fn{font-size:13px;font-weight:700;line-height:1.15}
+  .fold .fc{font-size:11px;opacity:.75;line-height:1.2}
+  .fold:hover{background:var(--cream-3)}
+  .fold.on{background:var(--indigo);color:var(--cream);border-color:var(--indigo)}
+  .fold.on .acc{fill:var(--cream)}
+  .fold:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+  #sidesGroup button[disabled]{opacity:.35;cursor:not-allowed}
+  .sel{background:var(--cream);border:1.5px solid var(--indigo);border-radius:14px;padding:12px 16px;margin:16px 0 8px}
+  .sel-k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:6px}
+  .sel-line{font-size:13px;line-height:1.35;margin:4px 0 8px;color:var(--ink)}
+  .sel-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+  #selIncl{font-size:32px;font-weight:700;color:var(--indigo);letter-spacing:-.02em;line-height:1}
+  .sel-pp{font-size:12px;font-weight:400;color:var(--ink-dim)}
+  .sel-ex{font-size:12px;color:var(--ink-dim);margin-top:4px}
+  .human-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(26,16,64,.55)}
+  .human-overlay[hidden]{display:none}
+  .human-card{background:var(--cream,#fff6ee);border:1px solid var(--ink);border-radius:18px;max-width:380px;width:100%;padding:28px 24px 24px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+  .human-icon svg{width:84px;height:84px}
+  .human-q{font-size:22px;margin:12px 0 8px;color:var(--indigo)}
+  .human-hint{font-size:15px;line-height:1.45;margin:0 0 18px;color:var(--ink)}
+  .human-btn{width:100%;background:var(--indigo);color:var(--cream);border:1px solid var(--ink);border-radius:999px;padding:14px 22px;font:inherit;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;transition:opacity .2s}
+  .human-btn:disabled{opacity:.45;cursor:default}
+  .sel-note{font-size:12px;color:var(--ink-dim);margin-top:8px;font-style:italic}
+  .versions-wrap{display:inline-flex;align-items:center;gap:10px}
+  .versions-label{font-size:11px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.12em}
+  .versions-control{display:inline-flex;align-items:center;border: 1px solid var(--ink);border-radius:999px;background:var(--cream-2);overflow:hidden;height:38px}
+  .versions-step{width:32px;height:100%;border:0;background:transparent;font:inherit;font-size:18px;font-weight:700;color:var(--ink);cursor:pointer;line-height:1}
+  .versions-step:hover{background:var(--cream-3)}
+  .versions-step:active{background:var(--indigo);color:var(--cream)}
+  #versionsInput{width:36px;height:100%;border:0;background:transparent;text-align:center;font:inherit;font-size:15px;font-weight:700;color:var(--ink);outline:none;-moz-appearance:textfield;border-left: 1px solid var(--ink);border-right: 1px solid var(--ink)}
+  #versionsInput::-webkit-outer-spin-button,#versionsInput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .versions-total{margin-top:10px;font-size:13px;font-weight:400;color:var(--ink-dim);font-style:italic}
+  .versions-total strong{color:var(--ink);font-style:normal}
+
+  /* ─────── Specs ─────── */
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media (max-width:640px){.specs{grid-template-columns:1fr}}
+  .field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .select{position:relative}
+  .select select{appearance:none;width:100%;background:var(--cream-2);border: 1px solid var(--ink);border-radius:12px;padding:13px 36px 13px 14px;color:var(--ink);font:inherit;font-weight:400;font-size:14px;cursor:pointer}
+  .select select:focus{outline:none;background:var(--cream-3)}
+  .select::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink);pointer-events:none;font-size:11px;font-weight:700}
+
+  .toggle-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .toggle-row button{background:var(--cream-2);border: 1px solid var(--ink);border-radius:12px;padding:13px;color:var(--ink);font:inherit;font-size:14px;font-weight:400;cursor:pointer;transition:all .1s}
+  .toggle-row button:hover{background:var(--cream-3)}
+  .toggle-row button.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+
+  .express{display:flex;align-items:center;gap:12px;background:var(--cream-2);border:2px dashed var(--ink);border-radius:12px;padding:14px;margin-top:16px;cursor:pointer;transition:background .15s;color:var(--ink)}
+  .express:hover{background:var(--cream-3)}
+  .express .bolt{width:32px;height:32px;border-radius:999px;background:var(--ink);color:#ffd60a;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
+  .express .text{flex:1}
+  .express .text strong{display:block;font-size:14px;font-weight:700}
+  .express .text small{color:var(--ink-dim);font-size:12px;font-weight:400}
+  .express .express-off{display:none}
+  .express.off{opacity:.65;cursor:not-allowed;border-style:solid}
+  .express.off .text small:not(.express-off){display:none}
+  .express.off .text .express-off{display:block;color:#b3261e;font-weight:600}
+  .express input{accent-color:var(--indigo);width:18px;height:18px}
+
+  /* ─────── Checkout ─────── */
+  .checkout .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  @media (max-width:640px){.checkout .row{grid-template-columns:1fr}}
+  .checkout .row-zip{grid-template-columns:140px 1fr}
+  @media (max-width:640px){.checkout .row-zip{grid-template-columns:1fr 1fr}}
+  .checkout input[type="email"],.checkout input[type="text"],.checkout input[type="tel"]{width:100%;background:var(--cream-2);border: 1px solid var(--ink);border-radius:12px;padding:13px 14px;color:var(--ink);font:inherit;font-weight:400;font-size:14px}
+  .checkout input:focus{outline:none;background:var(--cream-3)}
+  .checkout input::placeholder{color:var(--ink-dim)}
+  .checkout .inline-check{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;font-size:14px;font-weight:400;color:var(--ink)}
+  .checkout .inline-check input{width:18px;height:18px;accent-color:var(--indigo);margin:0;flex-shrink:0}
+  .checkout .section-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--ink);margin:16px 0 8px}
+  .checkout .conditional{overflow:hidden;transition:max-height .2s}
+  .receipt-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--ink-dim);font-style:italic}
+  .step .receipt-note{text-align:center}
+  .goodfile-link{white-space:nowrap;color:var(--indigo);font-style:normal;text-decoration:underline;text-underline-offset:2px}
+  .checkout .deliver{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+  @media (max-width:640px){.checkout .deliver{grid-template-columns:1fr}}
+  .deliver label{background:var(--cream-2);border: 1px solid var(--ink);border-radius:12px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:background .1s;color:var(--ink)}
+  .deliver label:hover{background:var(--cream-3)}
+  .deliver label.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+  .deliver label.on small{color:var(--cream)}
+  .deliver label.disabled{opacity:.45;cursor:not-allowed;background:var(--cream-2)}
+  .deliver label.disabled:hover{background:var(--cream-2)}
+  .deliver strong{font-size:14px;font-weight:700}
+  .deliver small{color:var(--ink-dim);font-size:13px;line-height:1.45;font-weight:400}
+  .deliver input{display:none}
+
+  /* ─────── Upload zone ─────── */
+  .upload-zone{border:2px dashed var(--ink);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;background:var(--cream-2);transition:background .15s,border-color .15s,transform .1s}
+  .upload-zone:hover,.upload-zone:focus,.upload-zone.dragover{background:var(--cream-3);outline:none;transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .upload-zone.uploading,.upload-zone.done{cursor:default;border-style:solid}
+  .upload-zone.done{background:#ecfdf5;border-color:#10b981}
+  .upload-zone.error{background:#fef2f2;border-color:#dc2626}
+  .upload-prompt{margin:0 0 6px;font-size:14px;font-weight:400;color:var(--ink)}
+  .upload-hint{margin:0;font-size:12px;color:var(--ink-dim);font-weight:400}
+  .upload-status{margin-top:10px;font-size:13px;line-height:1.5}
+  .upload-status:empty{display:none}
+  .upload-progress{color:var(--ink);font-weight:400}
+  .upload-bar{margin-top:6px;height:6px;border-radius:3px;background:var(--cream-3);overflow:hidden;border: 1px solid var(--ink)}
+  .upload-bar span{display:block;height:100%;background:var(--indigo);transition:width .15s}
+  .upload-list{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:6px}
+  .upload-item{display:flex;align-items:center;gap:10px;background:#ecfdf5;border: 1px solid #6ee7b7;border-radius:10px;padding:8px 12px;color:#065f46;font-weight:400}
+  .upload-item .file{flex:1;min-width:0;font-family:monospace;font-size:12px;word-break:break-all}
+  .upload-item .size{font-size:11px;color:#065f46;opacity:.7;font-family:monospace;flex-shrink:0}
+  .upload-remove{background:transparent;border: 1px solid #065f46;color:#065f46;padding:4px 10px;border-radius:8px;font:inherit;font-size:12px;font-weight:400;cursor:pointer;flex-shrink:0}
+  .upload-remove:hover{background:#065f46;color:#ecfdf5}
+  .upload-error{color:#991b1b;font-weight:400}
+
+  /* ─────── Price / cart card (inverted: cream card with ink text, stands out on indigo) ─────── */
+  /* Peach block — the third colour in tiegel.be's rhythm. Marks the quote as
+     a distinct area on the cream page without introducing more blue. */
+  .price-card{position:sticky;top:24px;background:var(--cream-3);color:var(--ink);border: 1px solid var(--ink);border-radius:20px;padding:28px;box-shadow:6px 6px 0 var(--ink);overflow:hidden}
+  .price-card h3{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim);margin:0 0 14px}
+  /* Order header — the indigo bleed-to-edge band at the top of the sticky
+     card. It used to show the live price for the item being configured, but
+     that only ever described the CURRENT selection: once a second item was
+     added it read as though it were the total, which it never was. The single
+     live price now lives on the Add-to-order button, and the running total is
+     in .totals below, where it belongs. */
+  /* Set like a .step h2 — weight 400, no tracking, size doing the work — so the
+     order card reads as a peer of the numbered sections rather than as a small
+     boxed label. Cream on indigo instead of indigo on cream. */
+  .price-card .order-head{background:var(--indigo);color:var(--cream);margin:-28px -28px 18px;padding:16px 24px;border-bottom: 1px solid var(--ink);text-align:center;font-size:26px;font-weight:400;line-height:1;text-transform:uppercase;letter-spacing:0}
+  /* VAT note rides on the same line, in brackets, dropped right back down —
+     it is a footnote to the heading, not part of it. */
+  .price-card .order-head .vat{font-size:12px;font-weight:400;letter-spacing:.06em;white-space:nowrap}
+  .price-card .order-head .vat::before{content:'('}
+  .price-card .order-head .vat::after{content:')'}
+
+  /* ─────── Cart items ─────── */
+  .cart-items{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}
+  .cart-items:empty{display:none}
+  .cart-item{background:var(--cream-2);border: 1px solid var(--ink);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+  .cart-item.editing{background:#fff7e6;border-color:#f59e0b;outline:2px dashed #f59e0b;outline-offset:-2px}
+  .cart-item .ci-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .cart-item .ci-title{font-weight:700;font-size:14px;color:var(--ink);letter-spacing:-.01em;flex:1;min-width:0}
+  .cart-item .ci-price{font-weight:700;font-size:14px;color:var(--indigo);white-space:nowrap}
+  .cart-item .ci-price.pending{color:var(--ink-dim);font-weight:400}
+  .cart-item .ci-meta{font-size:12px;color:var(--ink-dim);font-weight:400;line-height:1.4}
+  .cart-item .ci-files{font-size:11px;font-weight:400;color:#065f46;background:#ecfdf5;border: 1px solid #6ee7b7;border-radius:6px;padding:2px 6px;display:inline-block;margin-top:2px}
+  .cart-item .ci-files.missing{color:#991b1b;background:#fef2f2;border-color:#fca5a5}
+  .cart-item .ci-actions{display:flex;gap:6px;margin-top:2px}
+  .cart-item .ci-btn{background:transparent;border: 1px solid var(--ink);border-radius:8px;padding:4px 10px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;color:var(--ink);letter-spacing:.04em;text-transform:uppercase}
+  .cart-item .ci-btn:hover{background:var(--cream-3)}
+  .cart-item .ci-btn.remove{border-color:var(--red);color:var(--red)}
+  .cart-item .ci-btn.remove:hover{background:var(--red);color:var(--cream)}
+  .cart-empty{font-size:13px;color:var(--ink-dim);font-style:italic;padding:14px 0;text-align:center;border-top:1.5px dashed var(--line);border-bottom:1.5px dashed var(--line);margin-bottom:14px;white-space:pre-line}
+  .cart-items:not(:empty) ~ .cart-empty{display:none}
+
+  /* ─────── Totals ─────── */
+  [hidden]{display:none !important}
+  .totals{padding:12px 0;border-top: 1px solid var(--line);border-bottom: 1px solid var(--line);margin-bottom:14px;display:flex;flex-direction:column;gap:4px}
+  .totals .trow{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-dim);font-weight:400;gap:8px}
+  .totals .trow .v{font-weight:700;color:var(--ink)}
+  .totals .trow.total{font-size:16px;border-top: 1px solid var(--line);padding-top:8px;margin-top:4px}
+  .totals .trow.total .k{color:var(--ink);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.12em;align-self:center}
+  .totals .trow.total .v{color:var(--indigo);font-size:22px;letter-spacing:-.02em}
+  .totals .trow.ex{font-size:11px;color:var(--ink-dimmer)}
+  .totals .trow.ex .v{font-weight:400;color:var(--ink-dim)}
+
+  .ready{display:flex;align-items:center;padding:10px 14px;background:var(--cream-3);border: 1px solid var(--ink);border-radius:10px;font-size:12px;font-weight:400;color:var(--ink);margin-bottom:14px}
+  .ready .d{color:var(--ink-dim);line-height:1.35}
+  .ready strong{color:var(--ink);font-weight:700;display:block;font-size:16px;letter-spacing:-.01em;margin-bottom:1px}
+
+  /* ─────── Add to order CTA in configurator ─────── */
+  .btn-add{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:16px;background:var(--indigo);color:var(--cream);border: 1px solid var(--ink);border-radius:999px;padding:4px 4px 4px 22px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s;text-transform:uppercase;letter-spacing:.03em}
+  .btn-add:not(:disabled):hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-add:disabled{background:var(--indigo-mute);color:var(--indigo-mute-ink);cursor:not-allowed;border-color:var(--ink);font-size:13px}
+  .btn-add:disabled:hover{transform:none;box-shadow:none;background:var(--indigo-mute)}
+  .btn-add .lbl{flex:1;text-align:left}
+  /* Amount stays prominent regardless of the button's enabled/disabled state —
+     the price is the most important thing in the artwork step, the customer
+     should always see it clearly even before they upload a file. Since the
+     top-of-card banner stopped showing a price, this is the ONLY live price
+     for the current selection, so it carries more weight than before. */
+  .btn-add .amt{font-weight:700;font-size:26px;letter-spacing:-.01em;text-transform:none;opacity:1}
+  .btn-add:disabled .amt{color:var(--ink);font-size:26px;opacity:1}
+  .btn-add .ico{width:40px;height:40px;flex-shrink:0;border-radius:999px;background:var(--cream);color:var(--indigo);border: 1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;font-weight:700}
+  .btn-add:disabled .ico{background:var(--cream-2);color:var(--ink-dim)}
+  .add-hint{font-size:12px;color:var(--ink-dim);margin:8px 0 0;text-align:center;font-weight:400;font-style:italic}
+
+  /* ─────── Editing pill ─────── */
+  .editing-pill{background:#f59e0b;color:#0a0a0a;border: 1px solid var(--ink);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-left:auto}
+
+  .btn-order{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:20px;background:var(--indigo);color:var(--cream);border: 1px solid var(--ink);border-radius:999px;padding:4px 4px 4px 22px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s;text-transform:uppercase;letter-spacing:.03em}
+  .legal-notice{margin:16px 0 0;font-size:12px;line-height:1.5;color:var(--ink-dim);text-align:center}
+  .legal-notice a{color:var(--indigo);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+  footer .privacy a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+  .btn-order:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  #custCountry{width:100%;font:inherit;font-size:15px;padding:11px 12px;border: 1px solid var(--ink);border-radius:10px;background:var(--cream);color:var(--ink);appearance:none}
+  .paper-help{display:inline-block;margin:7px 0 0;font-size:12.5px;color:var(--indigo);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  .paper-warn{margin:6px 0 0;font-size:12.5px;line-height:1.4;color:#8a3b12;background:#fdf1e7;border: 1px solid #e8c3a6;border-radius:8px;padding:7px 10px}
+  .quote-box{margin-top:20px;padding:16px 18px;border: 1px solid var(--ink);border-radius:14px;background:var(--cream-2)}
+  .quote-box strong{display:block;font-size:15px;margin-bottom:6px}
+  .quote-box p{margin:0 0 12px;font-size:13.5px;line-height:1.5;color:var(--ink-dim)}
+  .quote-box .quote-msg{margin:10px 0 0;font-weight:400;color:var(--ink)}
+  .btn-quote{font:inherit;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;background:var(--indigo);color:var(--cream);border: 1px solid var(--ink);border-radius:999px;padding:10px 20px;cursor:pointer}
+  .btn-quote:hover{background:var(--indigo-hi);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .btn-quote.disabled{background:var(--indigo-mute);color:var(--indigo-mute-ink);cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-order.disabled{background:var(--indigo-mute);color:var(--indigo-mute-ink);cursor:not-allowed;font-size:13px}
+  .btn-order.disabled:hover{transform:none;box-shadow:none;background:var(--indigo-mute)}
+  .btn-order .cart{width:40px;height:40px;border-radius:999px;background:var(--cream);color:var(--indigo);border: 1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:18px}
+  .btn-order.disabled .cart{background:var(--cream-2);color:var(--ink-dim)}
+  .secure{text-align:center;margin-top:12px;font-size:11px;color:var(--ink-dim);font-weight:400;letter-spacing:.05em}
+
+  /* ─────── Bespoke ─────── */
+  .bespoke{margin-top:32px;padding:24px;background:var(--cream);color:var(--ink);border:2px dashed var(--ink);border-radius:20px;display:flex;align-items:center;gap:20px}
+  @media (max-width:640px){.bespoke{flex-direction:column;text-align:center}}
+  .bespoke .emoji{width:80px;height:auto;flex-shrink:0;display:block}
+  .bespoke h4{margin:0 0 4px;font-weight:700;font-size:17px}
+  .bespoke h4 em{color:var(--indigo)}
+  .bespoke p{margin:0;color:var(--ink-dim);font-size:14px;font-weight:400}
+  .bespoke a.mail{display:inline-flex;align-items:center;line-height:0;transition:transform .12s ease}
+  .bespoke a.mail:hover{transform:scale(1.08)}
+  .bespoke a.mail img{display:block}
+
+  /* ─────── Footer (cream-ish on indigo) ─────── */
+  footer{margin-top:56px;padding:28px 0 0;border-top: 1px solid var(--line-hi);color:var(--ink-dim);font-size:13px;line-height:1.6}
+  footer .privacy{color:var(--ink-dim);font-weight:400}
+  footer .privacy::before{content:"● ";color:var(--green)}
+
+  /* ─────── Mobile compaction ─────── */
+  @media (max-width:720px){
+    .topbar .inner{padding:10px 16px;gap:12px}
+      /* The bar must never wrap. Instead of the nav dropping to a second row,
+         the wordmark steps down: full -> "CL!CK CL!CK" -> the bare "!!" mark. */
+      .mark{font-size:15px}
+      .mark .mk-long{display:none}
+    nav.main{gap:16px}
+    nav.main a{font-size:13px}
+    nav.main a[href="#"]:not(.cur){display:none}
+    .langs button{font-size:11px;padding:4px 8px}
+
+    .shell{padding:12px 16px 40px}
+    .hero{margin-bottom:24px}
+    .hero h1{font-size:38px;line-height:1.02;margin-bottom:12px}
+    .hero p{font-size:14px;line-height:1.45}
+    .hero .arrow{margin-top:14px;font-size:36px;text-shadow:2px 2px 0 var(--ink)}
+
+    .grid{gap:14px}
+
+    .step{padding:16px;border-radius:16px;margin-bottom:10px;box-shadow:3px 3px 0 var(--ink)}
+    .step .head{margin-bottom:12px;gap:10px}
+    .step h2{font-size:17px}
+    .step .num{font-size:12px;width:24px;height:24px}
+    .step .hint{font-size:11px;flex-basis:100%;margin-left:0}
+
+    .products{gap:8px}
+    .tile{padding:10px;gap:10px;border-radius:12px}
+    .tile .img{width:52px;height:52px;border-radius:8px}
+    .tile h3{font-size:15px}
+    .tile p{font-size:11px;line-height:1.3}
+    .tile .tag{font-size:10px}
+
+    .qty-row{gap:6px}
+    .qty{padding:6px 12px;font-size:13px;min-width:44px}
+
+    .specs{gap:10px}
+    .field label{font-size:10px;margin-bottom:5px}
+    .select select,.toggle-row button,.checkout input[type="email"],.checkout input[type="text"]{padding:10px 12px;font-size:13px;border-radius:10px}
+    .select select{padding-right:32px}
+
+    .express{padding:10px;margin-top:10px;gap:10px}
+    .express .bolt{width:28px;height:28px;font-size:14px}
+    .express .text strong{font-size:13px}
+    .express .text small{font-size:11px}
+
+    .checkout .row{gap:8px;margin-bottom:8px}
+    .checkout .deliver{margin:10px 0;gap:6px}
+    .deliver label{padding:10px}
+    .deliver strong{font-size:13px}
+    .deliver small{font-size:12px;line-height:1.4}
+
+    .price-card{padding:18px;border-radius:16px;box-shadow:4px 4px 0 var(--ink);position:static;top:auto}
+    .price-card h3{margin-bottom:10px;font-size:11px}
+    .price-card .order-head{margin:-18px -18px 14px;padding:13px 16px;font-size:20px;letter-spacing:0}
+    .price-card .order-head .vat{font-size:11px}
+    .cart-item{padding:8px 10px}
+    .cart-item .ci-title{font-size:13px}
+    .cart-item .ci-price{font-size:13px}
+    .cart-item .ci-meta{font-size:11px}
+    .totals .trow{font-size:12px}
+    .totals .trow.total .v{font-size:18px}
+    .btn-add{padding:12px;font-size:14px;margin-top:12px}
+    .btn-add .amt,.btn-add:disabled .amt{font-size:22px}
+    .btn-order{padding:3px 3px 3px 18px;font-size:14px;margin-top:14px}
+    .btn-order .cart{width:34px;height:34px;font-size:15px}
+    .secure{font-size:10px;margin-top:10px}
+
+    .bespoke{margin-top:20px;padding:16px;gap:12px;border-radius:16px}
+    .bespoke .emoji{width:60px}
+    .bespoke h4{font-size:15px}
+    .bespoke p{font-size:12px}
+    .bespoke a.mail{padding:10px 16px;font-size:13px}
+
+    footer{margin-top:28px;padding-top:18px;font-size:11px;gap:8px}
+  }
+  /* ─────── Site look (new clickclick.be, Oct 2026) ───────
+     Calmer than the tiegel.be look: light rounded cards without the hard
+     offset shadow, thin warm lines instead of dark frames, normal-case
+     section titles, blue only for what is selected or clickable. */
+  .step{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:none;padding:28px 28px 24px}
+  .step .head{border-top:0;border-bottom:1px solid var(--line);padding:0 0 16px;margin:0 0 20px}
+  .step .num{border-color:var(--indigo);color:var(--indigo);font-weight:700}
+  .step h2{text-transform:none;font-size:26px;line-height:1.15;color:var(--indigo);letter-spacing:-.01em}
+  .step h2 em{color:var(--ink)}
+  /* Holiday closure box above step 1 (set in the Dashboard; shown from 7 days before the closure until 2 days before the first day back) */
+  .holnote{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 28px;margin-bottom:16px;color:var(--ink);font-size:15px;line-height:1.45}
+  .holnote .k{font-size:21px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--indigo);margin-bottom:10px;line-height:1.15}
+  .holnote b{font-weight:700}
+  .holnote .s{display:block;margin-top:6px;color:var(--ink-dim);font-size:14px}
+  @media (max-width:760px){ .holnote{padding:14px 16px;margin-bottom:10px;font-size:14px} .holnote .k{font-size:17px} .holnote .s{font-size:13px} }
+  .tile,.qty,.qty-custom,.versions-control,.select select,.toggle-row button,.checkout input[type="email"],.checkout input[type="text"],.checkout input[type="tel"],.deliver label,.cart-item,.quote-box,.ready,#custCountry,.tile .img{border-color:var(--line-hi)}
+  .tile:hover,.qty:hover,.toggle-row button:hover,.deliver label:hover,.upload-zone:hover,.upload-zone:focus,.upload-zone.dragover{transform:none;box-shadow:none;border-color:var(--indigo)}
+  .tile.on,.qty.on,.qty-custom.on,.toggle-row button.on,.deliver label.on{box-shadow:none;border-color:var(--indigo)}
+  .price-card{border:0;border-radius:16px;box-shadow:none}
+  .price-card .order-head{border-bottom:0;text-transform:none}
+  .btn-add,.btn-order,.btn-quote{border-color:var(--indigo)}
+  .btn-add:not(:disabled):hover,.btn-order:hover{transform:none;box-shadow:none}
+  .btn-add .ico{border:0}
+  /* No light purple (brand rule): disabled buttons are cream with a thin line. */
+  :root{--indigo-mute:#fff5ef;--indigo-mute-ink:rgba(26,0,102,.45)}
+  .btn-add:disabled,.btn-order.disabled,.btn-quote.disabled{border-color:var(--line-hi)}
+  .express{border:1.5px dashed var(--indigo)}
+  /* Order card follows the scroll on desktop: the aside must be as tall as the
+     form column for position:sticky to have room to move. If the card is taller
+     than the screen, it scrolls inside itself. */
+  @media (min-width:981px){
+    .grid > aside{align-self:stretch}
+    .price-card{max-height:calc(100vh - 48px);overflow-y:auto;overscroll-behavior:contain}
+  }
+</style>
+<link rel="stylesheet" href="lib/site-chrome/site-chrome.css?v=20261026">
+</head>
+<body>
+<div class="human-overlay" id="humanBox" hidden role="dialog" aria-modal="true" aria-labelledby="humanTitle">
+  <div class="human-card">
+    <div class="human-icon"><svg viewBox="0 0 90 90" aria-hidden="true"><g fill="#4200ff"><rect x="40" y="6" width="10" height="14" rx="3"/><circle cx="45" cy="9" r="7"/><path fill-rule="evenodd" d="M24 24h42a10 10 0 0 1 10 10v26a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10V34a10 10 0 0 1 10-10zm9 12a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm24 0a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM32 59a3 3 0 0 0 0 6h26a3 3 0 0 0 0-6z"/><rect x="4" y="38" width="7" height="18" rx="3"/><rect x="79" y="38" width="7" height="18" rx="3"/><rect x="30" y="73" width="8" height="12" rx="3"/><rect x="52" y="73" width="8" height="12" rx="3"/></g></svg></div>
+    <h2 class="human-q" id="humanTitle" data-i18n="human.q">One quick check</h2>
+    <p class="human-hint" data-i18n="human.hint">You've calculated a few prices already. Please confirm that you are a customer, not a competitor or a robot.</p>
+    <button type="button" class="human-btn" id="humanTick" disabled data-i18n="human.tick">I'm not a robot</button>
+  </div>
+</div>
+
+<div id="ccs-header"></div>
+<script src="lib/site-chrome/site-chrome.js?v=20261028"></script>
+
+<section class="hero-band">
+  <div class="hero-inner">
+    <section class="hero">
+    <h1><span data-i18n="hero.title">Print quote in a</span> <em data-i18n="hero.seconds">Click</em></h1>
+    <p data-i18n="hero.tagline">Brussels print shop. Real prices — pay online — pick up or we deliver by bike in Brussels.</p>
+    <p class="hero-note" data-i18n="hero.note">No account needed</p>
+    </section>
+  </div>
+</section>
+
+<div class="shell">
+
+  <main class="grid">
+
+    <section class="flow">
+
+      <!-- Holiday closure (filled by renderHoliday) -->
+      <div class="holnote" id="holidayNote" role="status" hidden>
+        <div class="k"><span aria-hidden="true">☀</span> <span data-i18n="holiday.title">We are on holidays</span></div>
+        <div id="holClosed"></div>
+        <span class="s" id="holMore"></span>
+      </div>
+
+      <!-- 01 Product -->
+      <div class="step">
+        <div class="head">
+          <span class="num">1</span>
+          <h2><span data-i18n="step1.title">What do you want to</span> <em data-i18n="step1.titleEm">print?</em></h2>
+        </div>
+        <div class="products" role="radiogroup">
+
+          <button class="tile on" data-p="flyer">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(18 12) rotate(-8)">
+                  <rect width="38" height="54" rx="2" fill="#eedfc8"/>
+                </g>
+                <g transform="translate(24 10) rotate(-3)">
+                  <rect width="38" height="54" rx="2" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1"/>
+                </g>
+                <g transform="translate(30 8)">
+                  <rect width="38" height="54" rx="2" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <rect x="4" y="6" width="30" height="12" fill="#3211fc"/>
+                  <rect x="4" y="22" width="22" height="2" fill="#0a0a0a"/>
+                  <rect x="4" y="27" width="26" height="2" fill="#0a0a0a"/>
+                  <rect x="4" y="32" width="18" height="2" fill="#0a0a0a"/>
+                  <circle cx="28" cy="44" r="6" fill="#ef3226"/>
+                </g>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.flyer">Flyer</h3>
+              <p data-i18n="tile.flyer.desc">Party, event, pop-up.</p>
+              <span class="tag">A6 · A5</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="card">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(8 28) rotate(-10)">
+                  <rect width="50" height="32" rx="3" fill="#eedfc8"/>
+                </g>
+                <g transform="translate(16 26) rotate(-4)">
+                  <rect width="50" height="32" rx="3" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1"/>
+                </g>
+                <g transform="translate(22 24)">
+                  <rect width="50" height="32" rx="3" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <circle cx="11" cy="13" r="5" fill="#ef3226"/>
+                  <rect x="20" y="10" width="24" height="2" fill="#0a0a0a"/>
+                  <rect x="20" y="15" width="18" height="2" fill="#0a0a0a" opacity=".5"/>
+                  <rect x="6" y="22" width="22" height="1.5" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="6" y="26" width="28" height="1.5" fill="#0a0a0a" opacity=".6"/>
+                </g>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.card">Card</h3>
+              <p data-i18n="tile.card.desc">Business, wedding, invite.</p>
+              <span class="tag">BC · A7 · A6 · A5 · A4</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="poster">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(28 10)">
+                  <rect width="30" height="60" rx="1" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <rect width="30" height="28" fill="#3211fc"/>
+                  <circle cx="15" cy="14" r="8" fill="#fef3ea"/>
+                  <rect x="5" y="36" width="20" height="3" fill="#0a0a0a"/>
+                  <rect x="5" y="43" width="16" height="2" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="5" y="48" width="18" height="2" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="5" y="55" width="12" height="2.5" fill="#ef3226"/>
+                </g>
+                <circle cx="43" cy="11" r="2.5" fill="#ef3226"/>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.poster">Poster</h3>
+              <p data-i18n="tile.poster.desc">Festival, gallery, club.</p>
+              <span class="tag" data-i18n="tile.poster.tag">A4 · A3 · larger on request</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="folder">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <!-- a 3-panel zigzag leaflet standing on the table -->
+                <polygon points="12,22 30,14 30,62 12,68" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="30,14 50,22 50,68 30,62" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="50,22 68,14 68,62 50,68" fill="#eedfc8" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="33,22 47,27 47,40 33,35" fill="#3211fc"/>
+                <rect x="34" y="44" width="12" height="2" transform="skewY(17) translate(0 -10)" fill="#0a0a0a"/>
+                <line x1="34" y1="49" x2="45" y2="52.5" stroke="#0a0a0a" stroke-width="1.6"/>
+                <line x1="34" y1="54" x2="42" y2="56.5" stroke="#0a0a0a" stroke-width="1.6" opacity=".6"/>
+                <circle cx="59" cy="31" r="5" fill="#ef3226"/>
+                <line x1="15" y1="34" x2="27" y2="29" stroke="#0a0a0a" stroke-width="1.6" opacity=".6"/>
+                <line x1="15" y1="39" x2="25" y2="35" stroke="#0a0a0a" stroke-width="1.6" opacity=".6"/>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.folder">Folder</h3>
+              <p data-i18n="tile.folder.desc">Menu, program, brochure.</p>
+              <span class="tag" data-i18n="tile.folder.tag">A5 · A4 · folded</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="brochure">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <!-- closed brochure: inside pages behind the cover, two staples on the spine -->
+                <rect x="24" y="14.5" width="37" height="54" rx="2.5" fill="#eedfc8" stroke="#0a0a0a" stroke-width="1.2"/>
+                <rect x="20.5" y="13.2" width="37" height="54" rx="2.5" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1.2"/>
+                <rect x="17" y="12" width="37" height="54" rx="2.5" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                <path d="M19.5 12.75 H22.5 V65.25 H19.5 A1.75 1.75 0 0 1 17.75 63.5 V14.5 A1.75 1.75 0 0 1 19.5 12.75 Z" fill="#eedfc8"/>
+                <line x1="22.5" y1="12.8" x2="22.5" y2="65.2" stroke="#0a0a0a" stroke-width=".9" opacity=".45"/>
+                <rect x="19.2" y="22" width="1.9" height="7" rx=".95" fill="#0a0a0a"/>
+                <rect x="19.2" y="49" width="1.9" height="7" rx=".95" fill="#0a0a0a"/>
+                <rect x="27" y="18" width="22" height="20" rx="1.5" fill="#3211fc"/>
+                <circle cx="38" cy="28" r="5.5" fill="#fef3ea"/>
+                <rect x="27" y="44" width="18" height="3" rx="1" fill="#0a0a0a"/>
+                <rect x="27" y="51" width="15" height="2" rx="1" fill="#0a0a0a" opacity=".6"/>
+                <rect x="27" y="56" width="11" height="2.5" rx="1" fill="#ef3226"/>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.brochure">Booklet</h3>
+              <p data-i18n="tile.brochure.desc">Catalogue, programme, magazine.</p>
+              <span class="tag" data-i18n="tile.brochure.tag">A5 · A4 · stapled</span>
+            </div>
+          </button>
+
+
+
+        </div>
+      </div>
+
+      <!-- 02 Quantity -->
+      <div class="step">
+        <div class="head">
+          <span class="num">2</span>
+          <h2><span data-i18n="step2.title">How many</span> <em data-i18n="step2.titleEm">copies?</em></h2>
+        </div>
+        <div class="qty-row">
+          <div class="qtys" id="qtyGroup"></div>
+          <input type="number" id="customQty" class="qty-custom"
+                 min="1" max="10000" step="1" inputmode="numeric"
+                 placeholder="Other" data-i18n-placeholder="qty.other" aria-label="Custom quantity">
+          <div class="versions-wrap">
+            <span class="versions-label" data-i18n="versions.label">Versions</span>
+            <div class="versions-control">
+              <button type="button" class="versions-step" id="versionsDec" aria-label="−">−</button>
+              <input type="number" id="versionsInput" min="1" max="10" value="1" inputmode="numeric">
+              <button type="button" class="versions-step" id="versionsInc" aria-label="+">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="versions-total" id="versionsTotal" hidden></div>
+      </div>
+
+      <!-- 03 Specs -->
+      <div class="step">
+        <div class="head">
+          <span class="num">3</span>
+          <h2><span data-i18n="step3.title">Size &amp;</span> <em data-i18n="step3.titleEm">paper</em></h2>
+        </div>
+        <div class="specs">
+          <div class="field">
+            <label id="sizeLabel" data-i18n="label.size">Size</label>
+            <div class="select"><select id="sizeSelect"></select></div>
+          </div>
+          <div class="field" id="pagesField" hidden>
+            <label data-i18n="label.pages">Pages</label>
+            <div class="select"><select id="pagesSelect"></select></div>
+          </div>
+          <div class="field" id="coverField" hidden>
+            <label data-i18n="label.cover">Cover</label>
+            <div class="select"><select id="coverSelect"></select></div>
+          </div>
+          <div class="field">
+            <label id="paperLabel" data-i18n="label.paper">Paper</label>
+            <div class="select"><select id="paperSelect"></select></div>
+            <p class="paper-warn" id="paperWarn" hidden data-i18n="paper.prefillMissing">The paper from your quote isn’t available for this product — please check your choice below.</p>
+            <a class="paper-help" id="paperHelp" href="/en/paper-guide/" target="_blank" rel="noopener" data-i18n="paper.help">Explain the different papers →</a>
+          </div>
+          <div class="field" id="foldField" style="grid-column:1/-1" hidden>
+            <label data-i18n="label.fold">Folded size</label>
+            <div class="folds" id="foldGroup" role="radiogroup"></div>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label data-i18n="label.sides">Print sides</label>
+            <div class="toggle-row" id="sidesGroup">
+              <button class="on" data-sides="1" data-i18n="sides.recto">Recto only</button>
+              <button data-sides="2" data-i18n="sides.rectoVerso">Recto &amp; Verso</button>
+            </div>
+          </div>
+        </div>
+        <label class="express">
+          <input type="checkbox" id="expressChk">
+          <div class="bolt">⚡</div>
+          <div class="text">
+            <strong data-i18n="express.title">Express · ready in 48 hours</strong>
+            <small data-i18n="express.sub">+35% — for when you needed it yesterday</small>
+            <small class="express-off" data-i18n="express.off">Express is not available right now — we are fully booked. Standard production still works.</small>
+          </div>
+        </label>
+      </div>
+
+      <!-- 04 Upload artwork + rules -->
+      <div class="step">
+        <div class="head">
+          <span class="num">4</span>
+          <h2><span data-i18n="step5.title">Upload your</span> <em data-i18n="step5.titleEm">artwork</em></h2>
+          <span class="editing-pill" id="editingPill" hidden><span data-i18n="cart.editingThis">Editing item</span></span>
+        </div>
+        <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Upload artwork">
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.tiff,.tif" multiple hidden>
+          <p class="upload-prompt" data-i18n="upload.drop">Drag your file here, or click to browse</p>
+          <p class="upload-hint" data-i18n="upload.types">PDF, JPG, PNG, TIFF — max 100 MB</p>
+        </div>
+        <div id="uploadStatus" class="upload-status" aria-live="polite"></div>
+        <p class="receipt-note"><span data-i18n="rules.bleed">⊞ Please add 3 mm bleed to your files so your print gets a perfect cut.</span> <a class="goodfile-link" id="goodFileLink" href="/en/good-file/" target="_blank" rel="noopener" data-i18n="rules.goodfile">Rules for a good file →</a></p>
+        <button type="button" class="btn-add" id="btnAdd" disabled>
+          <span class="lbl" id="btnAddLbl" data-i18n="cart.add">Add to order</span>
+          <span class="amt" id="btnAddAmt"></span>
+          <span class="ico" aria-hidden="true">+</span>
+        </button>
+        <p class="add-hint" id="addHint" data-i18n="cart.addHint">Configure the product, upload artwork, then add it. Repeat for more items.</p>
+      </div>
+
+      <!-- 05 Your details -->
+      <div class="step checkout">
+        <div class="head">
+          <span class="num">5</span>
+          <h2><span data-i18n="step4.title">Your</span> <em data-i18n="step4.titleEm">details</em></h2>
+        </div>
+
+        <div class="row">
+          <input type="email" id="custEmail" data-i18n-placeholder="ph.email" placeholder="Email" required>
+          <input type="text" id="custName" data-i18n-placeholder="ph.name" placeholder="Full name" required>
+        </div>
+        <div class="row">
+          <input type="tel" id="custPhone" data-i18n-placeholder="ph.phone" placeholder="Phone (optional)">
+        </div>
+
+        <label class="inline-check">
+          <input type="checkbox" id="isCompany">
+          <span data-i18n="form.isCompany">This order is for a company</span>
+        </label>
+
+        <div class="conditional" id="companyBlock" hidden>
+          <div class="row">
+            <input type="text" id="custCompany" data-i18n-placeholder="ph.company" placeholder="Company name">
+            <input type="text" id="vatNumber" data-i18n-placeholder="ph.vat" placeholder="VAT number — e.g. BE0732.984.161">
+          </div>
+        </div>
+
+        <label class="section-label" data-i18n="label.address">Address</label>
+        <div class="row">
+          <input type="text" id="custAddress" data-i18n-placeholder="ph.street" placeholder="Street + number" required>
+        </div>
+        <div class="row row-zip">
+          <input type="text" id="custZip" data-i18n-placeholder="ph.zip" placeholder="Zip">
+          <input type="text" id="custCity" data-i18n-placeholder="ph.city" placeholder="City" required>
+        </div>
+        <div class="row">
+          <select id="custCountry">
+            <option value="BE" selected data-i18n="country.BE">Belgium</option>
+            <option value="NL" data-i18n="country.NL">Netherlands</option>
+            <option value="FR" data-i18n="country.FR">France</option>
+            <option value="DE" data-i18n="country.DE">Germany</option>
+            <option value="LU" data-i18n="country.LU">Luxembourg</option>
+            <option value="OTHER" data-i18n="country.other">Another country</option>
+          </select>
+        </div>
+
+        <label class="section-label" data-i18n="label.delivery">Delivery</label>
+        <div class="deliver">
+          <label class="on">
+            <input type="radio" name="del" checked>
+            <strong data-i18n="deliver.pickup">Pick-up — Free</strong>
+            <small data-i18n="deliver.pickupSub">Aalststraat 7-11, 1000 Brussels · Mon–Fri 9–12:30 &amp; 14–18h</small>
+          </label>
+          <label>
+            <input type="radio" name="del">
+            <strong data-i18n="deliver.ship">Delivery — €15</strong>
+            <small data-i18n="deliver.shipSub">DPD Home or by bike in Brussels</small>
+          </label>
+        </div>
+
+        <div class="conditional" id="shipBlock" hidden>
+          <label class="inline-check">
+            <input type="checkbox" id="diffShip">
+            <span data-i18n="form.diffShip">Ship to a different address</span>
+          </label>
+          <div class="conditional" id="shipFields" hidden>
+            <div class="row">
+              <input type="text" id="shipAddress" data-i18n-placeholder="ph.shipStreet" placeholder="Shipping street + number">
+            </div>
+            <div class="row row-zip">
+              <input type="text" id="shipZip" data-i18n-placeholder="ph.shipZip" placeholder="Shipping zip">
+              <input type="text" id="shipCity" data-i18n-placeholder="ph.shipCity" placeholder="Shipping city">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="bespoke">
+        <div class="text">
+          <h4><span data-i18n="bespoke.title">Need something</span> <em data-i18n="bespoke.titleEm">bespoke?</em></h4>
+          <p data-i18n="bespoke.desc">Die-cut shapes, unusual sizes, coloured paper — let's talk.</p>
+        </div>
+        <a class="mail" href="mailto:info@clickclickgraphics.com?subject=Custom%20print%20quote" aria-label="Email us" data-i18n-title="bespoke.btn">
+          <img src="bespoke-icon.svg" alt="" width="44" height="27">
+        </a>
+      </div>
+
+    </section>
+
+    <!-- Cart / order summary -->
+    <aside>
+      <div class="price-card">
+        <div class="order-head">
+          <span data-i18n="cart.title">Your order</span> <span class="vat" data-i18n="itemPrice.sub">incl. VAT</span>
+        </div>
+        <div class="sel" id="selBlock">
+          <div class="sel-k" id="selTitle" data-i18n="sel.title">This selection</div>
+          <div class="sel-price"><span id="selIncl">…</span><span class="sel-pp" id="selPP"></span></div>
+          <div class="sel-note" id="selNote" data-i18n="sel.note">Not in your order yet — upload your file and click “Add to order”.</div>
+        </div>
+        <ul class="cart-items" id="cartItems"></ul>
+        <div class="cart-empty" id="cartEmpty" data-i18n="cart.empty">No items yet. Configure a product above and click "Add to order".</div>
+        <div class="totals" id="cartTotals" hidden>
+          <div class="trow"><span class="k" data-i18n="cart.subtotal">Subtotal incl. VAT</span><span class="v" id="totSubtotal">€0.00</span></div>
+          <div class="trow"><span class="k" id="totDeliveryLbl" data-i18n="cart.delivery">Delivery</span><span class="v" id="totDelivery">€0.00</span></div>
+          <div class="trow total"><span class="k" data-i18n="cart.total">Total incl. VAT</span><span class="v" id="totTotal">€0.00</span></div>
+          <div class="trow ex"><span class="k" data-i18n="cart.exVat">Of which ex VAT</span><span class="v" id="totEx">€0.00</span></div>
+        </div>
+        <div class="ready" id="readyBlock" hidden>
+          <div class="d"><span id="readyPrefix">Ready for pick-up by</span> <strong id="readyDate">Fri 24 Apr</strong><br><span id="readyDays">5 working days</span></div>
+        </div>
+        <div class="quote-box" id="quoteBox" hidden>
+          <strong data-i18n="intl.title">Delivery outside Belgium</strong>
+          <p data-i18n="intl.body">Our €15 delivery covers Belgium only. We do ship further — the cost depends on the destination, so we quote it by hand. Send us this order and we'll reply with a final price.</p>
+          <button type="button" class="btn-quote" id="btnQuote" data-i18n="intl.btn">Request a quote</button>
+          <p class="quote-msg" id="quoteMsg" hidden></p>
+        </div>
+        <p class="legal-notice">
+          <span data-i18n="legal.custom">Printed to your specification, so it cannot be cancelled or returned once production starts.</span>
+          <a id="legalLink" href="/legal/#terms" target="_blank" rel="noopener" data-i18n="legal.link">Terms &amp; privacy</a>
+        </p>
+        <button class="btn-order disabled">
+          <span data-i18n="cart.fillRequired">Add items and fill in your details</span>
+          <span class="cart" aria-hidden="true">
+            <img src="caddy.svg" alt="" width="24" height="26">
+          </span>
+        </button>
+        <div class="secure" data-i18n="secure">Bancontact · Apple Pay · Secure checkout</div>
+        <p class="receipt-note" id="receiptNote" data-i18n="rules.receipt">You will receive a receipt by email after payment.</p>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer>
+    <div data-i18n="footer.addr">Click Click Graphics · Aalststraat 7-11, 1000 Brussels · BE 0732.984.161</div>
+    <div class="privacy"><span data-i18n="footer.privacy">Privacy-friendly · No cookies · No tracking</span> · <a id="legalLinkFoot" href="/legal/" target="_blank" rel="noopener" data-i18n="legal.link">Terms &amp; privacy</a></div>
+  </footer>
+
+</div>
+
+<div id="ccs-footer"></div>
+
+<script type="module">
+  import { t, setLang, getLang, initLang, onLangChange } from './lib/i18n.js?v=20261026c';
+
+  // Prices come from the server — the client never sees raw costs or the formula.
+  // Shop v2: the backend is the api/ folder next to this page (e.g. /shop-v2/api/).
+  // It runs the same price engine as the internal calculator (calculator-v2),
+  // self-tested against the update script before it answers.
+  const API = location.pathname.replace(/[^/]*$/, '') + 'api/';
+  const CALC_URL = API + 'calc.php';
+
+  // Products, sizes, papers, folds and quantities come from the price file (Excel → Update prices).
+  const FOLD_ICONS = {
+    // side view of the folded sheet; the dot marks the outside/front
+    'half': '<svg viewBox="0 0 72 44" aria-hidden="true"><path d="M10 38 L36 8 L62 38" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+    'roll-6': '<svg viewBox="0 0 72 44" aria-hidden="true"><path d="M60 38 L12 38 L51.3 10.5 L33 31.4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+    'zigzag-6': '<svg viewBox="0 0 72 44" aria-hidden="true"><path d="M8 36 L26 8 L46 36 L64 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  };
+  let CATALOGUE = null;
+  const PRODUCTS = {};
+  // Express (urgent) can be switched off by the team in the Dashboard: then the option is greyed out.
+  let EXPRESS_OFF = false;
+  function setExpressAvailable(on) {
+    EXPRESS_OFF = !on;
+    const chk = document.getElementById('expressChk');
+    if (!chk) return;
+    chk.closest('label').classList.toggle('off', EXPRESS_OFF);
+    chk.disabled = EXPRESS_OFF;
+    if (EXPRESS_OFF) {
+      chk.checked = false;
+      try { state.express = false; } catch (e) { /* state is not created yet while the catalogue loads; the init below repeats this */ }
+    }
+  }
+  // Holiday closure (the team sets it in the Dashboard). While the holiday mode runs (7 days before the closure until
+  // 2 days before the first day back) the catalogue carries the dates: a box above step 1 (Kris, 26 Oct: not above the menu),
+  // express off with its own message. Orders stay possible; the server's ready date already skips the closed days.
+  let HOLIDAY = null;
+  function fmtHolDate(ymd, noMonth) {
+    const lm = { en: 'en-GB', fr: 'fr-BE', nl: 'nl-BE' };
+    return new Date(ymd + 'T12:00:00').toLocaleDateString(lm[getLang()] || 'en-GB', noMonth ? { weekday: 'long', day: 'numeric' } : { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  function renderHoliday() {
+    const box = document.getElementById('holidayNote');
+    if (box) {
+      box.hidden = !HOLIDAY;
+      if (HOLIDAY) {
+        const b = (x) => '<b>' + escapeHtml(x) + '</b>';
+        const sameMonth = HOLIDAY.from.slice(0, 7) === HOLIDAY.lastClosed.slice(0, 7);   // "lundi 2 au dimanche 8 novembre"
+        document.getElementById('holClosed').innerHTML = t('holiday.closed', { from: b(fmtHolDate(HOLIDAY.from, sameMonth)), to: b(fmtHolDate(HOLIDAY.lastClosed)), back: b(fmtHolDate(HOLIDAY.back)) });
+        document.getElementById('holMore').textContent = HOLIDAY.firstReady ? t('holiday.more', { first: fmtHolDate(HOLIDAY.firstReady) }) : t('holiday.moreNoDate');
+      }
+    }
+    const xo = document.querySelector('.express-off');
+    if (xo) { xo.dataset.i18n = HOLIDAY ? 'express.offHoliday' : 'express.off'; xo.textContent = t(xo.dataset.i18n); }
+  }
+  async function loadCatalogue() {
+    const res = await fetch(CALC_URL + '?catalogue=1', { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json.error || ('HTTP ' + res.status));
+    CATALOGUE = json;
+    setExpressAvailable(json.expressAvailable !== false);
+    HOLIDAY = json.holiday || null;
+    renderHoliday();
+    for (const [id, p] of Object.entries(json.products)) {
+      const papers = p.papers.filter(k => json.papers[k]).map(k => ({
+        k, v: `${json.papers[k].name} · ${json.papers[k].gsm} gsm`,
+      }));
+      const sizes = p.sizes.filter(k => json.sizes[k]).map(k => {
+        const z = json.sizes[k];
+        const v = `${z.name} · ${z.w}×${z.h} mm`;
+        const only = z.onlyOn || [];
+        return only.length ? { k, v, papers: papers.map(x => x.k).filter(x => only.includes(x.split('-')[0])) } : { k, v };
+      });
+      PRODUCTS[id] = {
+        label: p.name, sizes, papers,
+        defaultPaperIdx: Math.max(0, papers.findIndex(x => x.k === p.defaultPaper)),
+        qtys: p.qtys, defaultQty: p.defaultQty, maxQty: p.maxQty || 10000,
+        folds: p.folds || [], sides: p.sides || ['single', 'double'],
+        hint: p.hint || '', days: p.days || 5,
+        // brochures: page counts, cover papers (250 g per paper line), shop minimum
+        pages: p.pages || [], defaultPages: p.defaultPages || (p.pages || [])[0] || null,
+        covers: (p.coverPapers || []).filter(k => json.papers[k]).map(k => ({ k, v: `${json.papers[k].name} · ${json.papers[k].gsm} gsm` })),
+        minQty: p.minQty || 1,
+      };
+    }
+  }
+  function foldInfo(product, sizeIdx, foldIdx) {
+    const p = PRODUCTS[product];
+    if (!p.folds.length) return null;
+    const f = p.folds[foldIdx] || p.folds[0];
+    return CATALOGUE.folds[`${f}|${p.sizes[sizeIdx].k}`] || null;
+  }
+  // Brochure cover: the cover paper of the SAME paper line as the inside paper (MultiArt → MultiArt 250 …).
+  // Mixing lines is a special request (Kris, 17 Oct) — not offered in the shop; pay.php refuses it too.
+  const paperLine = k => String(k || '').split('-')[0];
+  function coverFor(p, insideKey, cur) {
+    if (!p.covers || !p.covers.length) return null;
+    const same = p.covers.filter(c => paperLine(c.k) === paperLine(insideKey));
+    if (cur && same.some(c => c.k === cur)) return cur;
+    return (same[0] || p.covers[0]).k;
+  }
+  function closedSize(fi) {
+    if (!fi || !fi.closed) return '';
+    return String(fi.closed).replace(/\.0\b/g, '').replace(' x ', '×') + ' mm';
+  }
+  try {
+    await loadCatalogue();
+  } catch (err) {
+    console.error('catalogue error:', err);
+    document.querySelector('.flow').innerHTML = '<div class="step"><h2>Prices are temporarily unavailable.</h2><p>Please try again in a few minutes, or mail shop@clickclickgraphics.com.</p></div>';
+    throw err;
+  }
+  document.querySelectorAll('.products .tile').forEach(t => { if (!PRODUCTS[t.dataset.p]) t.hidden = true; });
+
+  // ── Cart-based state ─────────────────────────────────────────────────────
+  // The customer configures one product at a time in the "draft"; clicking
+  // "Add to order" snapshots it into the cart so a second product can be added.
+  // Order-level fields (delivery, express, customer info) apply to the entire cart.
+  const MAX_ITEMS = 10;
+
+  function newDraft(product = 'flyer') {
+    const p = PRODUCTS[product];
+    return {
+      id: '',
+      product,
+      sizeIdx: 0,
+      paperIdx: p.defaultPaperIdx ?? 0,
+      foldIdx: 0,
+      pages: p.defaultPages || null,
+      cover: coverFor(p, (p.papers[p.defaultPaperIdx ?? 0] || {}).k, null),
+      qty: p.defaultQty ?? p.qtys[0],
+      versions: 1,
+      sides: p.sides[0] === 'double' ? 2 : 1,   // the first of "sides offered" (Excel) is the standard
+      uploadId: '',
+      uploadFiles: [],
+      uploadInFlight: 0,
+      uploadProgress: 0,
+      uploadError: '',
+      price: null,
+    };
+  }
+
+  const state = {
+    cart: [],
+    draft: newDraft('flyer'),
+    editingId: null,
+    express: false, delivery: 'pickup',
+    custName: '', custEmail: '', custPhone: '',
+    isCompany: false, custCompany: '', vatNumber: '',
+    custAddress: '', custZip: '', custCity: '', country: 'BE',
+    diffShip: false, shipAddress: '', shipZip: '', shipCity: '',
+  };
+
+  const PAY_URL    = API + 'pay.php';
+  const UPLOAD_URL = API + 'upload.php';
+  const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
+  const UPLOAD_EXT_OK = ['pdf','jpg','jpeg','png','tiff','tif'];
+
+  const $ = sel => document.querySelector(sel);
+  const qtyGroup = $('#qtyGroup'), sizeSelect = $('#sizeSelect'), paperSelect = $('#paperSelect');
+  // Set by applyUrlPrefill when a deep-linked paper_key isn't offered for the
+  // deep-linked product. Cleared as soon as the customer changes the paper.
+  let prefillPaperMissing = null;
+
+  const fmtEUR = n => n.toLocaleString('fr-BE',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(',', '.');
+
+  // ─── Render the configurator (top of page) from state.draft ──────────────
+  function renderConfigurator(){
+    const d = state.draft;
+    const p = PRODUCTS[d.product];
+    document.querySelectorAll('.products .tile').forEach(t => t.classList.toggle('on', t.dataset.p === d.product));
+    qtyGroup.innerHTML = p.qtys.map(q =>
+      `<button class="qty${q===d.qty?' on':''}" data-q="${q}">${q}</button>`).join('');
+    sizeSelect.innerHTML = p.sizes.map((s,i) =>
+      `<option value="${i}"${i===d.sizeIdx?' selected':''}>${s.v}</option>`).join('');
+    // A size may restrict which papers it can be printed on. Options stay in
+    // place (paperIdx indexes p.papers, so removing them would shift every
+    // index) — they are disabled instead, and an illegal selection snaps to
+    // the first legal one.
+    const allowedPapers = p.sizes[d.sizeIdx] && p.sizes[d.sizeIdx].papers;
+    if (allowedPapers && !allowedPapers.includes(p.papers[d.paperIdx].k)) {
+      const firstOk = p.papers.findIndex(pp => allowedPapers.includes(pp.k));
+      if (firstOk !== -1) d.paperIdx = firstOk;
+    }
+    paperSelect.innerHTML = p.papers.map((pp,i) => {
+      const blocked = allowedPapers && !allowedPapers.includes(pp.k);
+      return `<option value="${i}"${i===d.paperIdx?' selected':''}` +
+             `${blocked?' disabled':''}>${pp.v}</option>`;
+    }).join('');
+    const paperWarn = document.getElementById('paperWarn');
+    if (paperWarn) paperWarn.hidden = !prefillPaperMissing;
+    // sides offered by this product (folders: both sides only)
+    if (!p.sides.includes(d.sides === 2 ? 'double' : 'single')) d.sides = p.sides.includes('double') ? 2 : 1;
+    document.querySelectorAll('#sidesGroup button').forEach(b => {
+      const v = parseInt(b.dataset.sides, 10);
+      b.classList.toggle('on', v === d.sides);
+      b.disabled = !p.sides.includes(v === 2 ? 'double' : 'single');
+    });
+    // folds (folder): icon buttons, label = closed size after folding
+    const foldField = document.getElementById('foldField');
+    foldField.hidden = !p.folds.length;
+    document.getElementById('sizeLabel').textContent = p.folds.length ? t('label.sizeOpen') : t('label.size');
+    if (p.folds.length) {
+      if (d.foldIdx >= p.folds.length) d.foldIdx = 0;
+      const lang = getLang();
+      document.getElementById('foldGroup').innerHTML = p.folds.map((f, i) => {
+        const fi = foldInfo(d.product, d.sizeIdx, i);
+        return `<button type="button" class="fold${i === d.foldIdx ? ' on' : ''}" role="radio" aria-checked="${i === d.foldIdx}" data-fold="${i}" title="${(fi && (fi[lang] || fi.en)) || ''}">`
+          + (FOLD_ICONS[f] || '') + `<span class="fn">${t('fold.' + f)}</span><span class="fc">→ ${closedSize(fi)}</span></button>`;
+      }).join('');
+    }
+    const cq = document.getElementById('customQty'); if (cq) { cq.max = String(p.maxQty); cq.min = String(p.minQty || 1); }
+    // brochure: closed size, page count, cover paper (same line as the inside paper), one version
+    const bro = p.pages.length > 0;
+    document.getElementById('pagesField').hidden = !bro;
+    document.getElementById('coverField').hidden = !bro;
+    document.getElementById('paperLabel').textContent = bro ? t('label.paperInside') : t('label.paper');
+    document.querySelector('.versions-wrap').hidden = bro;
+    if (bro) {
+      document.getElementById('sizeLabel').textContent = t('label.sizeClosed');
+      if (!p.pages.includes(d.pages)) d.pages = p.defaultPages;
+      document.getElementById('pagesSelect').innerHTML = p.pages.map(n =>
+        `<option value="${n}"${n === d.pages ? ' selected' : ''}>${t('pages.opt', { n })}</option>`).join('');
+      d.cover = coverFor(p, p.papers[d.paperIdx].k, d.cover);
+      const cs = p.covers.filter(c => paperLine(c.k) === paperLine(p.papers[d.paperIdx].k));
+      const csel = document.getElementById('coverSelect');
+      csel.innerHTML = cs.map(c => `<option value="${c.k}"${c.k === d.cover ? ' selected' : ''}>${c.v}</option>`).join('');
+      csel.disabled = cs.length < 2;
+      d.versions = 1;
+    }
+    document.getElementById('versionsInput').value = String(d.versions);
+    if (typeof syncCustomQty === 'function') syncCustomQty();
+    renderVersionsTotal();
+    renderUploadHint();
+    renderUpload();
+    // editing pill + add-button label
+    const pill = document.getElementById('editingPill');
+    const addLbl = document.getElementById('btnAddLbl');
+    if (state.editingId) {
+      pill.hidden = false;
+      addLbl.textContent = t('cart.update');
+    } else {
+      pill.hidden = true;
+      addLbl.textContent = t('cart.add');
+    }
+  }
+
+  // ─── Pricing (server-side; one batched call for cart + draft) ────────────
+  let inflight = null;
+  let pendingTimer = null;
+  let lastTotals = null;     // {subtotalInclVat, deliveryInclVat, totalInclVat, ...}
+  let csrfToken = '';        // fetched on load from /calculator/csrf.php?issue=1
+
+  // ─── CSRF — fetch a one-shot token used by pay.php ──────────────────────
+  // The token is consumed on the first successful pay.php submit. If that
+  // submit fails (validation error, network blip), pay.php returns 403 +
+  // "Session expired"; we then re-fetch a fresh token on the next try.
+  const CSRF_URL = API + 'csrf.php';
+
+  async function fetchCsrfToken() {
+    try {
+      const res = await fetch(`${CSRF_URL}?issue=1`, { credentials: 'same-origin' });
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json && json.ok && typeof json.token === 'string') {
+        csrfToken = json.token;
+      }
+    } catch (_) {
+      // Silent — pay.php will surface "Session expired" if we couldn't get a token.
+    }
+  }
+
+  // Build the items[] payload — draft is included only if it's "complete" enough
+  // to price (which it always is, since the user can't set invalid values via the UI).
+  function itemPayload(it) {
+    const p = PRODUCTS[it.product];
+    return {
+      id:        it.id || null,
+      product:   it.product,
+      paper:     p.papers[it.paperIdx].k,
+      size:      p.sizes[it.sizeIdx].k,
+      fold:      p.folds.length ? p.folds[it.foldIdx || 0] : null,
+      pages:     p.pages.length ? it.pages : null,
+      cover:     p.pages.length ? it.cover : null,
+      qty:       it.qty,
+      versions:  it.versions,
+      sides:     it.sides === 2 ? 'double' : 'single',
+    };
+  }
+
+  function buildCalcPayload() {
+    const items = [...state.cart.map(itemPayload), itemPayload(state.draft)];
+    // Annotate items so we can splat the response back onto cart/draft below.
+    return {
+      items,
+      express:  state.express,
+      delivery: state.delivery,
+    };
+  }
+
+  // ─── Browse statistics: tell the server what the visitor is looking at (anonymous) ──
+  // Only after a real interaction, 3 s after the last change, same configuration never twice in a row.
+  let userTouched = false, logTimer = null, lastLogged = '';
+  ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => { userTouched = true; }, { once: true, passive: true }));
+  function scheduleBrowseLog() {
+    if (!userTouched || !state.draft.price) return;
+    clearTimeout(logTimer);
+    logTimer = setTimeout(() => {
+      const body = JSON.stringify({ items: [itemPayload(state.draft)], express: state.express, delivery: state.delivery });
+      if (body === lastLogged) return;
+      lastLogged = body;
+      fetch(CALC_URL + '?log=1', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+    }, 3000);
+  }
+
+  async function fetchPrice() {
+    if (inflight) inflight.abort?.();
+    const ctrl = new AbortController();
+    inflight = ctrl;
+    try {
+      const body = buildCalcPayload();
+      const res = await fetch(CALC_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body),
+        signal:  ctrl.signal,
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.status === 403 && json.human) { showHumanCheck(json.challenge); throw new Error('human check'); }
+      if (res.status === 409 && json.error === 'express_unavailable') { setExpressAvailable(false); applyExpressDeliveryLock(); setTimeout(fetchPrice, 0); throw new Error('express off'); }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!json.ok) throw new Error(json.error || 'calc failed');
+      if (ctrl !== inflight) return;
+      hideHumanCheck();
+      // Response item order matches request item order: [...cart, draft].
+      const respItems = json.items || [];
+      for (let i = 0; i < state.cart.length; i++) {
+        state.cart[i].price = priceFromResp(respItems[i]);
+      }
+      state.draft.price = priceFromResp(respItems[state.cart.length]);
+      scheduleBrowseLog();
+      // Compute order totals from CART items only (the draft is just a preview).
+      const cartSubInc = state.cart.reduce((s, it) => s + (it.price?.inclVat ?? 0), 0);
+      const cartSubEx  = state.cart.reduce((s, it) => s + (it.price?.exVat   ?? 0), 0);
+      const delInc = json.deliveryInclVat ?? 0;
+      const delEx  = json.deliveryExVat   ?? 0;
+      lastTotals = {
+        subtotalInclVat: Math.round(cartSubInc * 100) / 100,
+        subtotalExVat:   Math.round(cartSubEx  * 100) / 100,
+        deliveryInclVat: delInc,
+        deliveryExVat:   delEx,
+        totalInclVat:    Math.round((cartSubInc + delInc) * 100) / 100,
+        totalExVat:      Math.round((cartSubEx  + delEx)  * 100) / 100,
+        // Server-computed deadline — see the ready-by block in renderCart().
+        productionDeadline: json.productionDeadline ?? null,
+        productionDays:     json.productionDays     ?? null,
+      };
+      renderCart();
+      updateOrderButton();
+      updateAddButton();
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.error('calc.php error:', err);
+      state.draft.price = null;
+      for (const item of state.cart) item.price = null;
+      lastTotals = null;
+      renderCart();
+      updateOrderButton();
+      updateAddButton();
+    } finally {
+      if (ctrl === inflight) inflight = null;
+    }
+  }
+
+  // After 5 calculations calc.php asks for a click ("I'm not a robot") in a pop-up.
+  let humanChallenge = '';
+  let humanTimer = null;
+  function showHumanCheck(ch) {
+    humanChallenge = ch || humanChallenge;
+    const box = document.getElementById('humanBox'), btn = document.getElementById('humanTick');
+    if (!box.hidden) return;
+    btn.disabled = true;
+    box.hidden = false;
+    clearTimeout(humanTimer);
+    humanTimer = setTimeout(() => { btn.disabled = false; btn.focus(); }, 2300);   // the server wants 2 s between challenge and click
+  }
+  function hideHumanCheck() { document.getElementById('humanBox').hidden = true; }
+  document.getElementById('humanTick').addEventListener('click', async (e) => {
+    const btn = e.currentTarget; btn.disabled = true;
+    try {
+      const res = await fetch(CALC_URL + '?human=1', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tick: true, challenge: humanChallenge }), credentials: 'same-origin' });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j.ok) { hideHumanCheck(); fetchPrice(); return; }
+      if (j.challenge) humanChallenge = j.challenge;
+    } catch (_) {}
+    setTimeout(() => { btn.disabled = false; }, 2300);
+  });
+
+  function priceFromResp(r) {
+    if (!r) return null;
+    return {
+      inclVat:      r.inclVat,
+      exVat:        r.exVat,
+      perPieceIncl: r.perPieceIncl,
+      perPieceEx:   r.perPieceEx,
+    };
+  }
+
+  function schedulePriceFetch() {
+    clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(fetchPrice, 180);
+  }
+
+  function invalidatePrice() {
+    state.draft.price = null;
+    for (const item of state.cart) item.price = null;
+    lastTotals = null;
+    renderCart();
+    schedulePriceFetch();
+  }
+
+  // ─── Render the cart panel (right sidebar) ───────────────────────────────
+  function fmtMoney(n) {
+    if (typeof n !== 'number' || !isFinite(n)) return '—';
+    return '€' + n.toFixed(2).replace('.', ',');
+  }
+
+  function itemTitle(it) {
+    const p = PRODUCTS[it.product];
+    const fi = foldInfo(it.product, it.sizeIdx, it.foldIdx || 0);
+    const size = fi ? `${p.sizes[it.sizeIdx].k} → ${closedSize(fi)} (${t('fold.' + p.folds[it.foldIdx || 0])})` : p.sizes[it.sizeIdx].k;
+    const pg = p.pages.length ? ` · ${t('pages.short', { n: it.pages })}` : '';
+    return `${t('product.' + it.product)} · ${size}${pg} · ${it.qty}`;
+  }
+  function itemMeta(it) {
+    const p = PRODUCTS[it.product];
+    const sides = it.sides === 2 ? t('sides.rectoVerso') : t('sides.recto');
+    const versionsBit = it.versions > 1 ? ` · ${it.versions} ${t('versions.unit')}` : '';
+    if (p.pages.length) {
+      const cv = p.covers.find(c => c.k === it.cover);
+      return `${t('label.cover')}: ${cv ? cv.v : it.cover} · ${t('label.paperInside')}: ${p.papers[it.paperIdx].v} · ${sides}${versionsBit}`;
+    }
+    return `${p.papers[it.paperIdx].v} · ${sides}${versionsBit}`;
+  }
+
+  function renderCart() {
+    const list  = document.getElementById('cartItems');
+    const empty = document.getElementById('cartEmpty');
+    const totals = document.getElementById('cartTotals');
+    const ready = document.getElementById('readyBlock');
+
+    if (state.cart.length === 0) {
+      list.innerHTML = '';
+      empty.hidden = false;
+      totals.hidden = true;
+      ready.hidden = true;
+      return;
+    }
+
+    empty.hidden = true;
+    list.innerHTML = state.cart.map(it => {
+      const isEditing = it.id === state.editingId;
+      const priceLabel = it.price
+        ? fmtMoney(it.price.inclVat)
+        : `<span class="pending">${escapeHtml(t('cart.pricing'))}</span>`;
+      const filesCount = it.uploadFiles.length;
+      const filesBadge = filesCount > 0
+        ? `<span class="ci-files">${escapeHtml(t('cart.files', { n: filesCount }))}</span>`
+        : `<span class="ci-files missing">${escapeHtml(t('cart.uploadRequired'))}</span>`;
+      return `<li class="cart-item${isEditing ? ' editing' : ''}" data-id="${escapeHtml(it.id)}">
+        <div class="ci-top">
+          <div class="ci-title">${escapeHtml(itemTitle(it))}</div>
+          <div class="ci-price${it.price ? '' : ' pending'}">${priceLabel}</div>
+        </div>
+        <div class="ci-meta">${escapeHtml(itemMeta(it))}</div>
+        ${filesBadge}
+        <div class="ci-actions">
+          <button type="button" class="ci-btn edit" data-act="edit" data-id="${escapeHtml(it.id)}">${escapeHtml(t('cart.edit'))}</button>
+          <button type="button" class="ci-btn remove" data-act="remove" data-id="${escapeHtml(it.id)}">${escapeHtml(t('cart.remove'))}</button>
+        </div>
+      </li>`;
+    }).join('');
+
+    // Totals
+    if (lastTotals) {
+      document.getElementById('totSubtotal').textContent = fmtMoney(lastTotals.subtotalInclVat);
+      document.getElementById('totDelivery').textContent = fmtMoney(lastTotals.deliveryInclVat);
+      document.getElementById('totDeliveryLbl').textContent = t(state.delivery === 'dpd' ? 'cart.deliveryShip' : 'cart.deliveryPickup');
+      document.getElementById('totTotal').textContent    = fmtMoney(lastTotals.totalInclVat);
+      document.getElementById('totEx').textContent       = fmtMoney(lastTotals.totalExVat);
+      totals.hidden = false;
+    } else {
+      totals.hidden = true;
+    }
+
+    // Ready-by date. Prefer the server's deadline (Europe/Brussels, Belgian
+    // public holidays excluded) so the customer sees exactly the date pay.php
+    // will record on the order. The local estimate below is only a fallback for
+    // when no price call has landed yet — it knows nothing about holidays.
+    const slowest = Math.max(...state.cart.map(it => PRODUCTS[it.product].days));
+    let days = state.express ? 2 : slowest;
+    let d;
+    if (lastTotals && lastTotals.productionDeadline) {
+      d = new Date(lastTotals.productionDeadline + 'T12:00:00');
+      days = lastTotals.productionDays || days;
+    } else {
+      d = new Date();
+      let added = 0;
+      while (added < days) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0 && d.getDay() !== 6) added++; }
+    }
+    const localeMap = { en: 'en-GB', fr: 'fr-BE', nl: 'nl-BE' };
+    document.getElementById('readyDate').textContent = d.toLocaleDateString(localeMap[getLang()] || 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    document.getElementById('readyDays').textContent = state.express ? t('ready.express') : t('ready.days', { n: days });
+    document.getElementById('readyPrefix').textContent = t(state.delivery === 'pickup' ? 'ready.pickup' : 'ready.ship');
+    ready.hidden = false;
+  }
+
+  // ─── Tile click: change product type of the *draft* (not order-wide) ─────
+  document.querySelector('.products').addEventListener('click', e => {
+    const btn = e.target.closest('.tile'); if (!btn) return;
+    const newProduct = btn.dataset.p;
+    if (newProduct === state.draft.product) return;
+    // Preserve the draft's uploadId/files (customer already uploaded for this draft),
+    // but reset size/paper/qty to defaults for the new product.
+    const carryUpload = { uploadId: state.draft.uploadId, uploadFiles: state.draft.uploadFiles };
+    const fresh = newDraft(newProduct);
+    fresh.id       = state.draft.id;          // keep editingId target if mid-edit
+    fresh.uploadId = carryUpload.uploadId;
+    fresh.uploadFiles = carryUpload.uploadFiles;
+    state.draft = fresh;
+    invalidatePrice();
+    renderConfigurator();
+  });
+
+  qtyGroup.addEventListener('click', e => {
+    const btn = e.target.closest('.qty'); if (!btn) return;
+    state.draft.qty = parseInt(btn.dataset.q, 10);
+    syncCustomQty();
+    invalidatePrice();
+    renderConfigurator();
+  });
+
+  // ─── Custom quantity input (free-form 1..10000) ─────────────────────────
+  // Lets customers type any qty when the preset chips don't fit their need.
+  // Stays in lock-step with state.draft.qty: typing here updates the draft + clears
+  // the preset chip highlights; clicking a preset chip mirrors back here.
+  const customQty = document.getElementById('customQty');
+
+  function syncCustomQty() {
+    if (!customQty) return;
+    const presets = PRODUCTS[state.draft.product].qtys;
+    const isPreset = presets.includes(state.draft.qty);
+    customQty.value = isPreset ? '' : String(state.draft.qty);
+    customQty.classList.toggle('on', !isPreset);
+  }
+
+  let customQtyTimer = null;
+  if (customQty) {
+    customQty.addEventListener('input', () => {
+      let v = parseInt(customQty.value, 10);
+      if (!Number.isFinite(v)) return;
+      if (v < (PRODUCTS[state.draft.product].minQty || 1)) return;   // still typing (e.g. "2" on the way to "25")
+      v = Math.max(1, Math.min(PRODUCTS[state.draft.product].maxQty, v));
+      state.draft.qty = v;
+      const presets = PRODUCTS[state.draft.product].qtys;
+      qtyGroup.querySelectorAll('.qty').forEach(b => {
+        b.classList.toggle('on', parseInt(b.dataset.q, 10) === v);
+      });
+      customQty.classList.toggle('on', !presets.includes(v));
+      renderVersionsTotal();
+      clearTimeout(customQtyTimer);
+      customQtyTimer = setTimeout(() => { invalidatePrice(); }, 350);
+    });
+    customQty.addEventListener('blur', () => {
+      let v = parseInt(customQty.value, 10);
+      if (!Number.isFinite(v) || v < 1) v = state.draft.qty;
+      v = Math.max(PRODUCTS[state.draft.product].minQty || 1, Math.min(PRODUCTS[state.draft.product].maxQty, v));
+      state.draft.qty = v;
+      syncCustomQty();
+      invalidatePrice();
+      renderConfigurator();
+    });
+  }
+
+  // ─── Versions / sides / size / paper change the DRAFT ────────────────────
+  function maxUploadFiles() {
+    return Math.max(1, state.draft.versions * (state.draft.sides === 2 ? 2 : 1));
+  }
+
+  function renderVersionsTotal() {
+    const el = document.getElementById('versionsTotal');
+    if (!el) return;
+    if (state.draft.versions <= 1) {
+      el.hidden = true; el.innerHTML = '';
+      return;
+    }
+    el.hidden = false;
+    const total = state.draft.qty * state.draft.versions;
+    el.innerHTML = `${state.draft.qty} × ${state.draft.versions} ${t('versions.unit')} = <strong>${total} ${t('versions.copies')}</strong>`;
+  }
+
+  function renderUploadHint() {
+    const hint = document.querySelector('#uploadZone .upload-hint');
+    if (!hint) return;
+    const max = maxUploadFiles();
+    hint.textContent = max > 1
+      ? `${t('upload.types')} · ${t('upload.maxFiles', { n: max })}`
+      : t('upload.types');
+  }
+
+  function setVersions(n) {
+    n = Math.max(1, Math.min(10, parseInt(n, 10) || 1));
+    if (PRODUCTS[state.draft.product].pages.length) n = 1;   // brochures: one version per item
+    state.draft.versions = n;
+    const inp = document.getElementById('versionsInput');
+    if (inp && inp.value !== String(n)) inp.value = String(n);
+    renderVersionsTotal();
+    renderUploadHint();
+    invalidatePrice();
+  }
+
+  document.getElementById('versionsInput').addEventListener('input',  e => setVersions(e.target.value));
+  document.getElementById('versionsInput').addEventListener('change', e => setVersions(e.target.value));
+  document.getElementById('versionsDec').addEventListener('click',    () => setVersions(state.draft.versions - 1));
+  document.getElementById('versionsInc').addEventListener('click',    () => setVersions(state.draft.versions + 1));
+  sizeSelect.addEventListener('change',  e => { state.draft.sizeIdx  = parseInt(e.target.value, 10); renderConfigurator(); invalidatePrice(); });
+  paperSelect.addEventListener('change', e => { state.draft.paperIdx = parseInt(e.target.value, 10); prefillPaperMissing = null; renderConfigurator(); invalidatePrice(); });
+  document.getElementById('pagesSelect').addEventListener('change', e => { state.draft.pages = parseInt(e.target.value, 10); invalidatePrice(); });
+  document.getElementById('coverSelect').addEventListener('change', e => { state.draft.cover = e.target.value; invalidatePrice(); });
+  document.getElementById('foldGroup').addEventListener('click', e => {
+    const btn = e.target.closest('.fold'); if (!btn) return;
+    state.draft.foldIdx = parseInt(btn.dataset.fold, 10);
+    renderConfigurator();
+    invalidatePrice();
+  });
+  document.getElementById('sidesGroup').addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn || btn.disabled) return;
+    document.querySelectorAll('#sidesGroup button').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    state.draft.sides = parseInt(btn.dataset.sides, 10);
+    renderUploadHint();
+    invalidatePrice();
+  });
+
+  // ─── Express + delivery are ORDER-LEVEL (apply to the whole cart) ────────
+  // DPD is blocked two ways: express (can't make 48 h) and any country other
+  // than Belgium (the €15 flat is Belgium-only — those go through quote.php).
+  function applyExpressDeliveryLock() {
+    const labels = document.querySelectorAll('.deliver label');
+    if (labels.length < 2) return;
+    const abroad  = state.country !== 'BE';
+    const blocked = state.express || abroad;
+    labels[1].classList.toggle('disabled', blocked);
+    labels[1].title = abroad ? t('deliver.beOnly') : (state.express ? t('express.noDpd') : '');
+  }
+
+  // Outside Belgium the shop can't price shipping, so the order becomes a
+  // hand-quoted request instead of a payment.
+  function updateQuoteBox() {
+    const box = document.getElementById('quoteBox');
+    const btn = document.querySelector('.btn-order');
+    const abroad = state.country !== 'BE';
+    box.hidden = !abroad;
+    if (btn) btn.hidden = abroad;
+    const sec = document.querySelector('.secure');
+    if (sec) sec.hidden = abroad;
+  }
+
+  document.getElementById('custCountry').addEventListener('change', e => {
+    state.country = e.target.value;
+    if (state.country !== 'BE' && state.delivery === 'dpd') {
+      state.delivery = 'pickup';
+      document.querySelectorAll('.deliver label')
+        .forEach((l, i) => l.classList.toggle('on', i === 0));
+      updateShipBlockVisibility();
+      invalidatePrice();
+    }
+    applyExpressDeliveryLock();
+    updateQuoteBox();
+  });
+
+  let quoteSending = false;
+  document.getElementById('btnQuote').addEventListener('click', async () => {
+    if (quoteSending) return;
+    const msg = document.getElementById('quoteMsg');
+    const btn = document.getElementById('btnQuote');
+    const show = (key) => { msg.hidden = false; msg.textContent = t(key); };
+
+    if (state.cart.length === 0 || !customerFieldsValid()) { show('intl.needDetails'); return; }
+
+    quoteSending = true;
+    btn.classList.add('disabled');
+    try {
+      const base = buildSubmitPayload();
+      const res = await fetch(API + 'quote.php', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          items:            base.items,
+          express:          state.express,
+          country:          state.country,
+          customer_name:    base.customer_name,
+          customer_email:   base.customer_email,
+          customer_phone:   base.customer_phone,
+          customer_company: base.customer_company,
+          customer_address: base.customer_address,
+          customer_zip:     base.customer_zip,
+          customer_city:    base.customer_city,
+          ship_address:     state.diffShip ? state.shipAddress : '',
+          ship_zip:         state.diffShip ? state.shipZip     : '',
+          ship_city:        state.diffShip ? state.shipCity    : '',
+          vat_number:       base.vat_number,
+          lang:             getLang(),
+          csrf_token:       csrfToken,
+        }),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.ok) {
+        if (res.status === 403) { csrfToken = ''; fetchCsrfToken(); }
+        show('intl.error');
+        btn.classList.remove('disabled');
+        quoteSending = false;
+        return;
+      }
+      btn.hidden = true;
+      show('intl.sent');
+    } catch (err) {
+      console.error('quote.php error:', err);
+      show('intl.error');
+      btn.classList.remove('disabled');
+      quoteSending = false;
+    }
+  });
+
+  document.getElementById('expressChk').addEventListener('change', e => {
+    if (EXPRESS_OFF) { e.target.checked = false; state.express = false; return; }
+    state.express = e.target.checked;
+    if (state.express && state.delivery === 'dpd') {
+      state.delivery = 'pickup';
+      const labels = document.querySelectorAll('.deliver label');
+      labels.forEach((l, i) => l.classList.toggle('on', i === 0));
+      updateShipBlockVisibility();
+    }
+    applyExpressDeliveryLock();
+    invalidatePrice();
+  });
+
+  document.querySelectorAll('.deliver label').forEach((lbl, i) => {
+    lbl.addEventListener('click', () => {
+      if (lbl.classList.contains('disabled')) return;
+      document.querySelectorAll('.deliver label').forEach(l => l.classList.remove('on'));
+      lbl.classList.add('on');
+      state.delivery = i === 0 ? 'pickup' : 'dpd';
+      invalidatePrice();
+    });
+  });
+  document.querySelectorAll('.langs button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.langs button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      if (b.dataset.lang) setLang(b.dataset.lang);
+    });
+  });
+
+  // Initialise language (from localStorage / browser) and re-render dynamic bits on change.
+  initLang();
+  // URL override — if a deep-link (e.g. from the tiegel.be smartbot) passed
+  // ?lang=fr/nl/en, honour it so the customer doesn't suddenly see another
+  // language than the one they were chatting in.
+  (function applyLangFromUrl() {
+    const urlLang = new URLSearchParams(location.search).get('lang')
+      || (location.hash.match(/lang=([a-z]{2})/) || [])[1];
+    if (urlLang && ['fr','nl','en'].includes(urlLang) && urlLang !== getLang()) {
+      setLang(urlLang);
+    }
+  })();
+  document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === getLang()));
+  renderHoliday();   // the catalogue (and the holiday box) loaded before the language was known
+  // Legal and paper pages are one file per language. Point every link at the
+  // right one, and re-point them when the customer switches language.
+  const LEGAL_PAGE = Object.fromEntries(Object.entries({ en: '/en/legal/', fr: '/fr/mentions-legales/', nl: '/nl/juridisch/' }).map(([k, v]) => [k, (window.CC_SITE || '') + v]));
+  const PAPER_PAGE = Object.fromEntries(Object.entries({ en: '/en/paper-guide/', fr: '/fr/guide-des-papiers/', nl: '/nl/papiergids/' }).map(([k, v]) => [k, (window.CC_SITE || '') + v]));
+  const GOODFILE_PAGE = Object.fromEntries(Object.entries({ en: '/en/good-file/', fr: '/fr/bon-fichier/', nl: '/nl/goed-bestand/' }).map(([k, v]) => [k, (window.CC_SITE || '') + v]));
+  function syncLegalLinks() {
+    const base = LEGAL_PAGE[getLang()] || LEGAL_PAGE.en;
+    const a = document.getElementById('legalLink');
+    const f = document.getElementById('legalLinkFoot');
+    if (a) a.href = base + '#terms';
+    if (f) f.href = base;
+    const ph = document.getElementById('paperHelp');
+    if (ph) ph.href = PAPER_PAGE[getLang()] || PAPER_PAGE.en;
+    const gf = document.getElementById('goodFileLink');
+    if (gf) gf.href = GOODFILE_PAGE[getLang()] || GOODFILE_PAGE.en;
+    // Top-bar Paper/Terms follow the language the customer is reading in.
+    const np = document.getElementById('navPaper');
+    const nt = document.getElementById('navTerms');
+    if (np) np.href = PAPER_PAGE[getLang()] || PAPER_PAGE.en;
+    if (nt) nt.href = base;
+  }
+
+  onLangChange(() => {
+    renderHoliday();
+    renderConfigurator();
+    renderCart();
+    updateOrderButton();
+    updateAddButton();
+    updateReceiptNote();
+    applyExpressDeliveryLock();
+    syncLegalLinks();
+    renderVersionsTotal();
+    renderUploadHint();
+  });
+
+  // ────────── Customer form wiring ──────────
+  const textFields = ['custName','custEmail','custPhone','custCompany','vatNumber','custAddress','custZip','custCity','shipAddress','shipZip','shipCity'];
+  textFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', e => {
+      state[id] = e.target.value.trim();
+      updateOrderButton();
+      updateReceiptNote();
+    });
+  });
+
+  document.getElementById('isCompany').addEventListener('change', e => {
+    state.isCompany = e.target.checked;
+    document.getElementById('companyBlock').hidden = !state.isCompany;
+    updateOrderButton();
+    updateReceiptNote();
+  });
+
+  document.getElementById('diffShip').addEventListener('change', e => {
+    state.diffShip = e.target.checked;
+    document.getElementById('shipFields').hidden = !state.diffShip;
+    updateOrderButton();
+  });
+
+  function updateShipBlockVisibility() {
+    const showShip = state.delivery === 'dpd';
+    document.getElementById('shipBlock').hidden = !showShip;
+    if (!showShip) {
+      state.diffShip = false;
+      document.getElementById('diffShip').checked = false;
+      document.getElementById('shipFields').hidden = true;
+    }
+  }
+
+  // ─── Validation: cart-level vs. add-to-cart-level ────────────────────────
+  function customerFieldsValid() {
+    if (!state.custName || !state.custEmail || !state.custAddress || !state.custCity) return false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.custEmail)) return false;
+    if (state.delivery === 'dpd' && state.diffShip) {
+      if (!state.shipAddress || !state.shipCity) return false;
+    }
+    return true;
+  }
+
+  function draftHasFiles() {
+    return state.draft.uploadFiles.length > 0 && state.draft.uploadInFlight === 0 && !!state.draft.uploadId;
+  }
+
+  function canAddToOrder() {
+    if (!draftHasFiles()) return false;
+    if (!state.draft.price) return false;
+    if (state.editingId == null && state.cart.length >= MAX_ITEMS) return false;
+    return true;
+  }
+
+  function canCheckout() {
+    if (state.cart.length === 0) return false;
+    if (!customerFieldsValid()) return false;
+    if (!lastTotals) return false;
+    // Every cart item needs files + a server-confirmed price
+    return state.cart.every(it => it.uploadFiles.length > 0 && it.uploadInFlight === 0 && !!it.price);
+  }
+
+  // Live price of what is being configured, at the top of the order box (stays in view).
+  function renderSelection() {
+    const d = state.draft, pr = d.price;
+    const el = id => document.getElementById(id);
+    if (!el('selBlock')) return;
+    el('selTitle').textContent = state.editingId ? t('cart.editingThis') : t('sel.title');
+    el('selIncl').textContent = pr ? fmtMoney(pr.inclVat) : '…';
+    const pieces = d.qty * (d.versions || 1);
+    el('selPP').textContent = pr ? t('sel.perPiece', { p: fmtMoney(pr.inclVat / pieces) }) : '';
+    el('selNote').hidden = !!state.editingId;
+  }
+
+  function updateAddButton() {
+    const btn   = document.getElementById('btnAdd');
+    const lbl   = document.getElementById('btnAddLbl');
+    const amt   = document.getElementById('btnAddAmt');
+    const hint  = document.getElementById('addHint');
+    if (!btn) return;
+    btn.disabled = !canAddToOrder();
+    lbl.textContent = state.editingId ? t('cart.update') : t('cart.add');
+    amt.textContent = state.draft.price ? fmtMoney(state.draft.price.inclVat) : '';
+    renderSelection();
+    if (hint) {
+      if (!draftHasFiles()) {
+        hint.textContent = t('cart.addHintUpload');
+      } else if (state.cart.length >= MAX_ITEMS && state.editingId == null) {
+        hint.textContent = t('cart.addHintMax', { max: MAX_ITEMS });
+      } else {
+        hint.textContent = t('cart.addHint');
+      }
+    }
+  }
+
+  function updateOrderButton() {
+    const btn = document.querySelector('.btn-order');
+    if (!btn) return;
+    const label = btn.querySelector('span:first-child');
+    if (canCheckout()) {
+      btn.classList.remove('disabled');
+      label.textContent = t('btn.pay', { amount: lastTotals.totalInclVat.toFixed(2).replace('.', ',') });
+    } else {
+      btn.classList.add('disabled');
+      if (state.cart.length === 0) {
+        label.textContent = t('cart.fillRequired');
+      } else if (!customerFieldsValid()) {
+        label.textContent = t('btn.fillRequired');
+      } else if (!lastTotals) {
+        label.textContent = t('cart.pricing');
+      } else {
+        label.textContent = t('cart.fillRequired');
+      }
+    }
+  }
+
+  function updateReceiptNote() {
+    const note = document.getElementById('receiptNote');
+    if (!note) return;
+    note.textContent = t(state.isCompany ? 'rules.receiptCo' : 'rules.receipt');
+  }
+
+  // ─── Add / update / remove cart items ────────────────────────────────────
+  function addOrUpdateCart() {
+    if (!canAddToOrder()) return;
+    const snapshot = {
+      id:           state.editingId || genItemId(),
+      product:      state.draft.product,
+      sizeIdx:      state.draft.sizeIdx,
+      paperIdx:     state.draft.paperIdx,
+      foldIdx:      state.draft.foldIdx || 0,
+      pages:        state.draft.pages || null,
+      cover:        state.draft.cover || null,
+      qty:          state.draft.qty,
+      versions:     state.draft.versions,
+      sides:        state.draft.sides,
+      uploadId:     state.draft.uploadId,
+      uploadFiles:  state.draft.uploadFiles.slice(),
+      uploadInFlight: 0, uploadProgress: 0, uploadError: '',
+      price:        state.draft.price,
+    };
+    if (state.editingId) {
+      const idx = state.cart.findIndex(it => it.id === state.editingId);
+      if (idx >= 0) state.cart[idx] = snapshot; else state.cart.push(snapshot);
+      state.editingId = null;
+    } else {
+      state.cart.push(snapshot);
+    }
+    // Reset draft so a fresh configuration can begin
+    state.draft = newDraft(state.draft.product);
+    // Reset sides toggle UI
+    document.querySelectorAll('#sidesGroup button').forEach((b, i) => b.classList.toggle('on', i === 0));
+    invalidatePrice();
+    renderConfigurator();
+    renderCart();
+    updateOrderButton();
+    updateAddButton();
+  }
+
+  function editCartItem(id) {
+    const it = state.cart.find(x => x.id === id);
+    if (!it) return;
+    state.draft = {
+      id:           it.id,
+      product:      it.product,
+      sizeIdx:      it.sizeIdx,
+      paperIdx:     it.paperIdx,
+      foldIdx:      it.foldIdx || 0,
+      pages:        it.pages || null,
+      cover:        it.cover || null,
+      qty:          it.qty,
+      versions:     it.versions,
+      sides:        it.sides,
+      uploadId:     it.uploadId,
+      uploadFiles:  it.uploadFiles.slice(),
+      uploadInFlight: 0, uploadProgress: 0, uploadError: '',
+      price:        it.price,
+    };
+    state.editingId = it.id;
+    renderConfigurator();
+    renderCart();
+    updateAddButton();
+    document.querySelector('.flow').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function removeCartItem(id) {
+    const idx = state.cart.findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const it = state.cart[idx];
+    // Best-effort: DELETE each file from the temp folder
+    for (const f of it.uploadFiles) {
+      fetch(
+        `${UPLOAD_URL}?upload_id=${encodeURIComponent(it.uploadId)}&filename=${encodeURIComponent(f.filename)}`,
+        { method: 'DELETE' }
+      ).catch(() => {});
+    }
+    state.cart.splice(idx, 1);
+    if (state.editingId === id) {
+      state.editingId = null;
+      state.draft = newDraft(state.draft.product);
+      renderConfigurator();
+    }
+    invalidatePrice();
+    renderCart();
+    updateOrderButton();
+    updateAddButton();
+  }
+
+  function genItemId() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+
+  // ─── Cart panel: click handlers (edit / remove) ──────────────────────────
+  document.getElementById('cartItems').addEventListener('click', e => {
+    const btn = e.target.closest('.ci-btn');
+    if (!btn) return;
+    const act = btn.dataset.act;
+    const id  = btn.dataset.id;
+    if (act === 'edit')   editCartItem(id);
+    if (act === 'remove') removeCartItem(id);
+  });
+
+  // ─── Add to order CTA ────────────────────────────────────────────────────
+  document.getElementById('btnAdd').addEventListener('click', e => {
+    e.preventDefault();
+    addOrUpdateCart();
+  });
+
+  // ─── Checkout (Pay) CTA ──────────────────────────────────────────────────
+  function buildSubmitPayload() {
+    const items = state.cart.map(it => {
+      const p = PRODUCTS[it.product];
+      return {
+        id:        it.id,
+        product:   it.product,
+        paper:     p.papers[it.paperIdx].k,
+        size:      p.sizes[it.sizeIdx].k,
+        fold:      p.folds.length ? p.folds[it.foldIdx || 0] : null,
+        pages:     p.pages.length ? it.pages : null,
+        cover:     p.pages.length ? it.cover : null,
+        qty:       it.qty,
+        versions:  it.versions,
+        sides:     it.sides === 2 ? 'double' : 'single',
+        upload_id: it.uploadId,
+      };
+    });
+    const payload = {
+      items,
+      express:           state.express,
+      delivery:          state.delivery,
+      payment_type:      'bancontact',
+      customer_name:     state.custName,
+      customer_email:    state.custEmail,
+      customer_phone:    state.custPhone,
+      customer_company:  state.isCompany ? state.custCompany : '',
+      customer_address:  state.custAddress,
+      customer_zip:      state.custZip,
+      customer_city:     state.custCity,
+      doc_type:          state.isCompany ? 'invoice' : 'receipt',
+      receipt_email:     'shop@clickclickgraphics.com',
+      vat_number:        state.isCompany ? state.vatNumber : '',
+      claimed_total_cents: lastTotals ? Math.round(lastTotals.totalInclVat * 100) : 0,
+      csrf_token:        csrfToken,
+      lang:              getLang(),   // language of the mails + thank-you page
+    };
+    if (state.delivery === 'dpd' && state.diffShip) {
+      payload.ship_address = state.shipAddress;
+      payload.ship_zip     = state.shipZip;
+      payload.ship_city    = state.shipCity;
+    }
+    return payload;
+  }
+
+  let submitting = false;
+  async function submitOrder() {
+    if (!canCheckout() || submitting) return;
+    submitting = true;
+    const btn = document.querySelector('.btn-order');
+    btn && btn.classList.add('disabled');
+    try {
+      const res = await fetch(PAY_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(buildSubmitPayload()),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.ok || !json.checkoutUrl) {
+        // CSRF tokens are one-shot — refresh on 403 so the next try works.
+        if (res.status === 403) {
+          csrfToken = '';
+          fetchCsrfToken();
+        }
+        const msg = (json && json.error) ? `${t('cart.payError')} (${json.error})` : t('cart.payError');
+        alert(msg);
+        submitting = false;
+        updateOrderButton();
+        return;
+      }
+      window.top.location.href = json.checkoutUrl;
+    } catch (err) {
+      console.error('pay.php error:', err);
+      alert(t('cart.payError'));
+      submitting = false;
+      updateOrderButton();
+    }
+  }
+
+  document.querySelector('.btn-order').addEventListener('click', e => {
+    e.preventDefault();
+    submitOrder();
+  });
+
+  // ─── Artwork upload (multi-file) — operates on state.draft ──────────────
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  }
+
+  function fmtBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(0) + ' KB';
+    return (n / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  function renderUpload() {
+    const zone   = document.getElementById('uploadZone');
+    const status = document.getElementById('uploadStatus');
+    if (!zone || !status) return;
+
+    zone.classList.remove('uploading','error','dragover');
+    if (state.draft.uploadInFlight > 0) zone.classList.add('uploading');
+
+    const out = [];
+    if (state.draft.uploadFiles.length > 0) {
+      out.push('<ul class="upload-list">');
+      for (let i = 0; i < state.draft.uploadFiles.length; i++) {
+        const f = state.draft.uploadFiles[i];
+        out.push(
+          `<li class="upload-item">` +
+            `<span class="file">✓ ${escapeHtml(f.filename)}</span>` +
+            `<span class="size">${fmtBytes(f.size)}</span>` +
+            `<button type="button" class="upload-remove" data-i="${i}" aria-label="Remove ${escapeHtml(f.filename)}">${escapeHtml(t('upload.remove'))}</button>` +
+          `</li>`
+        );
+      }
+      out.push('</ul>');
+    }
+    if (state.draft.uploadInFlight > 0) {
+      out.push(`<div class="upload-progress">${escapeHtml(t('upload.uploading'))} ${state.draft.uploadProgress}%<div class="upload-bar"><span style="width:${state.draft.uploadProgress}%"></span></div></div>`);
+    }
+    if (state.draft.uploadError) {
+      out.push(`<div class="upload-error">${escapeHtml(state.draft.uploadError)}</div>`);
+    }
+    status.innerHTML = out.join('');
+  }
+
+  // Generate a UUID-v4 client-side so concurrent uploads share the same
+  // server-side temp folder. Falls back to Math.random() on very old browsers.
+  function genUploadId() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+
+  function uploadFile(file) {
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (!UPLOAD_EXT_OK.includes(ext)) {
+      state.draft.uploadError = t('upload.error.invalidType');
+      renderUpload(); return;
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      state.draft.uploadError = t('upload.error.tooLarge');
+      renderUpload(); return;
+    }
+    const cap = maxUploadFiles();
+    if (state.draft.uploadFiles.length + state.draft.uploadInFlight >= cap) {
+      state.draft.uploadError = t('upload.error.tooMany', { max: cap });
+      renderUpload(); return;
+    }
+
+    if (!state.draft.uploadId) state.draft.uploadId = genUploadId();
+
+    state.draft.uploadError = '';
+    state.draft.uploadInFlight++;
+    state.draft.uploadProgress = 0;
+    renderUpload(); updateAddButton(); updateOrderButton();
+
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_id', state.draft.uploadId);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        state.draft.uploadProgress = Math.round((e.loaded / e.total) * 100);
+        renderUpload();
+      }
+    };
+    xhr.onload = () => {
+      state.draft.uploadInFlight--;
+      let resp = null;
+      try { resp = JSON.parse(xhr.responseText); } catch (_) {}
+      if (xhr.status === 200 && resp && resp.ok) {
+        state.draft.uploadId = resp.upload_id;
+        state.draft.uploadFiles.push({ filename: resp.filename, size: resp.size });
+      } else {
+        const errKey = resp && resp.error === 'file too large' ? 'upload.error.tooLarge'
+                     : resp && resp.error === 'invalid type'   ? 'upload.error.invalidType'
+                     :                                            'upload.error.failed';
+        state.draft.uploadError = t(errKey);
+      }
+      renderUpload(); updateAddButton(); updateOrderButton();
+    };
+    xhr.onerror = () => {
+      state.draft.uploadInFlight--;
+      state.draft.uploadError = t('upload.error.failed');
+      renderUpload(); updateAddButton(); updateOrderButton();
+    };
+    xhr.open('POST', UPLOAD_URL);
+    xhr.send(fd);
+  }
+
+  function uploadFiles(fileList) {
+    Array.from(fileList || []).forEach(uploadFile);
+  }
+
+  function removeFile(idx) {
+    const f = state.draft.uploadFiles[idx];
+    if (!f || !state.draft.uploadId) return;
+    const id = state.draft.uploadId;
+
+    state.draft.uploadFiles.splice(idx, 1);
+    state.draft.uploadError = '';
+    if (state.draft.uploadFiles.length === 0) state.draft.uploadId = '';
+    renderUpload(); updateAddButton(); updateOrderButton();
+
+    fetch(
+      `${UPLOAD_URL}?upload_id=${encodeURIComponent(id)}&filename=${encodeURIComponent(f.filename)}`,
+      { method: 'DELETE' }
+    ).catch(() => {});
+  }
+
+  (function wireUpload() {
+    const zone  = document.getElementById('uploadZone');
+    const input = document.getElementById('fileInput');
+    if (!zone || !input) return;
+
+    input.addEventListener('change', () => {
+      uploadFiles(input.files);
+      input.value = '';
+    });
+
+    zone.addEventListener('click', e => {
+      const btn = e.target.closest('.upload-remove');
+      if (btn) { e.stopPropagation(); removeFile(parseInt(btn.dataset.i, 10)); return; }
+      input.click();
+    });
+    zone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    ['dragenter','dragover'].forEach(evt => {
+      zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.add('dragover'); });
+    });
+    ['dragleave','dragend'].forEach(evt => {
+      zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.remove('dragover'); });
+    });
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      uploadFiles(e.dataTransfer && e.dataTransfer.files);
+    });
+  })();
+
+  // Keep ship block + button state in sync with delivery changes
+  document.querySelectorAll('.deliver label').forEach(lbl => {
+    lbl.addEventListener('click', () => {
+      setTimeout(() => { updateShipBlockVisibility(); updateOrderButton(); }, 0);
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────────────
+  // URL prefill — accept ?product=&paper_key=&size=&qty=&sides=&express=
+  //                      &delivery=&custName=… so other tools (e.g.
+  // tiegel.be smartbot) can deep-link a fully configured FIRST item.
+  // Specs land on state.draft; order envelope + customer fields on state.
+  // Silently ignores anything that doesn't match the product catalog.
+  // ─────────────────────────────────────────────────────────────────────
+  (function applyUrlPrefill() {
+    const q = new URLSearchParams(location.search);
+    if (![...q.keys()].length) return;
+
+    // product (on draft)
+    const p = q.get('product');
+    if (p && PRODUCTS[p]) {
+      state.draft.product  = p;
+      state.draft.sizeIdx  = 0;
+      state.draft.paperIdx = PRODUCTS[p].defaultPaperIdx ?? 0;
+      state.draft.qty      = PRODUCTS[p].defaultQty ?? PRODUCTS[p].qtys[0];
+    }
+    const prod = PRODUCTS[state.draft.product];
+
+    // paper_key. If the requested paper isn't offered for this product we must
+    // NOT quietly leave the default selected — that is how a "card on Biotop
+    // 250" quote turned into MultiArt Silk 130 in the shop (found 17 Aug 2026).
+    // Flag it instead, so the customer sees that their choice didn't carry over.
+    // paper= takes the new ids (multiart-130); paper_key= the old ones (ms130) still work.
+    const OLD = { ms: 'multiart', bt: 'biotop', rs: 'recystar' };
+    let pk = q.get('paper') || q.get('paper_key');
+    const om = pk && pk.match(/^(ms|bt|rs)(\d+)$/);
+    if (om) pk = `${OLD[om[1]]}-${om[2]}`;
+    if (pk) {
+      const idx = prod.papers.findIndex(x => x.k === pk);
+      if (idx >= 0) {
+        state.draft.paperIdx = idx;
+      } else {
+        prefillPaperMissing = pk;
+        console.warn(`prefill: paper "${pk}" is not available for product "${state.draft.product}"`);
+      }
+    }
+    // size
+    const size = q.get('size');
+    if (size) {
+      const idx = prod.sizes.findIndex(x => x.k === size);
+      if (idx >= 0) state.draft.sizeIdx = idx;
+    }
+    const fold = q.get('fold');
+    if (fold && prod.folds.includes(fold)) state.draft.foldIdx = prod.folds.indexOf(fold);
+    const pgs = parseInt(q.get('pages'), 10);
+    if (prod.pages.length && prod.pages.includes(pgs)) state.draft.pages = pgs;
+    if (prod.pages.length) state.draft.cover = coverFor(prod, prod.papers[state.draft.paperIdx].k, q.get('cover'));
+    // qty — any 1..max for the product; renderConfigurator/syncCustomQty handle the UI
+    const qty = parseInt(q.get('qty'), 10);
+    if (Number.isFinite(qty) && qty >= (prod.minQty || 1) && qty <= prod.maxQty) {
+      state.draft.qty = qty;
+    }
+    // sides — 1 = single, 2 = double
+    const sides = q.get('sides');
+    if (sides === 'double') state.draft.sides = 2;
+    else if (sides === 'single') state.draft.sides = 1;
+
+    // ── ORDER-LEVEL: express, delivery, customer fields ───────────────
+    if (q.get('express') === '1') state.express = true;
+    const delivery = q.get('delivery');
+    if (delivery === 'pickup' || delivery === 'dpd') state.delivery = delivery;
+
+    const contactMap = {
+      custName:    'custName',
+      custEmail:   'custEmail',
+      custPhone:   'custPhone',
+      custCompany: 'custCompany',
+      vatNumber:   'vatNumber',
+      custAddress: 'custAddress',
+      custZip:     'custZip',
+      custCity:    'custCity',
+    };
+    Object.entries(contactMap).forEach(([stateKey, inputId]) => {
+      const v = q.get(inputId);
+      if (v) {
+        state[stateKey] = v;
+        const el = document.getElementById(inputId);
+        if (el) {
+          el.value = v;
+          el.dispatchEvent(new Event('input',  { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    });
+
+    if (q.get('custCompany') || q.get('vatNumber')) {
+      state.isCompany = true;
+      const chk = document.getElementById('isCompany');
+      if (chk) {
+        chk.checked = true;
+        chk.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    // Sync the static toggle buttons + express checkbox + deliver labels
+    // to the prefilled state (tile/qty/size/paper/sides are handled by
+    // renderConfigurator() below). For the express checkbox we BOTH set
+    // .checked and dispatch a change event — the change handler is what
+    // wires the visual state to applyExpressDeliveryLock() and the price
+    // refresh, so a silent property assignment alone leaves the DPD label
+    // unlocked and the receipt note stale.
+    const expressChk = document.getElementById('expressChk');
+    if (expressChk && state.express) {
+      expressChk.checked = true;
+      expressChk.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    document.querySelectorAll('.deliver label').forEach((lbl, i) => {
+      const isPickup = i === 0;
+      lbl.classList.toggle('on', (isPickup && state.delivery === 'pickup')
+                              || (!isPickup && state.delivery === 'dpd'));
+    });
+  })();
+
+  if (EXPRESS_OFF) { state.express = false; document.getElementById('expressChk').checked = false; }
+  updateShipBlockVisibility();
+  updateReceiptNote();
+  applyExpressDeliveryLock();
+  syncLegalLinks();
+  renderConfigurator();
+  renderCart();
+  updateOrderButton();
+  updateAddButton();
+
+  // CSRF token + first price load fire in parallel — neither blocks the UI.
+  fetchCsrfToken();
+  fetchPrice();
+</script>
+
+</body>
+</html>

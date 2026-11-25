@@ -1,0 +1,59 @@
+/* ================================================
+   Standard text styles: one look per tag (p, h1, h2, h3)
+   Applies to every text box on the pages listed in :is(...).
+   To roll out to another page, add its body class (slug-...) to the list,
+   in all the blocks below. Pages not listed keep their old look.
+   Body classes: slug-printing, slug-signage, slug-consulting,
+   slug-graphic-design, slug-natrimoine, slug-a-good-file, slug-quotes
+   ================================================ */
+
+/* Shared: font, colour, weight */
+:is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > :is(h1, h2, h3) {
+  font-family: gtpressuraregularwebfont;
+  color: #4200FF;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: left;
+  padding: 0;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+/* H1: page title (once per page) */
+:is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h1 {
+  font-size: 60px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin: 0 0 15px 0;
+}
+
+/* H2: section title */
+:is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h2 {
+  font-size: 40px;
+  line-height: 1.2;
+  text-transform: none;
+  margin: 0 0 15px 0;
+}
+
+/* H3: small heading */
+:is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h3 {
+  font-size: 30px;
+  line-height: 1.2;
+  text-transform: none;
+  margin: 0 0 15px 0;
+}
+
+/* Space above a heading that follows other content in the same text box */
+:is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > * + :is(h2, h3) {
+  margin-top: 30px;
+}
+
+/* Tablet and phone (Lay breakpoint: up to 1024px) */
+@media (max-width: 1024px) {
+  :is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h1 { font-size: 32px; }
+  :is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h2 { font-size: 32px; }
+  :is(body.slug-printing, body.slug-signage, body.slug-consulting) .lay-textformat-parent > h3 { font-size: 24px; }
+}
+
+/* P stays as Lay's "Default" text format (20px, 16px on phones, black).
+   Intro paragraph: <p class="cc-lead"> (30px blue, defined above in the cc- block). */

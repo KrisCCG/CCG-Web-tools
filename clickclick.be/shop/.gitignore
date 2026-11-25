@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+
+# Excel temp lockfiles (created when an xlsx is open in Excel)
+~$*.xlsx
+~$*.xls
+
+# Claude Code / VS Code tooling — local-only, not part of the project
+.claude/
+
+# Server runtime artifacts — never commit these
+calculator/data/.pricing_cache.json
+calculator/calc_log.jsonl
+
+# Customer data — JSONs with PII, uploaded artwork. Keep the .htaccess so the
+# protection is part of the deploy.
+calculator/orders/*
+!calculator/orders/.htaccess
+
+# Auth secrets (passwords don't belong in git, even hashed)
+flyers/.htpasswd
+shop/.htpasswd
+print-calculator/.htpasswd
+calculator/admin/.htpasswd
+
+# API keys / passphrases / kDrive tokens — server-only, copy from secrets.example.php
+calculator/secrets.php
+
+# Editor / IDE
+.idea/
+.vscode/
+
+# Node (in case anyone npm installs in here)
+node_modules/
+
+# Logs
+*.log
+
+# Assembled upload mirror — rebuilt by make-deploy.py, never committed.
+# (deploy-files/.vscode/sftp.json is already covered by the .vscode/ rule
+#  above, which is what keeps the real SFTP host and username out of git.)
+deploy/

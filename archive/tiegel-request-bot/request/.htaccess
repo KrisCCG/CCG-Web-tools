@@ -1,0 +1,39 @@
+# Stop WordPress from intercepting requests inside /request/.
+# (The tiegel.be root .htaccess would otherwise route everything to index.php.)
+RewriteEngine Off
+DirectoryIndex index.html
+Options -Indexes
+
+# ─── TEMP: Password gate while the bot is in pre-launch testing ───
+# Remove these 4 lines (AuthType / AuthName / AuthUserFile / Require) to go live.
+# AuthUserFile path is absolute on Infomaniak — adjust the UUID + path to the
+# actual deploy location before uploading.
+#
+# AuthType Basic
+# AuthName "Click Click — Request bot preview"
+# AuthUserFile /home/clients/REPLACE_WITH_INFOMANIAK_UUID/sites/tiegel.be/request/.htpasswd
+# Require valid-user
+
+# Correct MIME types for the assets we ship.
+AddType application/javascript .js
+AddType text/css               .css
+
+# Cache static assets briefly; HTML is always fresh.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/html            "access plus 0 seconds"
+    ExpiresByType application/javascript "access plus 1 hour"
+    ExpiresByType text/css             "access plus 1 hour"
+    ExpiresByType image/png            "access plus 7 days"
+    ExpiresByType image/svg+xml        "access plus 7 days"
+</IfModule>
+
+# Security headers.
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy        "strict-origin-when-cross-origin"
+    # Content-Security-Policy: allow inline styles/scripts (single-file UI),
+    # AJAX to our own /request-api/ on the same origin, plus Google Fonts
+    # (Space Grotesk — matches the calculator's design system).
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'"
+</IfModule>

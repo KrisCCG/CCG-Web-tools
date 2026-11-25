@@ -1,0 +1,4 @@
+# The shop moved from /flyers/ to /shop/ (Oct 2026).
+# This folder only redirects, so printed QR codes and old links keep working.
+# Query strings (?lang=nl, prefilled orders from the chat) are kept by Apache.
+RedirectMatch 301 ^/flyers(/.*)?$ /shop$1

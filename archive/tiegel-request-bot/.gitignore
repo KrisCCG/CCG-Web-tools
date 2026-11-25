@@ -1,0 +1,30 @@
+# ── NEVER commit these ──
+# Real config with Anthropic API key + HMAC signing key
+request-api/secrets.php
+
+# FTP password lives here in plain text (VS Code SFTP extension)
+.vscode/sftp.json
+
+# Basic-auth credentials
+request-api/.htpasswd
+request/.htpasswd
+
+# ── Runtime data (PII / state) ──
+# Persisted customer Requests — contains contact info, files, transcripts
+request-api/requests/*
+!request-api/requests/.htaccess
+
+# Audit logs — PII-redacted but still sensitive
+request-api/logs/*
+!request-api/logs/.htaccess
+
+# Per-IP rate-limit buckets
+request-api/.ratelimit/*
+!request-api/.ratelimit/.htaccess
+
+# ── macOS / IDE noise ──
+.DS_Store
+.idea/
+
+# ── Node noise (in case anyone npm installs here by mistake) ──
+node_modules/

@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Print calculator v2 — internal</title>
+<style>
+  @font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+  @font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+  :root{--bg:#fef3ea;--card:#fff;--ink:#0a0a0a;--muted:#6b6259;--line:#eadfd4;--accent:#e2401c;--ok:#1d7a3a;--warn:#b26b00;--bad:#c0261a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'GT Pressura',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card)}
+  header h1{font-size:20px;margin:0}
+  header .tag{background:var(--accent);color:#fff;font-size:12px;padding:3px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+  .src{font-size:13px;color:var(--muted)}
+  .src button,.btn{font:inherit;font-size:13px;border:1px solid var(--ink);background:#fff;border-radius:6px;padding:5px 10px;cursor:pointer}
+  nav{display:flex;gap:4px;padding:10px 20px 0}
+  nav button{font:inherit;border:1px solid var(--line);border-bottom:none;background:transparent;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted)}
+  nav button.on{background:var(--card);color:var(--ink);font-weight:700}
+  main{padding:0 20px 40px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:20px}
+  .grid{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:24px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+  select,input[type=number]{width:100%;font:inherit;font-size:15px;padding:7px 9px;border:1px solid #cfc3b6;border-radius:6px;background:#fff}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .chips button{font:inherit;font-size:13px;border:1px solid #cfc3b6;background:#fff;border-radius:14px;padding:3px 10px;cursor:pointer}
+  .chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+  .modes label{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:14px;margin:4px 0}
+  .modes .no{color:var(--muted)}
+  .checks label{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:14px;margin:8px 0}
+  .big{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;margin-bottom:14px}
+  .big .v{font-size:38px;font-weight:700;line-height:1}
+  .big .k{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .big .s{font-size:20px;font-weight:700}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;color:var(--muted);font-weight:400}
+  td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+  td.how{color:var(--muted);font-size:13px}
+  .notes{margin:10px 0 0;padding:0;list-style:none;font-size:13px;color:var(--warn)}
+  .err{color:var(--bad);font-weight:700}
+  .ok{color:var(--ok)} .bad{color:var(--bad)}
+  h2{font-size:16px;margin:26px 0 8px}
+  .muted{color:var(--muted);font-size:13px}
+  .hide{display:none}
+  .sub{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+  .sub button,.per button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;color:var(--muted)}
+  .sub button.on,.per button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .sub .sp{flex:1}
+  .expbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
+  .expbar .st{font-weight:700;padding:2px 10px;border-radius:999px;font-size:12px}
+  .expbar .st.on{background:#dff3e4;color:#17692f}
+  .expbar .st.off{background:#fbe0dd;color:#b3261e}
+  .expbar button{font:inherit;font-size:13px;border-radius:8px;padding:6px 14px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff}
+  .expbar button.go{background:#fff;color:var(--ink)}
+  .expbar .note{color:var(--muted);font-size:12px}
+  .expbar .st.plan{background:#e8e3ff;color:#4200ff}
+  .expbar input[type=date]{width:auto;font-size:13px;padding:5px 8px}
+  .expbar label.hd{display:flex;gap:6px;align-items:center;font-size:13px}
+  .cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .card{flex:1;min-width:120px;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:#fff}
+  .card .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .card .v{font-size:28px;font-weight:700;line-height:1.2}
+  .card .s{font-size:12px;color:var(--muted)}
+  .tw{border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+  .tw table th{background:#faf5ef;padding:9px 8px}
+  .tw td.c,.tw th.c{text-align:center}
+  .tw tr.faded{opacity:.45}
+  th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+  th.sortable:hover{color:var(--ink)}
+  th.sorted{color:var(--ink);font-weight:700}
+  th .arr{font-size:10px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700}
+  .pill.g{background:#e3f1e6;color:var(--ok)} .pill.o{background:#fff1dc;color:var(--warn)} .pill.b{background:#e8f0fc;color:#1857b0} .pill.n{background:#f1ede8;color:var(--muted)}
+  .inv{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--accent)}
+  .lnk{font:inherit;font-size:12px;border:1px solid var(--line);background:#faf5ef;border-radius:5px;padding:2px 8px;cursor:pointer;color:var(--accent);font-weight:700;white-space:nowrap}
+  .tw input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+  .tw input.dn{accent-color:var(--ok)}
+  .bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .bx{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+  .bx .t{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  .br{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12px}
+  .br .l{width:84px;text-align:right;font-weight:700;flex-shrink:0}
+  .br .tr{flex:1;display:flex;height:14px;border-radius:4px;overflow:hidden;background:#f1ede8}
+  .br .o{background:var(--accent)} .br .y{background:#cfc8c0}
+  .br .m{font-family:ui-monospace,Menlo,monospace;font-size:11px;flex-shrink:0}
+  .lg{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:8px}
+  .lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+  .daily{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:6px}
+  .daily div{flex:1;background:var(--accent);border-radius:2px 2px 0 0;min-height:2px}
+  .daily div.z{background:#f1ede8}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:99}
+  .modal .box{background:#fff;border-radius:14px;padding:24px;max-width:520px;width:92%;max-height:82vh;overflow:auto}
+  .modal h3{margin:0 0 2px;font-size:18px}
+  .modal .sec{margin:14px 0 4px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .modal .sp2{background:#faf5ef;border-radius:8px;padding:8px 12px;font-size:13px}
+  .modal .sp2 div{padding:3px 0;border-bottom:1px solid #eee3d8} .modal .sp2 div:last-child{border:none}
+  /* Customer files: download button per order + file list in the order window (25 Oct 2026) */
+  .dlb{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-size:12px;font-weight:700;border-radius:4px;padding:2px 7px;margin-right:6px;vertical-align:middle;white-space:nowrap}
+  .dlb:hover{filter:brightness(.9)}
+  .gone{font-size:11px;margin-right:6px;vertical-align:middle}
+  .mfiles .fl{font-size:12px;font-weight:700;margin:8px 0 2px}
+  .mfiles .fr{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:13px;padding:4px 0;border-bottom:1px solid #eee3d8}
+  .mfiles .fr a{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap;font-size:12px}
+  .mfiles .dla{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;border-color:var(--accent);text-decoration:none;font-weight:700}
+  .drop{border:2px dashed #cfc3b6;border-radius:10px;padding:30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Print calculator v2 <span class="tag">internal</span></h1></div>
+  <div class="src"><span id="srcInfo">Loading price data…</span>
+    <button id="pickBtn" title="Use another price file from your computer (only in this browser, nothing is uploaded)">Load another xlsx</button>
+    <input type="file" id="pick" accept=".xlsx" class="hide"></div>
+</header>
+<div id="selftest" class="hide" style="padding:10px 20px;font-size:14px"></div>
+<nav><button data-tab="calc" class="on">Calculator</button><button data-tab="jobs">Test jobs</button><button data-tab="dash">Dashboard</button></nav>
+<main>
+  <div class="panel" id="tab-calc">
+    <div id="noData" class="drop hide">Could not load the shop's price file (<b>shop/api/data/price-data.xlsx</b>).<br>Use <b>Load another xlsx</b> above to pick the price file.</div>
+    <div class="grid" id="calcGrid">
+      <form id="form" autocomplete="off" onsubmit="return false">
+        <label for="product">Product</label><select id="product"></select>
+        <label for="size" id="sizeLbl">Size open</label><select id="size"></select>
+        <div id="foldWrap"><label for="fold">Size closed (folded)</label><select id="fold"></select></div>
+        <div id="pagesWrap" class="hide"><label for="pages">Pages (cover included)</label><select id="pages"></select></div>
+        <div id="coverWrap" class="hide"><label for="cover">Cover paper</label><select id="cover"></select></div>
+        <label for="paper" id="paperLbl">Paper</label><select id="paper"></select>
+        <div class="checks"><label><input type="checkbox" id="allPapers"> Show every paper (not only the shop list)</label></div>
+        <label for="qty">Quantity</label><input type="number" id="qty" min="1" step="1">
+        <div class="chips" id="qtyChips"></div>
+        <label>Print</label>
+        <div class="modes" id="modes">
+          <label><input type="radio" name="mode" value="4/4" checked> <span>4/4</span></label>
+          <label><input type="radio" name="mode" value="4/0"> <span>4/0</span></label>
+          <label><input type="radio" name="mode" value="1/1"> <span>1/1 black</span></label>
+          <label><input type="radio" name="mode" value="1/1w"> <span>1/1 white</span></label>
+        </div>
+        <label for="versions">Versions</label><input type="number" id="versions" min="1" step="1" value="1">
+        <div class="checks">
+          <label><input type="checkbox" id="express"> Express</label>
+          <label><input type="checkbox" id="delivery"> DPD delivery</label>
+        </div>
+      </form>
+      <section>
+        <div id="out"></div>
+        <h2>Quantity table</h2>
+        <div id="ladder"></div>
+      </section>
+    </div>
+  </div>
+  <div class="panel hide" id="tab-jobs"><div id="jobs"></div></div>
+  <div class="panel hide" id="tab-dash"><div id="dash"></div></div>
+</main>
+
+<script src="xlsx.full.min.js?v=1"></script>
+<script src="engine.js?v=20261022"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const eur = (v) => "€" + (Math.round(v * 100) / 100).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let D = null, first = true;
+const MODES = { "4/4": { sides: "double", ink: "cmyk" }, "4/0": { sides: "single", ink: "cmyk" }, "1/1": { sides: "double", ink: "black" }, "1/1w": { sides: "double", ink: "white" } };
+const mode = () => (document.querySelector('input[name=mode]:checked') || {}).value || "4/4";
+const setMode = (m) => { const r = document.querySelector(`input[name=mode][value="${m}"]`); if (r) r.checked = true; };
+const modeOffered = (p, m) => p.sides.includes(MODES[m].sides) && p.inks.includes(MODES[m].ink);
+function markModes(p) { document.querySelectorAll("#modes label").forEach((l) => { const m = l.querySelector("input").value, sp = l.querySelector("span");
+  sp.textContent = sp.textContent.replace(/ \(not in shop\)$/, "") + (modeOffered(p, m) ? "" : " (not in shop)"); l.classList.toggle("no", !modeOffered(p, m)); }); }
+const START_QTY = 25;   // the internal quantity list starts at 25
+const qtyList = (p) => [START_QTY, ...p.qtys.filter((q) => q > START_QTY)];
+
+function sizeLabel(s, p) {
+  const z = D.sizes[s]; if (!z) return s;
+  const flat = p && isBrochure(p) && D.brochure ? D.brochure.sizes[s] : null;
+  return `${z.name || s} · ${z["width (mm)"]} × ${z["height (mm)"]} mm` + (flat ? ` (printed on ${flat} flat)` : "");
+}
+const isBrochure = (p) => !!(p && p.pages && p.pages.length);
+function paperLabel(p) { const x = D.papers[p]; return x ? `${x["name (shown to customers)"] || p} · ${x.gsm} gsm` : p; }
+function foldLabel(f, s) { const x = D.folds[f + "|" + s]; return x ? (x["name in the shop (EN)"] || x["name (EN)"] || f) : f; }
+function opts(sel, items, keep) {
+  const cur = keep ? sel.value : null;
+  sel.innerHTML = items.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join("");
+  if (cur && items.some(([v]) => v === cur)) sel.value = cur;
+}
+
+function setData(wb, label) {
+  const d = CCEngine.load(wb, XLSX);
+  if (d.errors && d.errors.length) { $("srcInfo").innerHTML = `<span class="err">${esc(label)}: ${esc(d.errors.join(" · "))}</span>`; return; }
+  D = d;
+  // version = newest date in the change log, if present
+  let ver = "";
+  try { const ws = wb.Sheets["Change log"]; const v = ws && ws["A4"] && ws["A4"].w; if (v) ver = " · last change " + v; } catch (e) {}
+  $("srcInfo").textContent = label + ver;
+  $("noData").classList.add("hide"); $("calcGrid").classList.remove("hide");
+  const prods = Object.values(D.products);
+  opts($("product"), prods.map((p) => [p.id, p.name + (p.active ? "" : " (not in shop)")]), true);
+  onProduct(!first); first = false; renderJobs();
+}
+
+function onProduct(keep) {
+  const p = D.products[$("product").value];
+  opts($("size"), p.sizes.filter((s) => D.sizes[s]).map((s) => [s, sizeLabel(s, p)]), keep);
+  $("foldWrap").classList.toggle("hide", !p.folds.length);
+  const bro = isBrochure(p);
+  $("pagesWrap").classList.toggle("hide", !bro); $("coverWrap").classList.toggle("hide", !bro);
+  $("sizeLbl").textContent = bro ? "Size closed (finished)" : "Size open";
+  $("paperLbl").textContent = bro ? "Inside paper" : "Paper";
+  if (bro) { opts($("pages"), p.pages.map((n) => [String(n), `${n} pages · ${n / 4} sheets (1 cover + ${n / 4 - 1} inside)`]), keep);
+    if (!keep && p.defaultPages) $("pages").value = String(p.defaultPages); }
+  onSize(keep);
+  fillPapers(keep);
+  const cur = parseInt($("qty").value, 10);
+  if (!keep || !cur) $("qty").value = p.defaultQty || p.qtys[Math.min(1, p.qtys.length - 1)] || 100;
+  if (!keep || !modeOffered(p, mode())) setMode(["4/4", "4/0", "1/1w", "1/1"].find((m) => modeOffered(p, m)) || "4/4");
+  markModes(p);
+  fillPapers(true);
+  $("qtyChips").innerHTML = qtyList(p).map((q) => `<button type="button" data-q="${q}">${q}</button>`).join("");
+  calc();
+}
+function onSize(keep) {
+  const p = D.products[$("product").value], s = $("size").value;
+  opts($("fold"), p.folds.filter((f) => D.folds[f + "|" + s]).map((f) => [f, foldLabel(f, s)]), keep);
+  fillPapers(true);
+}
+function fillPapers(keep) {
+  const p = D.products[$("product").value], s = $("size").value;
+  const only = CCEngine.split(D.sizes[s] && D.sizes[s]["only on papers (code, comma separated)"]);
+  const ink = MODES[mode()].ink;
+  const fits = (k) => ink === "black" || (ink === "white" ? D.papers[k].group !== "cmyk" : D.papers[k].group === "cmyk");
+  let list = ($("allPapers").checked
+    ? Object.keys(D.papers).filter((k) => D.papers[k].active === "yes")
+    : p.papers.filter((k) => D.papers[k])).filter(fits);
+  if (only.length) list = list.filter((k) => only.includes(k.split("-")[0]));
+  const prev = $("paper").value;
+  opts($("paper"), list.map((k) => [k, paperLabel(k) + (p.papers.includes(k) ? "" : "  (not in shop)")]), keep);
+  const kept = keep && prev && list.includes(prev);
+  if (!kept && p.defaultPaper && list.includes(p.defaultPaper)) $("paper").value = p.defaultPaper;
+  fillCover(keep);
+}
+// brochure cover: same paper line as the inside paper (Kris, 17 Oct: mixing = special request).
+// "Show every paper" lists every paper, to quote a special request.
+const line = (k) => (k || "").split("-")[0];
+function fillCover(keep) {
+  const p = D.products[$("product").value];
+  if (!isBrochure(p)) return;
+  const ink = MODES[mode()].ink;
+  const fits = (k) => ink === "black" || (ink === "white" ? D.papers[k].group !== "cmyk" : D.papers[k].group === "cmyk");
+  const inside = $("paper").value;
+  const cl = ($("allPapers").checked ? Object.keys(D.papers).filter((k) => D.papers[k].active === "yes")
+    : p.coverPapers.filter((k) => D.papers[k] && line(k) === line(inside))).filter(fits);
+  const prevC = $("cover").value;
+  opts($("cover"), cl.map((k) => [k, paperLabel(k) + (!p.coverPapers.includes(k) ? "  (not in shop)" : line(k) !== line(inside) ? "  (special request)" : "")]), keep);
+  if (!(keep && prevC && cl.includes(prevC))) {
+    const same = p.coverPapers.find((k) => cl.includes(k) && line(k) === line(inside));
+    if (same) $("cover").value = same;
+  }
+}
+
+function input() {
+  const p = D.products[$("product").value];
+  return { product: p.id, size: $("size").value, paperId: $("paper").value, qty: parseInt($("qty").value, 10),
+    sides: MODES[mode()].sides, ink: MODES[mode()].ink, versions: parseInt($("versions").value, 10) || 1, express: $("express").checked,
+    delivery: $("delivery").checked, fold: p.folds.length ? $("fold").value : null,
+    pages: isBrochure(p) ? parseInt($("pages").value, 10) : null, coverPaperId: isBrochure(p) ? $("cover").value : null };
+}
+
+function calc() {
+  if (!D) return;
+  const o = input();
+  if (!o.paperId) { $("out").innerHTML = `<p class="err">No paper in this product's list for this print mode. Tick "Show every paper" to see all papers.</p>`; $("ladder").innerHTML = ""; return; }
+  [...$("qtyChips").children].forEach((b) => b.classList.toggle("on", +b.dataset.q === o.qty));
+  let r;
+  try { r = CCEngine.price(D, o); } catch (e) { $("out").innerHTML = `<p class="err">${esc(e.message)}</p>`; $("ladder").innerHTML = ""; return; }
+  const vat = +(1 + (r.vat != null ? r.vat : D.rules.vat_rate)).toFixed(2);
+  const p = D.products[o.product];
+  const rows = r.lines.map((l) => `<tr><td>${esc(l.label)}</td><td class="how">${esc(l.detail)}</td><td class="n">${eur(l.cost)}</td><td class="n">${eur(l.sell)}</td></tr>`).join("");
+  const marginTxt = r.margin === null ? "—" : Math.round(r.margin * 100) + "%";
+  $("out").innerHTML = `
+    <div class="big">
+      <div><div class="k">Online price incl. VAT</div><div class="v">${eur(r.incl)}</div></div>
+      <div><div class="k">excl. VAT</div><div class="s">${eur(r.excl)}</div></div>
+      <div><div class="k">per piece incl. VAT</div><div class="s">${eur(r.incl / (o.qty * (o.versions || 1)))}</div></div>
+      <div><div class="k">our cost</div><div class="s">${eur(r.cost)}</div></div>
+      <div><div class="k">profit</div><div class="s">${r.margin === null ? "—" : eur(r.margin * r.cost)}</div></div>
+      <div><div class="k">margin on cost</div><div class="s">${marginTxt}</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Line</th><th>How</th><th class="n">Cost</th><th class="n">Sell excl. VAT</th></tr></thead>
+      <tbody>${rows}
+      <tr class="tot"><td>Total</td><td class="how">before the online discount</td><td class="n">${eur(r.cost)}</td><td class="n">${eur(r.listSell)}</td></tr>
+      <tr><td>Online</td><td class="how">${r.discount ? "−" + Math.round(r.discount * 100) + "%" : "no online discount"} (min. margin ${Math.round(D.rules.min_margin * 100)}%)${r.notes.length ? " · " + esc(r.notes.join(" · ")) : ""} · × ${vat} VAT = ${eur(r.rawIncl)} → rounded</td><td></td><td class="n">${eur(r.excl)}</td></tr>
+      </tbody>
+    </table>
+    <p class="muted">${r.sheets} print sheets · ${r.bigSheets} ${D.sizes[o.size]["banner feed (tall poster)"] === "yes" ? "sheets" : "big sheets"} to take from stock${r.stitch ? " · stitched " + (r.stitch === "tower" ? "with the tower" : "by hand") : ""}${o.coverPaperId && line(o.coverPaperId) !== line(o.paperId) ? ' · <span class="bad">cover and inside from different paper lines = special request</span>' : ""} · VAT ${Math.round((vat - 1) * 100)}% · ${p.days || "?"} production days${p.minQty && o.qty < p.minQty ? ` · <span class="bad">below the shop minimum of ${p.minQty}</span>` : ""}</p>`;
+  ladder(o);
+}
+
+function ladder(o) {
+  const p = D.products[o.product];
+  const qs = [...new Set([...qtyList(p), o.qty])].filter((q) => q > 0).sort((a, b) => a - b);
+  const body = qs.map((q) => {
+    try {
+      const r = CCEngine.price(D, { ...o, qty: q });
+      return `<tr${q === o.qty ? ' style="font-weight:700"' : ""}><td class="n">${q}</td><td class="n">${eur(r.excl)}</td><td class="n">${eur(r.incl)}</td><td class="n">${eur(r.incl / (q * (o.versions || 1)))}</td><td class="n">${eur(r.cost)}</td><td class="n">${r.margin === null ? "—" : eur(r.margin * r.cost)}</td><td class="n">${r.margin === null ? "—" : Math.round(r.margin * 100) + "%"}</td></tr>`;
+    } catch (e) { return `<tr><td class="n">${q}</td><td colspan="6" class="err">${esc(e.message)}</td></tr>`; }
+  }).join("");
+  $("ladder").innerHTML = `<table><thead><tr><th class="n">Qty</th><th class="n">Online excl.</th><th class="n">Online incl.</th><th class="n">Per piece incl.</th><th class="n">Cost</th><th class="n">Profit</th><th class="n">Margin</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function renderJobs() {
+  const rows = D.jobs.map((j) => {
+    let calcd = "", diff = "", cls = "";
+    try {
+      const r = CCEngine.price(D, { product: j.product, size: j.size, paperId: j.paper_id, qty: parseInt(j.quantity, 10), sides: j.sides || "single",
+        versions: parseInt(j.versions || 1, 10), express: j.express === "yes", fold: j.fold || null, pages: j.pages || null, coverPaperId: j["cover paper_id"] || null });
+      calcd = eur(r.incl);
+      const exp = j["your expected price incl. VAT (€)"];
+      if (typeof exp === "number") { const dlt = r.incl - exp; diff = (dlt > 0 ? "+" : "") + dlt.toFixed(2); cls = Math.abs(dlt) < 0.005 ? "ok" : Math.abs(dlt) > Math.max(2, exp * 0.05) ? "bad" : ""; }
+    } catch (e) { calcd = `<span class="err">${esc(e.message)}</span>`; }
+    const exp = j["your expected price incl. VAT (€)"];
+    return `<tr><td>${esc(j.job)}</td><td>${esc(j.product)}</td><td>${esc(j.size)}${j.fold ? " · " + esc(j.fold) : ""}${j.pages ? " · " + esc(j.pages) + " p." : ""}</td><td>${esc(j.paper_id)}${j["cover paper_id"] ? " · cover " + esc(j["cover paper_id"]) : ""}</td><td class="n">${esc(j.quantity)}</td><td>${esc(j.sides || "single")}</td><td class="n">${typeof exp === "number" ? eur(exp) : ""}</td><td class="n">${calcd}</td><td class="n ${cls}">${diff}</td></tr>`;
+  }).join("");
+  $("jobs").innerHTML = `<p class="muted">The fixed examples from the tab "Test jobs", calculated with the loaded file. Expected = the target price in the Excel.</p>
+    <table><thead><tr><th>#</th><th>Product</th><th>Size</th><th>Paper</th><th class="n">Qty</th><th>Sides</th><th class="n">Expected</th><th class="n">Calculated</th><th class="n">Diff</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+
+// ───────────── Dashboard (orders + calculator stats of the live shop) ─────────────
+// Reads the order API of the shop (same server, same login): /shop/api/api-dashboard.php. Orders are tagged with _src;
+// a checkbox update goes back to the shop that owns the order. Test orders (Mollie test mode, TEST-… numbers) carry a TEST tag.
+// (Until 22 Oct 2026 a second source read the old shop; the old shop is archived and no longer shown.)
+const DASH_SRC = [{ id: "v2", label: "Shop", url: "/shop/api/api-dashboard.php" }];
+const SORT_DEF = { production: { k: "deadline", dir: 1 }, orders: { k: "date", dir: -1 } };
+const DS = { sort: { production: { ...SORT_DEF.production }, orders: { ...SORT_DEF.orders } }, orders: null, logs: null, sub: "production", archive: false, period: "all", err: null, loading: false, src: "all", test: true, srcErr: {} };
+const eurBE = (v) => "€" + (Math.round(v * 100) / 100).toLocaleString("de-BE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const orderDate = (o) => o.paid_at || o.created_at;
+const fmtD = (iso, yr) => { if (!iso) return "—"; const d = new Date(iso); return isNaN(d) ? "—" : d.toLocaleDateString("en-GB", yr ? { day: "2-digit", month: "short", year: "numeric" } : { day: "2-digit", month: "short" }); };
+const lc = (o) => (o.specs || "").toLowerCase();
+const isExpress = (o) => o.express === true || o.express === "yes" || lc(o).includes("express");
+const isDpd = (o) => o.delivery === "yes";
+const money = (o) => parseFloat(o.amount_inc || o.amount_eur || 0) || 0;
+// Customer files: the API of the shop that owns the order serves them (same login as the dashboard).
+const srcUrl = (o) => (DASH_SRC.find((x) => x.id === o._src) || DASH_SRC[0]).url;
+const dlUrl = (o, path) => srcUrl(o) + "?action=download&invoice=" + encodeURIComponent(o.invoice_num) + (path ? "&file=" + encodeURIComponent(path) : "");
+const fsize = (b) => b >= 1e6 ? (b / 1e6).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1e3)) + " kB";
+function fileBtn(o) {
+  const n = +o.files_count || 0;
+  if (n) return `<a class="dlb" href="${esc(dlUrl(o, n === 1 ? o.files_one : ""))}" download title="${n === 1 ? "Download the file" : "Download all " + n + " files (" + esc(o.invoice_num) + ".zip)"}">⬇ ${n}</a>`;
+  if (o.files_purged) return '<span class="muted gone" title="Deleted automatically 6 months after payment">deleted</span>';
+  return "";
+}
+function prodLabel(o) {
+  const it = Array.isArray(o.items) && o.items.length ? o.items : null;
+  if (it) { const names = [...new Set(it.map((i) => i.product).filter(Boolean))]; if (names.length) { const cap = (x) => String(x).charAt(0).toUpperCase() + String(x).slice(1); return names.length > 1 ? cap(names[0]) + " +" + (names.length - 1) : cap(names[0]); } }
+  const s = lc(o); if (s.includes("poster")) return "Poster"; if (s.includes("coloured") || s.includes("colored")) return "Colour"; return "Card";
+}
+function addWorkdays(startIso, n) { const d = new Date(startIso); let a = 0; while (a < n) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0 && d.getDay() !== 6) a++; } return d; }
+function deadlineOf(o) {   // server value (Belgian holidays excluded) when the order has it, else the old rule
+  if (o.production_deadline) { const d = new Date(o.production_deadline + (String(o.production_deadline).length <= 10 ? "T23:59:59" : "")); if (!isNaN(d)) return d; }
+  const st = orderDate(o); if (!st) return null;
+  return addWorkdays(st, isExpress(o) ? 2 : (lc(o).includes("colour") || lc(o).includes("color")) ? 11 : 5);
+}
+function deadlineInfo(o) {
+  const d = deadlineOf(o); if (!d) return { label: "—", cls: "" };
+  const days = (d - new Date()) / 86400000;
+  return { label: fmtD(d), cls: days < 1 ? "bad" : days < 2 ? "" : "ok", warn: days >= 1 && days < 2, d };
+}
+function repeatSet(paid) {
+  const wk = (o) => { const d = new Date(orderDate(o)); const j = new Date(d.getFullYear(), 0, 1); return d.getFullYear() + "-W" + Math.ceil(((d - j) / 86400000 + j.getDay() + 1) / 7) + "-" + (o.customer_name || "").toLowerCase().trim(); };
+  const cnt = {}; paid.forEach((o) => { if ((o.customer_name || "").trim()) cnt[wk(o)] = (cnt[wk(o)] || 0) + 1; });
+  return new Set(paid.filter((o) => (o.customer_name || "").trim() && cnt[wk(o)] > 1).map((o) => o.invoice_num));
+}
+
+async function dashLoad() {
+  DS.loading = true; DS.srcErr = {}; dashRender();
+  const get = async (src, a) => { const r = await fetch(src.url + "?action=" + a, { cache: "no-store", credentials: "same-origin" });
+    if (!r.ok) throw new Error(r.status === 401 ? "login needed (401)" : r.status === 404 ? "not uploaded yet (404)" : "server answered " + r.status);
+    const j = await r.json(); if (!Array.isArray(j)) throw new Error("unexpected answer"); return j; };
+  const res = await Promise.all(DASH_SRC.map(async (src) => {
+    try { const [o, l] = await Promise.all([get(src, "orders"), get(src, "logs")]); return { src, o, l }; }
+    catch (e) { DS.srcErr[src.id] = e.message; return { src, o: [], l: [] }; }
+  }));
+  if (res.every((r) => DS.srcErr[r.src.id])) { DS.err = Object.values(DS.srcErr).join(" · "); }
+  DS.orders = res.flatMap((r) => r.o.map((o) => Object.assign(o, { _src: r.src.id })));
+  DS.orders.sort((a, b) => String(orderDate(b) || "").localeCompare(String(orderDate(a) || "")));
+  DS.logs = res.flatMap((r) => r.l);
+  try { const r = await fetch(DASH_SRC[0].url + "?action=express", { cache: "no-store", credentials: "same-origin" }); DS.express = r.ok ? await r.json() : null; } catch (e) { DS.express = null; }
+  try { const r = await fetch(DASH_SRC[0].url + "?action=holiday", { cache: "no-store", credentials: "same-origin" }); DS.holiday = r.ok ? await r.json() : null; } catch (e) { DS.holiday = null; }
+  DS.loading = false; dashRender();
+}
+function dashOpen() { if (DS.orders === null && !DS.loading) dashLoad(); else dashRender(); }
+
+function dashToggle(inv, field) {
+  const o = DS.orders.find((x) => x.invoice_num === inv); if (!o) return;
+  const nv = !o[field]; o[field] = nv; dashRender();
+  fetch((DASH_SRC.find((x) => x.id === o._src) || DASH_SRC[0]).url + "?action=update", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ invoice_num: inv, [field]: nv }) })
+    .then((r) => { if (!r.ok) throw new Error(r.status); })
+    .catch(() => { o[field] = !nv; dashRender(); alert("Could not save — the change was undone."); });
+}
+
+function expBar() {
+  const e = DS.express;
+  if (!e) return '<div class="expbar"><span class="note">Urgent (express) switch: not available yet (upload the new shop files first).</span></div>';
+  const since = e.since ? " since " + fmtD(new Date(e.since)) : "";
+  if (e.holiday && !e.switched_off) {
+    const h = DS.holiday || {};
+    return `<div class="expbar">Urgent orders (express) in the shop and the chat: <span class="st off">OFF (holiday period)</span><span class="note">Set by the holiday closure below. Express comes back by itself${h.mode_until ? " after " + fmtYmd(h.mode_until) : ""}.</span></div>`;
+  }
+  return `<div class="expbar">Urgent orders (express) in the shop and the chat: <span class="st ${e.available ? "on" : "off"}">${e.available ? "ON" : "OFF" + since}</span>`
+    + (e.available ? `<button id="dExp" data-to="0">Switch urgent orders OFF</button><span class="note">Customers can no longer choose express; the chat stops offering it.</span>`
+                   : `<button id="dExp" class="go" data-to="1">Switch urgent orders back ON</button><span class="note">Customers see "express not available right now".</span>`) + `</div>`;
+}
+// Holiday closure (26 Oct 2026). Stored in shop/api/data/holiday.json via ?action=holiday.
+// Holiday mode = from 7 days before the first closed day until 2 days before the first day back:
+// banner in the shop, closure line in the chat, express off. Ready dates skip the closed days.
+const fmtYmd = (ymd) => { const d = new Date(ymd + "T12:00:00"); return isNaN(d) ? "—" : d.toLocaleDateString("en-GB", { weekday: "short", day: "2-digit", month: "short", year: "numeric" }); };
+function holBar() {
+  const h = DS.holiday;
+  if (!h) return '<div class="expbar"><span class="note">Holiday closure: not available yet (upload the new shop files first).</span></div>';
+  const form = (f, b) => `<label class="hd">First closed day <input type="date" id="hFrom" value="${esc(f || "")}"></label><label class="hd">First working day back <input type="date" id="hBack" value="${esc(b || "")}"></label><button id="hSave">Save closure</button>`;
+  if (!h.planned || h.past || DS.holEdit) {
+    return `<div class="expbar">Holiday closure: ${h.planned && !h.past ? '<span class="st plan">CHANGING</span>' : '<span class="st on">none planned</span>'}`
+      + form(h.planned && !h.past ? h.from : "", h.planned && !h.past ? h.back : "")
+      + (DS.holEdit ? '<button id="hCancel" class="go">Cancel</button>' : "")
+      + `<span class="note">From ${h.notice_days || 7} days before the first closed day until ${h.resume_days || 2} days before you are back: holiday banner in the shop, closure line in the chat, express off. Orders stay possible; ready dates skip the closed days, and nothing is ready before 2 working days after you are back.</span></div>`;
+  }
+  const st = h.active ? '<span class="st off">HOLIDAY MODE ON</span>' : '<span class="st plan">PLANNED</span>';
+  return `<div class="expbar">Holiday closure: ${st}<span>closed <b>${fmtYmd(h.from)}</b> – <b>${fmtYmd(h.last_closed)}</b>, back <b>${fmtYmd(h.back)}</b></span>`
+    + `<button id="hEdit" class="go">Change dates</button><button id="hClear" class="go">Remove</button>`
+    + `<span class="note">Shop banner, chat closure line and express off: ${fmtYmd(h.mode_from)} – ${fmtYmd(h.mode_until)}.${h.first_ready ? " First ready date after the closure: " + fmtYmd(h.first_ready) + "." : ""}</span></div>`;
+}
+async function dashHoliday(body) {
+  try {
+    const r = await fetch(DASH_SRC[0].url + "?action=holiday", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || ("server answered " + r.status));
+    DS.holiday = j; DS.holEdit = false;
+    try { const x = await fetch(DASH_SRC[0].url + "?action=express", { cache: "no-store", credentials: "same-origin" }); if (x.ok) DS.express = await x.json(); } catch (e) {}
+  } catch (e) { alert("Could not save the holiday closure: " + e.message + "\nNothing was changed."); }
+  dashRender();
+}
+async function dashExpress(to) {
+  if (!to && !confirm("Switch urgent (express) orders OFF?\nCustomers will not be able to choose express in the shop, and the chat stops offering it, until you switch it back on.")) return;
+  try {
+    const r = await fetch(DASH_SRC[0].url + "?action=express", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ available: !!to }) });
+    if (!r.ok) throw new Error(r.status); DS.express = await r.json();
+  } catch (e) { alert("Could not change the setting (" + e.message + "). Nothing was changed."); }
+  dashRender();
+}
+
+function dashRender() {
+  const box = $("dash"); if (!box) return;
+  if (DS.loading && DS.orders === null) { box.innerHTML = '<p class="muted">Loading dashboard data…</p>'; return; }
+  if (DS.err && (DS.orders === null || !DS.orders.length)) { box.innerHTML = `<p class="err">Could not load dashboard data: ${esc(DS.err)}</p><button class="btn" id="dRetry">Try again</button>`; $("dRetry").onclick = dashLoad; return; }
+  const vis = DS.orders.filter((o) => (DS.src === "all" || o._src === DS.src) && (DS.test || !o.test_mode));
+  const paid = vis.filter((o) => o.status === "paid"), pend = vis.filter((o) => o.status !== "paid");
+  const active = paid.filter((o) => !o.done), done = paid.filter((o) => o.done), rep = repeatSet(paid);
+  const subs = [["production", "Production"], ["orders", "Paid orders"], ["browse", "Browse stats"]];
+  let h = expBar() + holBar() + `<div class="sub">${subs.map(([k, t]) => `<button data-sub="${k}"${DS.sub === k ? ' class="on"' : ""}>${t}</button>`).join("")}<span class="sp"></span><select id="dSrc" style="width:auto;font-size:13px;padding:5px 8px"><option value="all">All shops</option>${DASH_SRC.map((x) => `<option value="${x.id}"${DS.src === x.id ? " selected" : ""}>${x.label}</option>`).join("")}</select><label style="display:flex;gap:5px;align-items:center;margin:0 6px;font-size:13px;color:var(--ink)"><input type="checkbox" id="dTest"${DS.test ? " checked" : ""}> Show test orders</label><span class="muted">${DS.loading ? "Refreshing…" : ""}</span><button class="btn" id="dRefresh">Refresh</button></div>`
+    + Object.entries(DS.srcErr).map(([k, v]) => `<p class="bad" style="margin:0 0 10px">${esc((DASH_SRC.find((x) => x.id === k) || {}).label || k)}: ${esc(v)}</p>`).join("");
+  if (DS.sub === "production") h += dashProduction(paid, active, done, rep);
+  else if (DS.sub === "orders") h += dashOrders(paid, pend);
+  else h += dashBrowse(paid);
+  box.innerHTML = h;
+  box.querySelectorAll("[data-sub]").forEach((b) => b.onclick = () => { DS.sub = b.dataset.sub; dashRender(); });
+  box.querySelectorAll("[data-sort]").forEach((h) => h.onclick = () => { const [kind, k] = h.dataset.sort.split(":"), cur = DS.sort[kind];
+    DS.sort[kind] = cur.k === k ? { k, dir: -cur.dir } : { k, dir: (k === "date" || k === "amount") ? -1 : 1 }; dashRender(); });
+  $("dRefresh").onclick = dashLoad;
+  if ($("dExp")) $("dExp").onclick = () => dashExpress(Number($("dExp").dataset.to));
+  if ($("hSave")) $("hSave").onclick = () => {
+    const f = $("hFrom").value, b = $("hBack").value;
+    if (!f || !b) return alert("Please fill in both dates.");
+    if (f >= b) return alert("The first working day back must be after the first closed day.");
+    dashHoliday({ from: f, back: b });
+  };
+  if ($("hEdit")) $("hEdit").onclick = () => { DS.holEdit = true; dashRender(); };
+  if ($("hCancel")) $("hCancel").onclick = () => { DS.holEdit = false; dashRender(); };
+  if ($("hClear")) $("hClear").onclick = () => { if (confirm("Remove the holiday closure?\nThe shop banner and the chat closure line disappear, and ready dates are calculated without the closure.")) dashHoliday({ clear: true }); };
+  $("dSrc").onchange = (e) => { DS.src = e.target.value; dashRender(); };
+  $("dTest").onchange = (e) => { DS.test = e.target.checked; dashRender(); };
+  box.querySelectorAll("[data-f]").forEach((c) => c.onchange = () => dashToggle(c.dataset.i, c.dataset.f));
+  box.querySelectorAll("[data-det]").forEach((b) => b.onclick = () => dashDetail(DS.orders.find((o) => o.invoice_num === b.dataset.det)));
+  box.querySelectorAll("[data-per]").forEach((b) => b.onclick = () => { DS.period = b.dataset.per; dashRender(); });
+  const ar = $("dArch"); if (ar) ar.onclick = () => { DS.archive = !DS.archive; dashRender(); };
+}
+// Sortable table headers: click = sort, click again = reverse. Keys map to a value of the order.
+const SORT_VAL = {
+  production: { date: (o) => +new Date(orderDate(o)) || 0, invoice: (o) => o.invoice_num || "", customer: (o) => (o.customer_name || "").toLowerCase(),
+    order: (o) => prodLabel(o).toLowerCase(), deadline: (o) => +(deadlineOf(o) || 0), files: (o) => o.files_checked ? 1 : 0, printed: (o) => o.printed ? 1 : 0,
+    shipped: (o) => isDpd(o) ? (o.shipped ? 1 : 0) : -1, pickup: (o) => !isDpd(o) ? (o.ready_pickup ? 1 : 0) : -1, done: (o) => o.done ? 1 : 0 },
+  orders: { date: (o) => +new Date(orderDate(o)) || 0, invoice: (o) => o.invoice_num || "", customer: (o) => (o.customer_name || "").toLowerCase(),
+    amount: (o) => money(o), delivery: (o) => isDpd(o) ? 1 : 0, status: (o) => o.status || "" },
+};
+function sortRows(rows, kind) {
+  const { k, dir } = DS.sort[kind], f = SORT_VAL[kind][k] || SORT_VAL[kind].date, dt = SORT_VAL[kind].date;
+  return [...rows].sort((a, b) => { const x = f(a), y = f(b);
+    const c = typeof x === "string" ? x.localeCompare(y, undefined, { numeric: true }) : x - y;
+    return (c || dt(b) - dt(a)) * (c ? dir : 1); });
+}
+const sth = (kind, k, label, cls) => { const on = DS.sort[kind].k === k;
+  return `<th class="${cls || ""} sortable${on ? " sorted" : ""}" data-sort="${kind}:${k}" title="Sort by ${label}">${label}<span class="arr">${on ? (DS.sort[kind].dir > 0 ? " ▲" : " ▼") : ""}</span></th>`; };
+const card = (k, v, s, cls) => `<div class="card"><div class="k">${k}</div><div class="v ${cls || ""}">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`;
+
+function dashProduction(paid, active, done, rep) {
+  const files = active.filter((o) => !o.files_checked).length, toPrint = active.filter((o) => o.files_checked && !o.printed).length;
+  const toShip = active.filter((o) => o.printed && isDpd(o) && !o.shipped).length, toPick = active.filter((o) => o.printed && !isDpd(o) && !o.ready_pickup).length;
+  const cb = (o, f, cls) => `<input type="checkbox" ${cls ? `class="${cls}" ` : ""}data-i="${esc(o.invoice_num)}" data-f="${f}"${o[f] ? " checked" : ""}>`;
+  const row = (o, faded) => { const dl = deadlineInfo(o);
+    return `<tr class="${faded ? "faded" : ""}"><td class="c muted">${fmtD(orderDate(o))}</td><td class="c inv">${esc(o.invoice_num)}</td>
+      <td><b>${esc(o.customer_name || "—")}</b>${o.test_mode ? ' <span class="pill o">TEST</span>' : ""}${rep.has(o.invoice_num) ? ' <span title="Repeat customer this week" style="color:#ff9500">★</span>' : ""}</td>
+      <td><button class="lnk" data-det="${esc(o.invoice_num)}">${esc(prodLabel(o))}</button></td>
+      <td class="c"><b class="${dl.cls}" style="${dl.warn ? "color:var(--warn)" : ""}">${isExpress(o) ? '<span title="Express">⚡</span>' : ""}${dl.label}</b></td>
+      <td class="c" style="white-space:nowrap">${fileBtn(o)}${cb(o, "files_checked")}</td><td class="c">${cb(o, "printed")}</td>
+      <td class="c">${isDpd(o) ? cb(o, "shipped") : '<span class="muted">—</span>'}</td><td class="c">${!isDpd(o) ? cb(o, "ready_pickup") : '<span class="muted">—</span>'}</td>
+      <td class="c">${cb(o, "done", "dn")}</td></tr>`; };
+  const head = `<thead><tr>${[["date", "Date"], ["invoice", "Invoice"], ["customer", "Customer"], ["order", "Order"], ["deadline", "Deadline"], ["files", "Files"], ["printed", "Printed"], ["shipped", "Shipped"], ["pickup", "Pick-up"], ["done", "Done"]].map(([k, t]) => sth("production", k, t, "c")).join("")}</tr></thead>`;
+  const sorted = sortRows(active, "production");
+  return `<div class="cards">${card("In progress", active.length)}${card("Files to check", files, "", files ? "bad" : "ok")}${card("To print", toPrint, "", toPrint ? "" : "ok")}${card("To ship", toShip, "", toShip ? "" : "ok")}${card("To pick up", toPick, "", toPick ? "" : "ok")}</div>`
+    + (!paid.length ? '<p class="muted">No orders yet.</p>' : `<div class="tw"><table>${head}<tbody>${active.length ? sorted.map((o) => row(o, false)).join("") : '<tr><td colspan="10" class="c muted">All jobs done!</td></tr>'}</tbody></table></div>`)
+    + (done.length ? `<p><button class="btn" id="dArch">${DS.archive ? "▾" : "▸"} Archive (${done.length} completed)</button></p>${DS.archive ? `<div class="tw"><table>${head}<tbody>${sortRows(done, "production").map((o) => row(o, true)).join("")}</tbody></table></div>` : ""}` : "");
+}
+
+function dashOrders(paid, pend) {
+  const real = paid.filter((o) => !o.test_mode), rev = real.reduce((a, o) => a + money(o), 0), nTest = paid.length - real.length;
+  const pill = (c, t) => `<span class="pill ${c}">${esc(t)}</span>`;
+  return `<div class="cards">${card("Total orders", real.length)}${card("Revenue (incl. VAT)", eurBE(rev), nTest ? "excl. " + nTest + " test order" + (nTest > 1 ? "s" : "") : "")}${card("Pending", pend.length, "not yet paid", pend.length ? "bad" : "")}${card("Avg. order", real.length ? eurBE(rev / real.length) : "—")}</div>`
+    + (!paid.length ? '<p class="muted">No paid orders yet.</p>' : `<div class="tw"><table><thead><tr>${sth("orders", "date", "Date")}${sth("orders", "invoice", "Invoice")}${sth("orders", "customer", "Customer")}${sth("orders", "amount", "Amount", "n")}${sth("orders", "delivery", "Delivery")}${sth("orders", "status", "Status")}</tr></thead><tbody>${sortRows(paid, "orders").map((o) =>
+      `<tr><td>${fmtD(orderDate(o), 1)}</td><td class="inv">${esc(o.invoice_num)}</td><td><b>${esc(o.customer_name || "—")}</b>${o.test_mode ? ' <span class="pill o">TEST</span>' : ""}${o.customer_company ? `<div class="muted">${esc(o.customer_company)}</div>` : ""}<div class="muted">${esc(o.customer_email || "")}</div></td><td class="n"><b>${eurBE(money(o))}</b></td><td>${isDpd(o) ? pill("b", "Delivery") : pill("n", "Pick-up")}</td><td>${pill("g", "Paid")}</td></tr>`).join("")}</tbody></table></div>`)
+    + (pend.length ? `<h2>Pending / unpaid</h2><div class="tw"><table><tbody>${pend.map((o) => `<tr><td class="muted">${fmtD(o.created_at, 1)}</td><td class="muted">${esc(o.invoice_num)}</td><td class="muted">${esc(o.customer_name || "—")}</td><td class="muted">${esc((o.specs || "—").split(" · ").slice(0, 2).join(" · "))}…</td><td class="n muted">${eurBE(parseFloat(o.amount_eur || 0))}</td><td>${pill("o", o.status || "pending")}</td></tr>`).join("")}</tbody></table></div>` : "");
+}
+
+function dashBrowse(paid) {
+  const logs = DS.logs || [], now = new Date();
+  const cut = { "7d": 7, "30d": 30, "90d": 90 }[DS.period]; const cutoff = cut ? new Date(now - cut * 86400000) : null;
+  const f = cutoff ? logs.filter((e) => e.timestamp && new Date(e.timestamp) >= cutoff) : logs;
+  const pO = paid.filter((o) => !o.test_mode && (!cutoff || new Date(orderDate(o)) >= cutoff));
+  const cap = (x) => String(x).charAt(0).toUpperCase() + String(x).slice(1);
+  const tab = (t, e) => { if (e && e.product) return cap(e.product); t = (t || "").toLowerCase(); return t.includes("poster") ? "Poster" : t.includes("colour") || t.includes("color") ? "Colour" : "Card"; };
+  const band = (p) => p < 50 ? "Under €50" : p < 100 ? "€50–100" : p < 200 ? "€100–200" : "Over €200";
+  const inc = (m, k) => { m[k] = (m[k] || 0) + 1; };
+  const C = { p: {}, s: {}, q: {}, pr: {} }, O = { p: {}, s: {}, q: {}, pr: {} }, daily = {}, sum = {}, osum = {};
+  f.forEach((e) => { const t = tab(e.tab, e); inc(C.p, t); sum[t] = (sum[t] || 0) + (parseFloat(e.price) || 0); inc(C.s, e.size || "unknown"); inc(C.q, String(e.quantity || "unknown")); inc(C.pr, band(parseFloat(e.price) || 0)); const d = (e.timestamp || "").slice(0, 10); if (d) inc(daily, d); });
+  pO.forEach((o) => { const t = prodLabel(o); inc(O.p, t); osum[t] = (osum[t] || 0) + money(o); const parts = (o.specs || "").split(" · ");
+    const it0 = Array.isArray(o.items) && o.items[0];
+    inc(O.s, it0 ? String(it0.size || "unknown") : ((parts[1] || "unknown").trim().split(" ")[0])); const qp = parts.find((x) => x.includes("cop")), qm = qp && qp.match(/(\d[\d\s']*)/); inc(O.q, it0 ? String(it0.qty || "unknown") : (qm ? qm[1].replace(/[\s']/g, "") : "unknown")); inc(O.pr, band(money(o))); });
+  const total = f.length, conv = total ? pO.length / total : 0;
+  const chart = (title, c, o, avg) => {
+    const keys = [...new Set([...Object.keys(c), ...Object.keys(o)])].map((k) => ({ k, c: c[k] || 0, o: o[k] || 0 })).sort((a, b) => b.c - a.c).slice(0, 8), mx = Math.max(...keys.map((x) => x.c), 1);
+    return `<div class="bx"><div class="t">${title}</div>${keys.map((x) => `<div class="br"><span class="l">${esc(x.k)}</span><span class="tr"><span class="o" style="width:${x.o / mx * 100}%" title="${x.o} ordered"></span><span class="y" style="width:${Math.max(x.c - x.o, 0) / mx * 100}%" title="${Math.max(x.c - x.o, 0)} browsed only"></span></span><span class="m"><b style="color:var(--accent)">${x.o}</b> / ${x.c}${avg && avg[x.k] ? ` · ~${eurBE(avg[x.k])}` : ""}</span></div>`).join("")}<div class="lg"><span><i style="background:var(--accent)"></i>Ordered</span><span><i style="background:#cfc8c0"></i>Browsed only</span></div></div>`; };
+  const avg = {}; Object.keys({ ...C.p, ...O.p }).forEach((k) => { avg[k] = O.p[k] ? osum[k] / O.p[k] : C.p[k] ? sum[k] / C.p[k] : 0; });
+  const nd = cut || 30, days = []; for (let i = nd - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); days.push(d.toISOString().slice(0, 10)); }
+  const mxd = Math.max(...days.map((d) => daily[d] || 0), 1);
+  return `<div class="sub per"><span class="muted">Period:</span>${[["7d", "7 days"], ["30d", "30 days"], ["90d", "90 days"], ["all", "All time"]].map(([k, t]) => `<button data-per="${k}"${DS.period === k ? ' class="on"' : ""}>${t}</button>`).join("")}</div>
+    <div class="cards">${card("Calculations", total)}${card("Orders", pO.length, "", "ok")}${card("Conversion", total ? (conv * 100).toFixed(1) + "%" : "—", "calculated → ordered")}${card("Browse only", Math.max(total - pO.length, 0), "didn't order")}</div>`
+    + (!total ? '<p class="muted">No browse data in this period. Calculator visits are logged by the live shop (/flyers/).</p>' : `<div class="bars">${chart("Interest by product", C.p, O.p, avg)}${chart("Interest by size", C.s, O.s)}${chart("Interest by quantity", C.q, O.q)}${chart("Price range interest", C.pr, O.pr)}
+    <div class="bx" style="grid-column:1/-1"><div class="t">Daily calculations (last ${nd} days)</div><div class="daily">${days.map((d) => `<div class="${daily[d] ? "" : "z"}" style="height:${(daily[d] || 0) / mxd * 100}%" title="${d}: ${daily[d] || 0}"></div>`).join("")}</div></div></div>`);
+}
+
+function dashDetail(o) {
+  if (!o) return;
+  const dl = deadlineInfo(o);
+  const items = Array.isArray(o.items) && o.items.length ? o.items.map((i) => i.specs_line || [i.product, i.size, i.qty && i.qty + " copies"].filter(Boolean).join(" · ")) : (o.specs || "").split(" · ").filter((p) => { const l = p.trim().toLowerCase(); return !l.startsWith("delivery") && !l.startsWith("pick-up"); });
+  const m = document.createElement("div"); m.className = "modal";
+  m.innerHTML = `<div class="box"><div style="display:flex;justify-content:space-between"><div><h3>Order ${esc(o.invoice_num)}</h3><span class="muted">${fmtD(orderDate(o), 1)}</span></div><button class="btn" id="mx">×</button></div>
+    <div class="sec">Deadline</div><b class="${dl.cls}">${isExpress(o) ? "⚡ " : ""}${dl.label}</b>${isExpress(o) ? ' <span class="bad">EXPRESS</span>' : ""}
+    <div class="sec">Customer</div><div><b>${esc(o.customer_name || "—")}</b></div>${o.customer_company ? `<div class="muted">${esc(o.customer_company)}</div>` : ""}<div class="muted">${esc(o.customer_email || "")}${o.customer_phone ? " · " + esc(o.customer_phone) : ""}</div>${o.customer_address ? `<div class="muted">${esc(o.customer_address)}, ${esc(o.customer_zip || "")} ${esc(o.customer_city || "")}</div>` : ""}
+    <div class="sec">Order details</div><div class="sp2">${items.map((p) => `<div>${esc(String(p).trim())}</div>`).join("")}</div>
+    <div class="sec">Files</div><div class="mfiles" id="mFiles"><span class="muted">Loading…</span></div>
+    <div class="sec">Delivery</div><div><b>${isDpd(o) ? "DPD / Bike" : "Pick-up at shop"}</b></div>${isDpd(o) && o.ship_address ? `<div class="muted">${esc(o.ship_address)}, ${esc(o.ship_zip || "")} ${esc(o.ship_city || "")}</div>` : ""}
+    <div class="sec">Amount</div><div><b>${eurBE(money(o))}</b> incl. VAT${o.vat_number ? ` <span class="muted">· VAT ${esc(o.vat_number)} · ${o.doc_type === "invoice" ? "Invoice" : "Receipt"}</span>` : ""}</div></div>`;
+  const close = () => m.remove(); m.onclick = (e) => { if (e.target === m) close(); };
+  document.body.appendChild(m); m.querySelector("#mx").onclick = close;
+  const fx = m.querySelector("#mFiles");
+  fetch(srcUrl(o) + "?action=files&invoice=" + encodeURIComponent(o.invoice_num), { cache: "no-store", credentials: "same-origin" })
+    .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+    .then((j) => {
+      if (!j.total) { fx.innerHTML = `<span class="muted">${j.purged ? "Deleted" + (j.purged_at ? " on " + fmtD(j.purged_at, 1) : "") + " (automatically, 6 months after payment)." : "No files uploaded."}</span>`; return; }
+      fx.innerHTML = j.groups.map((g) => `<div class="fl">${esc(g.label)}</div>` + g.files.map((f) =>
+        `<div class="fr"><span>${esc(f.name)} <span class="muted">${fsize(f.size)}</span></span><a href="${esc(dlUrl(o, f.path))}" download>⬇ Download</a></div>`).join("")).join("")
+        + (j.total > 1 ? `<a class="btn dla" href="${esc(dlUrl(o))}" download>⬇ Download all (${esc(o.invoice_num)}.zip)</a>` : "");
+    })
+    .catch((e) => { fx.innerHTML = `<span class="bad">Could not load the file list${e === 404 ? " (upload the new api-dashboard.php)" : ""}.</span>`; });
+}
+
+// events
+$("product").addEventListener("change", () => onProduct(false));
+$("size").addEventListener("change", () => { onSize(true); calc(); });
+$("allPapers").addEventListener("change", () => { fillPapers(true); calc(); });
+["fold", "express", "delivery", "pages", "cover"].forEach((id) => $(id).addEventListener("change", calc));
+$("paper").addEventListener("change", () => { fillCover(true); calc(); });
+$("modes").addEventListener("change", () => { fillPapers(true); calc(); });
+["qty", "versions"].forEach((id) => $(id).addEventListener("input", calc));
+$("qtyChips").addEventListener("click", (e) => { if (e.target.dataset.q) { $("qty").value = e.target.dataset.q; calc(); } });
+document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
+  ["calc", "jobs", "dash"].forEach((t) => $("tab-" + t).classList.toggle("hide", b.dataset.tab !== t));
+  if (b.dataset.tab === "dash") dashOpen();
+}));
+$("pickBtn").addEventListener("click", () => $("pick").click());
+$("pick").addEventListener("change", async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { setData(XLSX.read(await f.arrayBuffer()), f.name + " (from your computer)"); }
+  catch (err) { $("srcInfo").innerHTML = `<span class="err">${esc(f.name)}: not a readable xlsx</span>`; }
+});
+
+// self-test: recalculate the prices the update script wrote in selftest.json
+function selfTest(st) {
+  const box = $("selftest"); box.classList.remove("hide");
+  let bad = 0, first = null;
+  for (const j of st.jobs) {
+    let got = null;
+    try { got = CCEngine.price(D, j.o).incl; } catch (e) { got = null; }
+    const ok = (j.incl === null) === (got === null) && (j.incl === null || Math.abs(j.incl - got) < 0.005);
+    if (!ok) { bad++; if (!first) first = { o: j.o, expected: j.incl, got }; }
+  }
+  if (bad) {
+    box.style.cssText += ";background:#c0261a;color:#fff;font-weight:700";
+    box.textContent = `PRICE CHECK FAILED: ${bad} of ${st.jobs.length} prices differ from the update script. Do not use these prices. First: ${JSON.stringify(first)}`;
+  } else {
+    box.style.cssText += ";background:#e3f1e6;color:#1d7a3a";
+    box.textContent = `✓ Price check OK: ${st.jobs.length} prices identical to the update script (${st.version}, ${st.made}).`;
+  }
+}
+
+// Load the price file of the SHOP (one price file on the server, 25 Oct 2026): /shop/api/data/price-data.xlsx,
+// served by the shop's dashboard API behind the same staff login. This folder no longer keeps its own copy.
+const PRICE_API = "/shop/api/api-dashboard.php";
+fetch(PRICE_API + "?action=pricedata", { cache: "no-store", credentials: "same-origin" })
+  .then((r) => { if (!r.ok) throw new Error(r.status); const lm = r.headers.get("Last-Modified"); return r.arrayBuffer().then((b) => [b, lm]); })
+  .then(([b, lm]) => setData(XLSX.read(b), "price-data.xlsx (shop)" + (lm ? " · uploaded " + new Date(lm).toLocaleDateString("en-GB") : "")))
+  .then(() => fetch(PRICE_API + "?action=selftest", { cache: "no-store", credentials: "same-origin" }).then((r) => r.ok ? r.json() : null).then((st) => { if (st && D) selfTest(st); else { $("selftest").classList.remove("hide"); $("selftest").textContent = "selftest.json not found in shop/api/data/ — run Update prices and upload the folder shop."; } }).catch(() => {}))
+  .catch(() => { $("srcInfo").textContent = "No price file loaded"; $("noData").classList.remove("hide"); $("calcGrid").classList.add("hide"); });
+</script>
+</body>
+</html>

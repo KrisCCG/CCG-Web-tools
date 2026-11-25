@@ -1,0 +1,202 @@
+# ==========================================================================
+#  LE PAPIER — texte français
+#  Modifiez le texte ci-dessous, puis lancez :  python3 build.py
+#
+#  [id]  Heading      opens a section. The body under it is HTML.
+#  {photos slug | caption A | caption B}   a pair of sample photos.
+#  Lines starting with # are notes and are never printed.
+# ==========================================================================
+
+title:          Le papier — Click Click Graphics
+desc:           MultiArt Silk, Biotop et RecyStar : le toucher de chaque papier, son effet sur l’encre, et lequel choisir.
+h1:             Le papier
+sub:            Trois papiers dans la boutique. Ce que chacun donne sous les doigts, et ce qu’il fait à votre encre.
+back:           Retour à la boutique
+updated:        Dernière mise à jour le 19 août 2026
+contents:       Sur cette page
+nav:            Services > https://tiegel.be/ | Boutique > /flyers/ | Papier > SELF | Conditions > /legal/fr.html
+footer:         Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> · +32 2 880 70 36 <em>!!</em>
+photo-pending:  Photo à venir
+
+# --------------------------------------------------------------------------
+[choose]  Choisir en dix secondes
+
+<p class="lede">Les trois papiers de la boutique ne sont pas bon, meilleur et excellent. Ce sont
+trois caractères différents, et le bon dépend de ce que la pièce doit faire.</p>
+<div class="tw"><table>
+<tr><th>Si vous voulez</th><th>Prenez</th><th>Parce que</th></tr>
+<tr><td>Des photos, des noirs profonds, une couleur précise</td><td><strong>MultiArt Silk</strong></td>
+    <td>Il est couché : l’encre reste en surface au lieu de pénétrer</td></tr>
+<tr><td>Une page chaude et naturelle sur laquelle écrire</td><td><strong>Biotop</strong></td>
+    <td>Non couché et légèrement crème — un stylo, un tampon ou une signature y tiennent</td></tr>
+<tr><td>L’empreinte la plus faible, avec du caractère</td><td><strong>RecyStar</strong></td>
+    <td>100&nbsp;% recyclé et non blanchi ; on voit les fibres dont il est fait</td></tr>
+</table></div>
+
+# --------------------------------------------------------------------------
+[multiart]  MultiArt Silk — couché, blanc vif
+
+<p class="lede">Le cheval de trait. Une feuille couchée satinée, d’un blanc vif, qui tient la
+couleur exactement là où vous la posez.</p>
+{photos multiart-silk | La feuille vierge | Le même papier, imprimé}
+<h3>Le toucher</h3>
+<p>Lisse et froid, avec un très léger éclat. Un couchage satiné se situe entre le brillant et le
+mat : il ne brille pas, il ne vous renvoie pas la lumière du plafonnier, mais on sent que la
+surface a été fermée. L’ongle glisse dessus sans accroche.</p>
+
+<h3>Ce qu’il fait à l’encre</h3>
+<p>Le couchage empêche le papier de boire. L’encre reste au-dessus et y sèche : les couleurs
+sortent presque à pleine puissance, les noirs sont denses plutôt que gris, et un corps 6 reste
+lisible au lieu de baver sur les bords. Si votre mise en page repose sur une photo, un dégradé ou
+un grand aplat, c’est la feuille qui le montrera.</p>
+
+<h3>Où il fonctionne</h3>
+<p>Les flyers avec images. Les affiches qui doivent se lire de loin. Les cartes de visite qui
+doivent claquer. Tout ce où l’impression est le sujet et où le papier doit s’effacer.</p>
+
+<h3>À surveiller</h3>
+<p>Ce n’est pas un papier d’écriture — le bic glisse et l’encre bave. Dans les grammages lourds, un
+grand aplat foncé garde les traces de doigts. Et le blanc vif l’est vraiment : à l’écran, une photo
+chaude peut paraître plus chaude qu’elle ne le sera sur cette feuille.</p>
+
+<h3>Provenance</h3>
+<p>Couché sans bois, certifié FSC.</p>
+
+# --------------------------------------------------------------------------
+[biotop]  Biotop — non couché, blanc naturel chaud
+
+<p class="lede">Le discret. Non couché, légèrement crème, et le seul de la liste sur lequel on
+écrive confortablement.</p>
+{photos biotop | La feuille vierge | Le même papier, imprimé}
+<h3>Le toucher</h3>
+<p>Sec et légèrement chaud, avec un grain fin que le doigt perçoit. La teinte est un blanc cassé
+naturel — il n’a pas été blanchi jusqu’au bleu, il paraît donc chaud à côté d’une feuille MultiArt.
+Il est aussi bouffant : une carte Biotop de 300&nbsp;g/m<sup>2</sup> paraît plus épaisse qu’une couchée du
+même grammage.</p>
+
+<h3>Ce qu’il fait à l’encre</h3>
+<p>Un papier non couché absorbe. Les couleurs se posent un cran plus bas, les noirs se lisent comme
+un anthracite profond plutôt qu’un noir de jais, et le détail très fin s’adoucit un peu à mesure
+que l’encre gagne les fibres. En échange, la page n’éblouit pas, se lit sans fatigue et paraît
+fabriquée plutôt que produite.</p>
+
+<h3>Où il fonctionne</h3>
+<p>Les flyers portés par le texte. Les faire-part et la papeterie de mariage. Le papier à en-tête.
+Les cartes de visite sur lesquelles on écrira un nom, une date, un rendez-vous. Tout ce qui doit
+avoir une allure chaude ou éditoriale.</p>
+
+<h3>À surveiller</h3>
+<p>N’attendez pas d’une photo qu’elle éclate. Un grand aplat foncé paraîtra plus doux et moins
+régulier qu’à l’écran, et la teinte de fond colore très légèrement tout le reste — les gris clairs
+prennent un peu de crème, et le blanc éclatant n’existe pas ici.</p>
+
+<h3>Provenance</h3>
+<p>Un papier non couché totalement sans chlore (TCF), porteur de l’Écolabel européen et de la
+certification FSC.</p>
+
+# --------------------------------------------------------------------------
+[recystar]  RecyStar — 100 % recyclé, non blanchi
+
+<p class="lede">L’honnête. Fait entièrement de papier récupéré, laissé non blanchi, et il ne
+prétend pas le contraire.</p>
+{photos recystar | La feuille vierge | Le même papier, imprimé}
+<h3>Le toucher</h3>
+<p>Proche du Biotop dans la main — non couché, sec, un léger grain — mais plus gris et plus chaud
+de teinte, avec de minuscules éclats des fibres dont il est né, dispersés dans la feuille. Ces
+éclats sont l’intérêt même : ils disent, sans logo ni argument, que ce papier a eu une vie
+avant celle-ci.</p>
+
+<h3>Ce qu’il fait à l’encre</h3>
+<p>Il absorbe comme le Biotop, puis sa teinte de fond plus sombre abaisse encore l’ensemble d’un
+cran. Le même fichier imprimé sur MultiArt Silk et sur RecyStar donne deux mises en page
+différentes : sur RecyStar toute la gamme est comprimée, plus calme et plus douce, avec moins
+d’écart entre la zone la plus claire et la plus foncée.</p>
+
+<h3>Où il fonctionne</h3>
+<p>Partout où la matière fait partie du message. Fanzines et affiches à l’allure brute, cartes
+d’ateliers et de créateurs, et tous les travaux où le contenu recyclé compte plus que l’éclat.</p>
+
+<h3>À surveiller</h3>
+<p>Il n’y a pas d’encre blanche. Toute zone laissée blanche dans votre fichier ressort à la couleur
+du papier — un gris chaud — donc une mise en page bâtie sur du blanc franc se lira autrement. La
+teinte varie aussi un peu d’un lot à l’autre : c’est normal pour un papier recyclé, ce n’est pas un
+défaut.</p>
+
+<h3>Provenance</h3>
+<p>Fibres 100&nbsp;% recyclées, non blanchies, portant l’Ange Bleu et l’Écolabel européen.</p>
+
+# --------------------------------------------------------------------------
+[gsm]  Ce que veut dire le grammage
+
+<p>Le papier se vend au grammage — grammes par mètre carré. C’est un poids, pas une épaisseur,
+mais à l’intérieur d’une même famille il en tient lieu : plus le chiffre est haut, plus la feuille
+est rigide.</p>
+<div class="tw"><table>
+<tr><th>Grammage</th><th>L’impression</th><th>À utiliser pour</th></tr>
+<tr><td>115 – 135 g/m<sup>2</sup></td><td>Une page de magazine. Se plie sans effort, s’empile à plat.</td>
+    <td>Les flyers distribués par centaines</td></tr>
+<tr><td>160 – 170 g/m<sup>2</sup></td><td>Nettement plus rigide. Tient sa forme quand on la prend par un coin.</td>
+    <td>Les affiches, et les flyers qui doivent survivre à une poche</td></tr>
+<tr><td>250 g/m<sup>2</sup></td><td>Une carte légère. Tient debout toute seule.</td>
+    <td>Faire-part, cartes de fidélité, une carte au budget serré</td></tr>
+<tr><td>300 g/m<sup>2</sup></td><td>Le grammage standard de la carte de visite.</td>
+    <td>Cartes de visite, faire-part, tout ce qui doit paraître solide</td></tr>
+<tr><td>350 – 400 g/m<sup>2</sup></td><td>Épais. Fait un bruit en tombant sur une table.</td>
+    <td>Les cartes dont on doit se souvenir</td></tr>
+</table></div>
+<p>Comme le Biotop et le RecyStar sont non couchés et bouffants, ils paraissent plus épais qu’une
+couchée du même grammage. Une carte Biotop 300&nbsp;g/m<sup>2</sup> et une MultiArt Silk 350&nbsp;g/m<sup>2</sup> sont de
+proches cousines dans la main.</p>
+
+# --------------------------------------------------------------------------
+[colour]  La couleur, et pourquoi le papier la change
+
+<p>Un écran est une lampe : il fabrique la couleur en vous envoyant de la lumière. Le papier, non —
+il ne peut que renvoyer la lumière déjà présente dans la pièce. Cette seule différence fait qu’une
+impression ne sera jamais la copie exacte de ce que vous avez validé sur un moniteur, et ce n’est
+pas un défaut.</p>
+<p>Le papier ajoute ensuite son propre accent. Le même fichier sur nos trois papiers donne trois
+résultats : le plus vif et le plus contrasté sur MultiArt Silk, un cran plus calme et plus chaud
+sur Biotop, plus calme et plus gris encore sur RecyStar.</p>
+<ul>
+  <li><strong>Nous imprimons en CMJN.</strong> Les couleurs d’écran très saturées — bleus
+      électriques, verts fluo — sortent de ce que quatre encres peuvent atteindre et reviendront un
+      peu plus sourdes.</li>
+  <li><strong>Il n’y a pas d’encre blanche.</strong> Le blanc dans votre fichier signifie « laisser
+      le papier nu » : sur Biotop il est crème, sur RecyStar gris chaud. Sauf sur un papier de
+      couleur : là, nous pouvons imprimer en blanc.</li>
+  <li><strong>Les grands aplats montrent le papier le plus.</strong> Si la mise en page est un
+      grand champ de couleur, choisissez le papier à dessein.</li>
+</ul>
+
+# --------------------------------------------------------------------------
+[ask]  Les papiers que nous avons, mais ne vendons pas en ligne
+
+<p>Le menu déroulant contient les trois papiers que nous savons chiffrer instantanément. L’atelier
+en contient bien davantage. Ceux-ci se devisent à la main, car le prix dépend du format et du
+tirage.</p>
+
+<h3>Colorplan</h3>
+{photos colorplan | La feuille vierge | Le même papier, imprimé}
+<p>Le papier de couleur de GF Smith, fabriqué au Royaume-Uni, dans une cinquantaine de teintes
+franches de 135 à 700&nbsp;g/m<sup>2</sup>. La couleur est teintée dans la masse : une tranche coupée ou un pli
+montre de la couleur et non une âme blanche — d’où son statut de choix classique pour une carte de
+visite sérieuse, un faire-part ou une couverture. Deux feuilles peuvent être contrecollées pour
+obtenir une carte à tranche colorée.</p>
+
+<h3>La collection Fedrigoni</h3>
+{photos fedrigoni | La feuille vierge | Le même papier, imprimé}
+<p>Papetier italien, avec une énorme collection de papiers spéciaux.</p>
+
+<h3>Color 1802</h3>
+{photos color-1802 | La feuille vierge | Le même papier, imprimé}
+<p>Un papier de couleur, le concurrent du Colorplan. Cela vaut vraiment le coup d’œil.</p>
+
+<h3>Et dans les casiers</h3>
+<p>Arena en rough et smooth, Woodstock, Old Mill, Cotton Pure, Splendorgel, Splendorlux,
+Constellation Snow, Lessebo Design, Matrica kraft, et un Sirio 700&nbsp;g/m<sup>2</sup> pour quand il faut
+quelque chose de vraiment massif.</p>
+<div class="note"><p><strong>Pour commander sur l’un de ceux-ci :</strong> utilisez la demande de
+devis dans la <a href="/flyers/">boutique</a>, ou écrivez à
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> avec le format, la
+quantité et le papier. Nous répondons par un prix, pas par un formulaire.</p></div>

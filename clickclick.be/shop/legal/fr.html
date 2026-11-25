@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mentions légales, vie privée & conditions — Click Click Graphics</title>
+<meta name="description" content="Mentions légales, politique de confidentialité et conditions de vente de Click Click Graphics SRL, Bruxelles.">
+<link rel="icon" href="data:,">
+<style>
+/* GT Pressura — the Click Click brand face, and the face tiegel.be is set in.
+   Italic is load-bearing, not decoration: the "!" in the wordmark and the "!!"
+   sign-off are italic glyphs. */
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700-italic.woff2) format('woff2')}
+
+/* Sampled off tiegel.be; identical to the restyled shop. */
+:root{--cream:#fff5ef;--peach:#ffe5d4;--ink:#000;--ink-dim:#4a4a4a;--indigo:#4200ff;--line:#e6d6c3}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
+  font-family:'GT Pressura',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+em{font-style:italic}
+a{color:var(--indigo)}
+
+/* ── Top bar — full-bleed indigo, cream wordmark ─────────────────────────── */
+.bar{background:var(--indigo);color:var(--cream);position:sticky;top:0;z-index:5}
+/* One line, always. The bar must never wrap: the FR labels are the longest
+   (Boutique / Papier / Conditions) and used to push the nav onto a second row
+   below ~500px. Instead of wrapping, the WORDMARK steps down — full, then
+   without "Graphics", then to the bare "!!" brand mark — which buys back the
+   width the longer language needs. */
+.bar .in{max-width:1280px;margin:0 auto;padding:14px 28px;display:flex;
+  justify-content:space-between;align-items:center;gap:20px;flex-wrap:nowrap}
+.bar a{color:var(--cream);text-decoration:none}
+.mark{font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;
+  white-space:nowrap;flex:none}
+.mark .mk-min{display:none}
+.bar nav{display:flex;align-items:center;gap:22px;font-size:15px;white-space:nowrap;flex:none}
+.bar nav a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.langs{display:flex;gap:2px;background:rgba(255,245,239,.16);border-radius:999px;padding:3px}
+.langs a{padding:4px 10px;border-radius:999px;opacity:.6;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase}
+.langs a.on{background:var(--cream);color:var(--indigo);opacity:1}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px}
+
+/* ── Hero ────────────────────────────────────────────────────────────────────
+   The page title takes the same rule-above / rule-below treatment as the
+   section headings, just larger. Sentence case, no "!!" mark. */
+.hero{padding:52px 0 44px}
+hr.r{border:0;border-top:1.5px solid var(--indigo);margin:0}
+h1{color:var(--indigo);font-weight:400;line-height:1.1;letter-spacing:-.015em;
+  font-size:clamp(34px,6vw,64px);margin:0;padding:12px 0 16px;text-wrap:balance}
+/* No `max-width` in ch anywhere in the body copy: the text fills whatever
+   column it is in and reflows with the viewport, rather than sitting in a
+   fixed block with dead space beside it. In the photo sections the grid
+   column is the measure; in full-width sections the page is. */
+.sub{font-size:clamp(17px,2vw,23px);line-height:1.35;margin:24px 0 22px}
+.back{margin:0;font-size:15px}
+.back a{text-decoration:none;border-bottom:1px solid var(--indigo);padding-bottom:1px}
+
+/* Pill button. Unused by /papers/ — kept because it is a real component of
+   this look (tiegel's "Order online"), and the next page will want it. */
+.pill{display:inline-block;background:var(--indigo);color:var(--cream);text-decoration:none;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 20px;border-radius:999px;margin:0 8px 14px 0}
+.pill:hover{background:#3300c1}
+.pill.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo)}
+.pill.ghost:hover{background:var(--indigo);color:var(--cream)}
+
+/* ── Contents + section headings — tiegel's rule/heading/rule sandwich ───── */
+nav.toc{margin:0 0 56px}
+nav.toc ol{list-style:none;margin:0;padding:14px 0 0;columns:2;column-gap:44px}
+nav.toc li{margin:0 0 9px;break-inside:avoid;font-size:16px}
+nav.toc li a{text-decoration:none;border-bottom:1px solid transparent}
+nav.toc li a:hover{border-bottom-color:var(--indigo)}
+nav.toc .n{opacity:.55;font-weight:700;font-size:12px;letter-spacing:.1em;margin-right:9px}
+nav.toc .lbl{display:block;padding:14px 0 0;color:var(--indigo);font-size:12px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+section{padding:0 0 68px;scroll-margin-top:76px}
+h2{color:var(--indigo);font-weight:400;font-size:clamp(25px,3.5vw,40px);line-height:1.15;
+  letter-spacing:-.01em;margin:0;padding:14px 0 16px;display:flex;gap:.6em;align-items:baseline}
+h2 .n{font-size:.42em;opacity:.55;font-weight:700;letter-spacing:.1em;flex:none}
+
+/* ── Section body ───────────────────────────────────────────────────────── */
+.body{padding-top:26px}
+.lede{font-size:clamp(18px,2.1vw,25px);line-height:1.3;letter-spacing:-.01em;
+  margin:0 0 26px;color:var(--ink)}
+/* h3 is the small label (/papers/: "How it feels"). h3.plain is a real
+   sentence-case subheading (/legal/: "Prices", "Your artwork"). */
+h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--indigo);
+  margin:24px 0 8px}
+h3.plain{font-size:18px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin:26px 0 8px}
+p,li{font-size:15.5px;line-height:1.6}
+p{margin:0 0 14px}
+sup{font-size:.68em;line-height:0;vertical-align:.45em}
+ul{padding-left:20px;margin:0 0 14px}
+li{margin-bottom:7px}
+dl{margin:0 0 18px;display:grid;grid-template-columns:210px 1fr;gap:9px 20px;font-size:15.5px}
+dt{color:var(--indigo)}
+dd{margin:0}
+.tw{overflow-x:auto;margin:0 0 18px;clear:both}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:480px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--indigo);
+  border-bottom:1.5px solid var(--indigo)}
+.note{background:var(--peach);padding:18px 22px;margin:0 0 20px;clear:both}
+.note p:last-child{margin:0}
+.note.warn{border-left:4px solid #ef3226}
+
+/* ── Photo pair ──────────────────────────────────────────────────────────────
+   Two columns: the photo pair holds the left, all prose runs down the right.
+   Explicit grid placement, NOT a float — a float plus `max-width` on <p>
+   squeezes the paragraph's line boxes to zero and drops every paragraph below
+   the image, which is exactly the bug this replaced.
+
+   The photo is a CSS background on a pseudo-element, NOT an <img>. These
+   directories ship `script-src 'none'`, so a JS onerror fallback would never
+   fire and a not-yet-uploaded photo would show a broken-image icon on a live
+   page. A background that 404s simply paints nothing and the pending label
+   underneath shows through. */
+.sec-photos .body{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);
+  column-gap:44px;align-items:start}
+.sec-photos .body > *{grid-column:2;min-width:0}
+.sec-photos .body > .shots{grid-column:1;grid-row:1/span 99}
+.shot{margin:0 0 14px}
+.shot .frame{position:relative;aspect-ratio:4/3;background:var(--peach)}
+.shot .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:11px;line-height:1.4;color:var(--indigo);
+  letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.shot .frame::after{content:"";position:absolute;inset:0;
+  background-image:var(--shot);background-size:cover;background-position:center;
+  background-repeat:no-repeat}
+.shot figcaption{font-size:12px;line-height:1.35;padding:7px 0 0;color:var(--ink-dim)}
+/* Pairs set inline between subheadings rather than beside a column of prose. */
+.inline-shots .shots{width:100%;margin:14px 0 18px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inline-shots .shot{margin:0}
+
+footer{background:var(--peach);margin-top:20px;padding:34px 0 40px}
+footer .in{max-width:1280px;margin:0 auto;padding:0 28px;font-size:13.5px;line-height:1.6;
+  color:var(--ink-dim)}
+.updated{color:var(--ink-dim);font-size:12.5px;margin:14px 0 0;opacity:.8}
+footer em{color:var(--indigo);font-style:italic;font-weight:700}
+
+@media(max-width:760px){
+  .sec-photos .body{display:block}
+  .shots{margin:0 0 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .shot{margin:0}
+  nav.toc ol{columns:1}
+  .bar .in{padding:11px 18px;gap:12px}
+  .mark{font-size:15px}
+  .mark .mk-long{display:none}
+  .bar nav{gap:14px;font-size:14px}
+  .wrap,footer .in{padding:0 18px}
+  dl{grid-template-columns:1fr;gap:2px 0}
+  dt{margin-top:10px}
+}
+@media(max-width:560px){
+  .bar .in{padding:10px 14px;gap:10px}
+  .bar nav{gap:10px;font-size:12.5px}
+  .langs{padding:2px}
+  .langs a{padding:3px 6px;font-size:10px;letter-spacing:.05em}
+}
+@media(max-width:460px){
+  .shots,.inline-shots .shots{grid-template-columns:1fr}
+  /* Below this the full wordmark cannot share a line with three nav labels
+     and the language pill, so it drops to the "!!" mark alone. */
+  .mark .mk-short{display:none}
+  .mark .mk-min{display:inline;font-size:20px}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="mark" href="https://tiegel.be/" aria-label="Click Click Graphics"><span class="mk-short">Cl<em>!</em>ck Cl<em>!</em>ck</span><span class="mk-long"> Graphics</span><span class="mk-min"><em>!!</em></span></a>
+  <nav><a class="" href="https://tiegel.be/">Services</a><a class="" href="/shop/">Boutique</a><a class="" href="/papers/fr.html">Papier</a><a class="cur" href="fr.html">Conditions</a><span class="langs"><a class="" href="index.html">EN</a><a class="on" href="fr.html">FR</a><a class="" href="nl.html">NL</a></span></nav>
+</div></header>
+
+<div class="wrap">
+<div class="hero">
+  <hr class="r"><h1>Mentions légales, vie privée &amp; conditions</h1><hr class="r">
+  <p class="sub">Click Click Graphics SRL — Bruxelles</p>
+  <p class="back"><a href="/shop/">&larr; Retour à la boutique</a></p>
+</div>
+
+<nav class="toc"><hr class="r"><span class="lbl">Sur cette page</span><ol><li><a href="#company"><span class="n">01</span>Qui sommes-nous</a></li><li><a href="#privacy"><span class="n">02</span>Politique de confidentialité</a></li><li><a href="#data"><span class="n">03</span>Ce que nous collectons et pourquoi</a></li><li><a href="#sharing"><span class="n">04</span>Qui d’autre y a accès</a></li><li><a href="#retention"><span class="n">05</span>Combien de temps nous les conservons</a></li><li><a href="#rights"><span class="n">06</span>Vos droits</a></li><li><a href="#cookies"><span class="n">07</span>Cookies et traçage</a></li><li><a href="#terms"><span class="n">08</span>Conditions de vente</a></li></ol><hr class="r"></nav>
+<section id="company" class="sec">
+<hr class="r">
+<h2><span class="n">01</span>Qui sommes-nous</h2>
+<hr class="r">
+<div class="body">
+<p>Ce site et la boutique d’impression en ligne sont exploités par :</p>
+<dl>
+  <dt>Société</dt><dd>Click Click Graphics SRL</dd>
+  <dt>Siège social</dt><dd>Rue d’Alost 7-11, 1000 Bruxelles, Belgique</dd>
+  <dt>N° d’entreprise / TVA</dt><dd>BE 0732.984.161</dd>
+  <dt>E-mail</dt><dd><a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a> — général<br>
+                     <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> — commandes</dd>
+  <dt>Téléphone</dt><dd>+32 2 880 70 36</dd>
+</dl>
+<p>Click Click Graphics SRL est le responsable du traitement des données personnelles décrites ci-dessous.</p></div>
+</section>
+<section id="privacy" class="sec">
+<hr class="r">
+<h2><span class="n">02</span>Politique de confidentialité</h2>
+<hr class="r">
+<div class="body">
+<p>Cette page est courte parce qu’il n’y a pas grand-chose à dire. Nous ne faisons pas de publicité,
+nous ne profilons personne, et nous ne partageons vos données avec personne d’autre que ceux dont
+nous avons besoin pour imprimer et livrer votre commande.</p>
+<div class="note"><p><strong>Aucun cookie, aucun traçage.</strong> Ce site ne dépose aucun cookie et
+n’utilise aucun outil de mesure d’audience. La seule chose enregistrée dans votre navigateur est la
+langue que vous avez choisie, afin que le site reste dans votre langue. Cette information ne quitte
+jamais votre appareil et ne requiert aucun consentement — c’est pourquoi vous ne voyez aucune
+bannière de cookies.</p></div>
+<p>Les polices, scripts et images sont servis depuis notre propre serveur. Aucun tiers n’est
+contacté du simple fait que vous consultez une page.</p></div>
+</section>
+<section id="data" class="sec">
+<hr class="r">
+<h2><span class="n">03</span>Ce que nous collectons et pourquoi</h2>
+<hr class="r">
+<div class="body">
+<div class="tw"><table>
+<tr><th>Quoi</th><th>Quand</th><th>Pourquoi — et base légale</th></tr>
+<tr><td>Nom, e-mail, téléphone, adresse de facturation et de livraison, n° de TVA pour les
+    sociétés</td><td>Lors de votre commande</td>
+    <td>Pour produire, facturer et livrer votre commande. <em>Exécution du contrat ; obligation
+    légale.</em></td></tr>
+<tr><td>Les fichiers que vous téléversez</td><td>Lors de votre commande</td>
+    <td>Pour imprimer votre travail. Nous ne réutilisons jamais vos fichiers et ne les montrons pas
+    en dehors de l’atelier. <em>Exécution du contrat.</em></td></tr>
+<tr><td>Statut et référence de paiement</td><td>Au paiement</td>
+    <td>Pour confirmer votre paiement. Nous ne voyons ni ne conservons vos données bancaires.
+    <em>Exécution du contrat.</em></td></tr>
+<tr><td>Ce que vous écrivez dans le chat, et vos coordonnées si vous les donnez</td>
+    <td>Si vous utilisez l’assistant</td>
+    <td>Pour préparer une demande de devis et vous répondre. <em>Intérêt légitime à répondre aux
+    demandes.</em></td></tr>
+<tr><td>Journaux du serveur et empreinte à sens unique de votre adresse IP</td><td>Automatiquement</td>
+    <td>Sécurité et prévention des abus. L’empreinte ne peut pas être reconvertie en adresse.
+    <em>Intérêt légitime.</em></td></tr>
+</table></div></div>
+</section>
+<section id="sharing" class="sec">
+<hr class="r">
+<h2><span class="n">04</span>Qui d’autre y a accès</h2>
+<hr class="r">
+<div class="body">
+<p>Uniquement les parties nécessaires à l’exécution de votre commande. Chacune est contractuellement
+tenue de ne traiter les données que sur nos instructions.</p>
+<div class="tw"><table>
+<tr><th>Qui</th><th>Ce qu’ils reçoivent</th><th>Où</th></tr>
+<tr><td>Mollie B.V. — paiements</td><td>Montant, référence, et ce que vous saisissez sur leur page de
+    paiement</td><td>Pays-Bas (UE)</td></tr>
+<tr><td>Infomaniak — hébergement et sauvegardes chiffrées</td><td>Tout ce qui est stocké sur le
+    site</td><td>Suisse (décision d’adéquation)</td></tr>
+<tr><td>DPD — livraison</td><td>Nom, adresse et téléphone du destinataire, si vous choisissez la
+    livraison</td><td>Belgique (UE)</td></tr>
+<tr><td>Anthropic — l’assistant de chat</td><td>Ce que vous écrivez dans le chat. Uniquement si vous
+    l’utilisez.</td><td>États-Unis, sous clauses contractuelles types de l’UE</td></tr>
+<tr><td>Commission européenne (VIES)</td><td>Un numéro de TVA d’entreprise, pour en vérifier la
+    validité</td><td>UE</td></tr>
+</table></div>
+<p>Nous partageons également les données de facturation avec notre comptable et, lorsque la loi
+l’exige, avec l’administration fiscale. Nous ne vendons jamais de données personnelles et ne les
+utilisons pas à des fins publicitaires.</p></div>
+</section>
+<section id="retention" class="sec">
+<hr class="r">
+<h2><span class="n">05</span>Combien de temps nous les conservons</h2>
+<hr class="r">
+<div class="body">
+<div class="tw"><table>
+<tr><th>Quoi</th><th>Durée</th><th>Ensuite</th></tr>
+<tr><td>Vos fichiers d’impression</td><td>6 mois après le paiement</td>
+    <td>Supprimés automatiquement</td></tr>
+<tr><td>Les commandes avec vos coordonnées</td><td>2 ans après le paiement</td>
+    <td>Vos données personnelles sont remplacées par un marqueur ; le numéro de facture et le
+    montant sont conservés</td></tr>
+<tr><td>Conversations du chat</td><td>90 jours</td>
+    <td>Coordonnées supprimées ; le reste est effacé après 2 ans</td></tr>
+<tr><td>Journaux de sécurité</td><td>6 mois au maximum</td><td>Supprimés automatiquement</td></tr>
+</table></div>
+<p>Ces nettoyages s’exécutent automatiquement sur nos serveurs. Nous ne gardons rien « au cas
+où ».</p>
+<p>Les factures sont conservées séparément dans notre logiciel comptable, comme toute entreprise
+doit le faire, et ne sont pas concernées par ce qui précède.</p></div>
+</section>
+<section id="rights" class="sec">
+<hr class="r">
+<h2><span class="n">06</span>Vos droits</h2>
+<hr class="r">
+<div class="body">
+<p>Conformément au RGPD, vous pouvez nous demander de :</p>
+<ul>
+  <li>vous indiquer quelles données nous détenons à votre sujet et vous en remettre une copie ;</li>
+  <li>corriger ce qui serait inexact ;</li>
+  <li>effacer vos données, lorsque nous ne sommes pas tenus de les conserver — les documents de
+      facturation sont soumis à des délais de conservation légaux ;</li>
+  <li>limiter leur utilisation ou vous y opposer ;</li>
+  <li>les recevoir dans un format portable et lisible par machine.</li>
+</ul>
+<p>Écrivez à <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a>. Nous
+répondons dans le mois, et cela ne vous coûte rien.</p>
+<p>Si notre réponse ne vous satisfait pas, vous pouvez introduire une réclamation auprès de
+l’Autorité de protection des données, Rue de la Presse 35, 1000 Bruxelles —
+<a href="https://www.autoriteprotectiondonnees.be" rel="noopener">autoriteprotectiondonnees.be</a>.</p></div>
+</section>
+<section id="cookies" class="sec">
+<hr class="r">
+<h2><span class="n">07</span>Cookies et traçage</h2>
+<hr class="r">
+<div class="body">
+<p>Nous n’utilisons aucun cookie. Ni mesure d’audience, ni pixel publicitaire, ni traceur de réseau
+social, ni police ou script tiers.</p>
+<p>Votre navigateur ne conserve qu’une chose pour nous : la langue que vous avez choisie, afin que le
+site s’ouvre dans celle-ci la prochaine fois. C’est une préférence fonctionnelle, elle reste sur
+votre appareil, et vider les données de votre navigateur la supprime. Aucun consentement n’est
+requis, d’où l’absence de bannière.</p></div>
+</section>
+<section id="terms" class="sec">
+<hr class="r">
+<h2><span class="n">08</span>Conditions de vente</h2>
+<hr class="r">
+<div class="body">
+<p>Ces conditions s’appliquent à toute commande passée via notre boutique en ligne. Passer commande
+implique que vous les acceptez. Nous sommes Click Click Graphics SRL, Rue d’Alost 7-11, 1000 Bruxelles, BE 0732.984.161.</p>
+
+<h3 class="plain">Prix</h3>
+<p>Tous les prix affichés s’entendent TVA de 21 % comprise. Le prix affiché au moment de la commande
+est celui que vous payez — aucun supplément n’est ajouté ensuite. La livraison en Belgique est un
+forfait de 15 € TVAC, compté une seule fois par commande, quelle que soit la quantité.</p>
+
+<h3 class="plain">Commande et paiement</h3>
+<p>Votre commande est confirmée dès que le paiement est accepté. Nous demandons le paiement intégral
+avant production, car chaque travail est réalisé spécifiquement pour vous et ne peut être revendu.
+Le paiement est traité par Mollie ; nous ne voyons ni ne conservons vos données bancaires.</p>
+
+<h3 class="plain">Vos fichiers</h3>
+<p><strong>Vous êtes responsable du fichier que vous fournissez</strong> — son contenu, son
+orthographe, ses couleurs, sa résolution, ainsi que votre droit de l’imprimer. Nous imprimons ce que
+nous recevons.</p>
+<p>Nous vérifions les fichiers pour repérer les problèmes techniques évidents avant impression — un
+fond perdu manquant, une résolution très faible, un mode colorimétrique inhabituel — et nous vous
+prévenons si nous remarquons quelque chose. C’est un service, pas une garantie : nous ne pouvons pas
+tout détecter et nous ne relisons pas le contenu.</p>
+<p>Nous préférons un PDF prêt à imprimer, avec 3 mm de fond perdu, jusqu’à 100 Mo par fichier. Nous
+acceptons également JPG, PNG et TIFF.</p>
+
+<h3 class="plain">Délai de production</h3>
+<p>La production standard prend <strong>5 jours ouvrables</strong>. L’express prend
+<strong>48 heures</strong> et est disponible uniquement en retrait — un transporteur ne peut pas
+tenir 48 heures.</p>
+<p>Les jours ouvrables sont du lundi au vendredi, jours fériés belges exclus. Les commandes passées
+après 15 h sont comptées à partir du jour ouvrable suivant.</p>
+<p>Il s’agit du délai de production, pas de livraison. La date affichée à la commande est celle où
+votre commande quitte nos ateliers.</p>
+
+<h3 class="plain">Livraison et retrait</h3>
+<p><strong>Le retrait</strong> au Aalststraat 7-11 Rue d’Alost, 1000 Brussel – Bruxelles est gratuit.</p>
+<p><strong>La livraison</strong> est un forfait de 15 € en Belgique, par DPD. Le délai
+d’acheminement s’ajoute à la production et échappe à notre contrôle : nous ne promettons donc
+aucune date d’arrivée. Vous recevez un code de suivi au moment de l’expédition.</p>
+<p><strong>Hors Belgique</strong>, nous expédions également, mais le tarif dépend de la destination
+et est établi manuellement. Demandez-nous un prix et nous vous répondrons.</p>
+
+<h3 class="plain">Droit de rétractation</h3>
+<div class="note warn"><p>Tout ce que nous imprimons est réalisé selon vos spécifications, à partir
+de votre fichier. En vertu de l’article VI.53, 3° du Code de droit économique, les biens confectionnés
+selon les spécifications du consommateur ou nettement personnalisés sont <strong>exclus du droit de
+rétractation de 14 jours</strong>.</p>
+<p><strong>Votre commande ne peut donc être ni annulée ni retournée une fois la production
+lancée.</strong> Vérifiez soigneusement votre fichier avant de commander.</p></div>
+<p>Si vous nous contactez avant le lancement de l’impression, nous ferons toujours notre possible
+pour vous aider.</p>
+
+<h3 class="plain">En cas de problème</h3>
+<p>Vérifiez votre commande à la réception ou au retrait et signalez-nous tout problème dans les
+<strong>7 jours calendrier</strong> — écrivez à
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> avec votre numéro de
+facture et une photo.</p>
+<p>Si l’erreur vient de nous — un défaut d’impression, une spécification erronée, un dommage lors du
+transport — nous réimprimons le travail à nos frais. Cela ne porte pas atteinte à vos droits légaux
+en tant que consommateur, que nous ne limitons pas.</p>
+<p>Nous ne pouvons pas réimprimer pour un problème présent dans le fichier fourni : une faute de
+frappe, une image en basse résolution, ou des couleurs erronées dans le document d’origine.</p>
+
+<h3 class="plain">Couleurs</h3>
+<p>Un écran est rétroéclairé, pas une impression. De légères différences de couleur entre l’écran et
+le résultat imprimé sont normales et ne constituent pas un défaut. Si la précision des couleurs est
+essentielle, demandez-nous une épreuve avant de commander.</p>
+
+<h3 class="plain">Responsabilité</h3>
+<p>Nous sommes responsables des dommages causés par notre propre faute. Notre responsabilité est
+limitée à la valeur de la commande concernée, sauf lorsque la loi ne permet pas une telle limitation
+— notamment en cas de décès, de dommage corporel ou de faute intentionnelle.</p>
+
+<h3 class="plain">Droit applicable et litiges</h3>
+<p>Le droit belge s’applique. Nous préférons toujours régler un problème directement : écrivez-nous
+d’abord. Les consommateurs peuvent également s’adresser au Service de Médiation pour le
+Consommateur, Boulevard du Roi Albert II 8, 1000 Bruxelles. Les litiges relèvent des tribunaux de
+Bruxelles.</p></div>
+</section>
+</div>
+<footer><div class="in">Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a> · +32 2 880 70 36
+<p class="updated">Dernière mise à jour : 18 août 2026</p></div></footer>
+</body>
+</html>

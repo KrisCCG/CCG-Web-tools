@@ -1,0 +1,194 @@
+# ==========================================================================
+#  THE PAPER — English text
+#  Edit the words below, then run:  python3 build.py
+#
+#  [id]  Heading      opens a section. The body under it is HTML.
+#  {photos slug | caption A | caption B}   a pair of sample photos.
+#  Lines starting with # are notes and are never printed.
+# ==========================================================================
+
+title:          The paper — Click Click Graphics
+desc:           MultiArt Silk, Biotop and RecyStar: what each paper feels like, what it does to your ink, and which one to pick.
+h1:             The paper
+sub:            Three stocks in the shop. What each one feels like in the hand, and what it does to your ink.
+back:           Back to the shop
+updated:        Last updated 19 August 2026
+contents:       On this page
+nav:            Services > https://tiegel.be/ | Shop > /flyers/ | Paper > SELF | Terms > /legal/
+footer:         Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> · +32 2 880 70 36 <em>!!</em>
+photo-pending:  Photo to come
+
+# --------------------------------------------------------------------------
+[choose]  Choosing in ten seconds
+
+<p class="lede">The three papers in the shop are not good, better and best. They are three
+different characters, and the right one depends on what the piece has to do.</p>
+<div class="tw"><table>
+<tr><th>If you want</th><th>Take</th><th>Because</th></tr>
+<tr><td>Photographs, deep blacks, precise colour</td><td><strong>MultiArt Silk</strong></td>
+    <td>It is coated, so the ink stays on the surface instead of sinking in</td></tr>
+<tr><td>A warm, natural page you can write on</td><td><strong>Biotop</strong></td>
+    <td>Uncoated and slightly cream — a pen, a stamp or a signature all work on it</td></tr>
+<tr><td>The lowest footprint, with visible character</td><td><strong>RecyStar</strong></td>
+    <td>100&nbsp;% recycled and unbleached; you can see the fibres it was made from</td></tr>
+</table></div>
+
+# --------------------------------------------------------------------------
+[multiart]  MultiArt Silk — coated, bright white
+
+<p class="lede">The workhorse. A silk-coated, bright white sheet that holds colour exactly
+where you put it.</p>
+{photos multiart-silk | The blank sheet | The same stock, printed}
+<h3>How it feels</h3>
+<p>Smooth and cool, with a very slight sheen. A silk coating sits between gloss and matt: it is
+not shiny, it does not throw a reflection back at you under a ceiling light, but you can feel that
+the surface has been closed. Run a nail across it and there is no tooth.</p>
+
+<h3>What it does to your ink</h3>
+<p>The coating stops the paper from drinking. Ink sits on top and dries there, so colours come out
+close to full strength, blacks are dense rather than grey, and 6&nbsp;pt type stays legible instead
+of blurring at the edges. If your design leans on photography, a gradient or a large flat colour,
+this is the sheet that will show it.</p>
+
+<h3>Where it works</h3>
+<p>Flyers with images. Posters that have to read across a room. Business cards that need punch.
+Anything where the print is the point and the paper should stay out of the way.</p>
+
+<h3>What to watch</h3>
+<p>It is not a writing paper — a ballpoint skates on it and ink pens smudge. On the heavy weights,
+a large dark solid will show fingerprints. And bright white is genuinely bright: on screen a warm
+photograph can look warmer than it will on this sheet.</p>
+
+<h3>Provenance</h3>
+<p>Wood-free coated, FSC-certified.</p>
+
+# --------------------------------------------------------------------------
+[biotop]  Biotop — uncoated, warm natural
+
+<p class="lede">The quiet one. Uncoated, faintly cream, and the only sheet here you can
+comfortably write on.</p>
+{photos biotop | The blank sheet | The same stock, printed}
+<h3>How it feels</h3>
+<p>Dry and slightly warm, with a faint tooth you can feel under a fingertip. The shade is a natural
+off-white — it has not been bleached blue-white, so it reads warm next to a MultiArt sheet. It is
+also bulky for its weight: a 300&nbsp;gsm Biotop card feels thicker than a 300&nbsp;gsm coated one.</p>
+
+<h3>What it does to your ink</h3>
+<p>Uncoated paper absorbs. Colours settle a step quieter, blacks read as a deep charcoal rather
+than jet, and very fine detail softens a fraction as the ink spreads into the fibres. What you get
+back is a page that does not glare, is easy on the eye at reading distance, and looks made rather
+than manufactured.</p>
+
+<h3>Where it works</h3>
+<p>Text-led flyers. Invitations and wedding stationery. Letterheads. Business cards that will be
+written on — a name, a date, an appointment. Anything with a warm or editorial feel.</p>
+
+<h3>What to watch</h3>
+<p>Do not expect a photograph to pop. A large dark solid will look softer and less even than it
+does on screen, and the warm base shade tints everything very slightly — pale greys pick up a
+little cream, and there is no such thing as a brilliant white here.</p>
+
+<h3>Provenance</h3>
+<p>A totally chlorine-free (TCF) uncoated paper, carrying the EU Ecolabel and FSC
+certification.</p>
+
+# --------------------------------------------------------------------------
+[recystar]  RecyStar — 100 % recycled, unbleached
+
+<p class="lede">The honest one. Made entirely from recovered paper, left unbleached, and it
+does not pretend otherwise.</p>
+{photos recystar | The blank sheet | The same stock, printed}
+<h3>How it feels</h3>
+<p>Close to Biotop in the hand — uncoated, dry, a little tooth — but greyer and warmer in shade,
+with tiny flecks of the fibres it was made from scattered through the sheet. Those flecks are the
+point. They are what tells someone, without a logo or a claim, that the paper had a life before
+this one.</p>
+
+<h3>What it does to your ink</h3>
+<p>It absorbs like Biotop, and then the darker base shade lowers everything by another step. The
+same file printed on MultiArt Silk and on RecyStar will look like two different designs: on
+RecyStar the whole range is compressed, quieter and softer, with less distance between the
+lightest and the darkest area.</p>
+
+<h3>Where it works</h3>
+<p>Anything where the material is part of the message. Zines and posters with a raw look, cards for
+makers and studios, and every job where the recycled content matters more than the punch.</p>
+
+<h3>What to watch</h3>
+<p>There is no white ink. Every area you leave white in your design comes out the colour of the
+paper — a warm grey — so a design built on crisp white space will read differently. Shade also
+varies a little from batch to batch, which is normal for a recycled stock and not a defect.</p>
+
+<h3>Provenance</h3>
+<p>100&nbsp;% recycled fibre, unbleached, carrying the Blue Angel and EU Ecolabel marks.</p>
+
+# --------------------------------------------------------------------------
+[gsm]  What the weight means
+
+<p>Paper is sold by grammage — grams per square metre. It is a weight, not a thickness, but for a
+given family it works as one: the higher the number, the stiffer the sheet.</p>
+<div class="tw"><table>
+<tr><th>Weight</th><th>Feels like</th><th>Use it for</th></tr>
+<tr><td>115 – 135 gsm</td><td>A magazine page. Bends easily, stacks flat.</td>
+    <td>Flyers you hand out by the hundred</td></tr>
+<tr><td>160 – 170 gsm</td><td>Noticeably stiffer. Holds its shape when held at one corner.</td>
+    <td>Posters, and flyers meant to survive a pocket</td></tr>
+<tr><td>250 gsm</td><td>A light card. Stands up on its own.</td>
+    <td>Invitations, loyalty cards, a card on a budget</td></tr>
+<tr><td>300 gsm</td><td>The standard business-card weight.</td>
+    <td>Business cards, invitations, anything that should feel solid</td></tr>
+<tr><td>350 – 400 gsm</td><td>Thick. Makes a sound when it lands on a table.</td>
+    <td>Cards that have to be remembered</td></tr>
+</table></div>
+<p>Because Biotop and RecyStar are uncoated and bulky, they feel thicker than a coated sheet of the
+same weight. A 300&nbsp;gsm Biotop card and a 350&nbsp;gsm MultiArt Silk card are close cousins in
+the hand.</p>
+
+# --------------------------------------------------------------------------
+[colour]  Colour, and why the sheet changes it
+
+<p>A screen is a lamp: it makes colour by shining light at you. Paper is not — it can only reflect
+the light already in the room. That difference alone means a print will never be an exact copy of
+what you approved on a monitor, and it is not a fault.</p>
+<p>The paper then adds its own accent on top. The same file on our three stocks gives three
+results: brightest and most contrasted on MultiArt Silk, a step quieter and warmer on Biotop,
+quieter and greyer again on RecyStar.</p>
+<ul>
+  <li><strong>We print CMYK.</strong> Very saturated screen colours — electric blues, fluorescent
+      greens — sit outside what four inks can reach and will come back a little more muted.</li>
+  <li><strong>There is no white ink.</strong> White in your artwork means "leave the paper bare",
+      so on Biotop it is cream and on RecyStar it is warm grey. Except on a coloured paper — there
+      we can print white ink.</li>
+  <li><strong>Large flat solids show the paper most.</strong> If a design is one big colour field,
+      choose the stock deliberately.</li>
+</ul>
+
+# --------------------------------------------------------------------------
+[ask]  Papers we keep, but do not sell online
+
+<p>The dropdown holds the three stocks we can price instantly. The workshop holds a good deal more.
+These are quoted by hand, because the price depends on the format and the run.</p>
+
+<h3>Colorplan</h3>
+{photos colorplan | The blank sheet | The same stock, printed}
+<p>GF Smith's coloured paper, made in the UK, in around fifty solid colours from 135 to
+700&nbsp;gsm. The colour is dyed right through the sheet, so a cut edge or a fold shows colour and
+not a white core — which is why it is the standard choice for a serious business card, an
+invitation or a cover. Two sheets can be bonded together for a card with a coloured edge.</p>
+
+<h3>The Fedrigoni collection</h3>
+{photos fedrigoni | The blank sheet | The same stock, printed}
+<p>Italian paper mill with an enormous collection of special papers.</p>
+
+<h3>Color 1802</h3>
+{photos color-1802 | The blank sheet | The same stock, printed}
+<p>A coloured paper, and Colorplan's competitor. Well worth a look.</p>
+
+<h3>And in the racks</h3>
+<p>Arena in rough and smooth, Woodstock, Old Mill, Cotton Pure, Splendorgel, Splendorlux,
+Constellation Snow, Lessebo Design, Matrica kraft, and a 700&nbsp;gsm Sirio for when something has
+to be genuinely solid.</p>
+<div class="note"><p><strong>To order on any of these:</strong> use the quote request in the
+<a href="/flyers/">shop</a>, or write to
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> with the size, the
+quantity and the paper. We answer with a price, not a form.</p></div>

@@ -1,0 +1,13 @@
+.DS_Store
+**/.DS_Store
+.env
+.env.*
+**/.env
+**/.env.*
+**/secrets.php
+**/.htpasswd
+*.pem
+*.key
+**/node_modules/
+tiegel.be/Backup/*.sql
+tiegel.be/site/tiegel.be/*.sql

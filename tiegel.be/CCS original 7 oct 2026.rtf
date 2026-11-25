@@ -1,0 +1,485 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 /* ================================================\
+   Les bords des vignettes de projets arrondi\
+   (Edit Project Thumbnail Grid - Lay Theme)\
+   ================================================ */\
+\
+/* Arrondit les bords du lien/conteneur principal de chaque vignette */\
+.thumbnail-wrap .thumb \{\
+  border-radius: clamp(6px, 1.5vw, 12px);\
+  position: relative;\
+  overflow: hidden;\
+\}\
+\
+/* Le fond violet cach\'e9 en bas par d\'e9faut */\
+.thumbnail-wrap .thumb::before \{\
+  content: '';\
+  position: absolute;\
+  bottom: 0;\
+  left: 0;\
+  width: 100%;\
+  height: 100%;\
+  background-color: #FFF5EF;\
+  transform: translateY(110%);\
+  transition: transform 0.2s ease;\
+  z-index: 0;\
+\}\
+\
+/* Au survol : le fond remonte */\
+.thumbnail-wrap .thumb:hover::before \{\
+  transform: translateY(0%);\
+\}\
+\
+/* Arrondit le conteneur int\'e9rieur */\
+.thumbnail-wrap .thumb .thumb-rel \{\
+  border-radius: clamp(6px, 1.5vw, 12px);\
+  padding: clamp(3px, 0.5vw, 6px);\
+  position: relative;\
+  z-index: 1;\
+\}\
+\
+/* Arrondit le conteneur du ratio de l'image */\
+.thumbnail-wrap .thumb .thumb-rel .ph \{\
+  border-radius: clamp(4px, 1vw, 8px);\
+\}\
+\
+/* Titre des vignettes avec padding */\
+.thumbnail-wrap .thumb .lay-textformat-parent \{\
+  padding: clamp(4px, 1vw, 8px) 0px clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px);\
+  position: relative;\
+  z-index: 1;\
+\}\
+\
+/* Titre violet par d\'e9faut */\
+.thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+  color: #4200FF;\
+  transition: color 0.3s ease;\
+  font-size: 0.9rem;\
+\}\
+\
+@media (min-width: 768px) \{\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    font-size: 1rem;\
+  \}\
+\}\
+\
+@media (min-width: 1200px) \{\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    font-size: 1.15rem;\
+  \}\
+\}\
+\
+/* Au survol : titre beige */\
+.thumbnail-wrap .thumb:hover .lay-textformat-parent .title \{\
+  color: #FFE5D4;\
+\}\
+\
+/* D\'e9sactive le hover sur tactile */\
+@media (hover: none) \{\
+  .thumbnail-wrap .thumb::before \{\
+    display: none;\
+  \}\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    color: #4200FF;\
+  \}\
+\}\
+/* ================================================\
+   Les bords des vignettes de projets arrondi\
+   (Edit Project Thumbnail Grid - Lay Theme)\
+   ================================================ */\
+\
+/* Arrondit les bords du lien/conteneur principal de chaque vignette */\
+.thumbnail-wrap .thumb \{\
+  border-radius: clamp(6px, 1.5vw, 12px);\
+  position: relative;\
+  overflow: hidden;\
+\}\
+\
+/* Le fond violet cach\'e9 en bas par d\'e9faut */\
+.thumbnail-wrap .thumb::before \{\
+  content: '';\
+  position: absolute;\
+  bottom: 0;\
+  left: 0;\
+  width: 100%;\
+  height: 100%;\
+  background-color: #FFE5D4;\
+  transform: translateY(110%);\
+  transition: transform 0.2s ease;\
+  z-index: 0;\
+\}\
+\
+/* Au survol : le fond remonte */\
+.thumbnail-wrap .thumb:hover::before \{\
+  transform: translateY(0%);\
+\}\
+\
+/* Arrondit le conteneur int\'e9rieur */\
+.thumbnail-wrap .thumb .thumb-rel \{\
+  border-radius: clamp(6px, 1.5vw, 12px);\
+  padding: clamp(3px, 0.5vw, 6px);\
+  position: relative;\
+  z-index: 1;\
+\}\
+\
+/* Arrondit le conteneur du ratio de l'image */\
+.thumbnail-wrap .thumb .thumb-rel .ph \{\
+  border-radius: clamp(4px, 1vw, 8px);\
+\}\
+\
+/* Titre des vignettes avec padding */\
+.thumbnail-wrap .thumb .lay-textformat-parent \{\
+  padding: clamp(4px, 1vw, 8px) 0px clamp(4px, 1vw, 8px) clamp(4px, 1vw, 8px);\
+  position: relative;\
+  z-index: 1;\
+\}\
+\
+/* Titre violet par d\'e9faut */\
+.thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+  color: #4200FF;\
+  transition: color 0.3s ease;\
+  font-size: 1.5rem;\
+\}\
+\
+@media (min-width: 768px) \{\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    font-size: 1.75rem;\
+  \}\
+\}\
+\
+@media (min-width: 1200px) \{\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    font-size: 2rem;\
+  \}\
+\}\
+\
+/* Au survol : titre beige */\
+.thumbnail-wrap .thumb:hover .lay-textformat-parent .title \{\
+  color: #4200FF;\
+\}\
+\
+/* D\'e9sactive le hover sur tactile */\
+@media (hover: none) \{\
+  .thumbnail-wrap .thumb::before \{\
+    display: none;\
+  \}\
+  .thumbnail-wrap .thumb .lay-textformat-parent .title \{\
+    color: #4200FF;\
+  \}\
+\}\
+\
+\
+\
+    \
+/* --- Mobile (max 600px) --- */\
+@media (max-width: 600px) \{\
+    .overlay-id-198 .standard-overlay-close-icon::before \{\
+        font-size: 25px;\
+    \}\
+    .overlay-id-198 .overlay-close \{\
+        padding: 15px 15px 0 0;\
+    \}\
+    .overlay-id-198 .custom-overlay-close-icon img \{\
+        width: 30px;\
+    \}\
+    .overlay-id-198 \{\
+        width: 100%;\
+        border-radius: 16px;\
+        margin: 12px;\
+        height: calc(100% - 24px);\
+        padding-bottom: 12px;\
+    \}\
+    .burger-overlay-id-198.standard-overlay-burger::before \{\
+        font-size: 20px;\
+    \}\
+    .burger-overlay-id-198.custom-overlay-burger img \{\
+        width: 30px;\
+    \}\
+    .burger-overlay-id-198.overlay-burger \{\
+        padding: 15px;\
+    \}\
+\}\
+    \
+ /* ================================================\
+   Menu Burger - Overlay #198\
+   (Lay Theme - Navigation principale)\
+   ================================================ */\
+\
+.overlay-id-198 .overlay-close \{\
+    right: 0; top: 0;\
+\}\
+.overlay-id-198 .standard-overlay-close-icon::before \{\
+    color: #000000;\
+\}\
+.overlay-id-198 .text-overlay-close \{\
+    color: #000000;\
+\}\
+.overlay-id-198 \{\
+    background-color: rgba(66,0,255,1);\
+    border-radius: 16px;\
+\}\
+\
+/* --- Ic\'f4ne burger --- */\
+.burger-overlay-id-198.overlay-burger \{\
+    right: 0;\
+\}\
+.burger-overlay-id-198.standard-overlay-burger::before \{\
+    color: #000000;\
+\}\
+.burger-overlay-id-198.text-overlay-burger span \{\
+    color: #000000;\
+\}\
+\
+/* --- Titres du menu : effet d\'e9calage droite au survol --- */\
+.overlay-id-198 a \{\
+    display: inline-block;\
+    transform: translateX(0);\
+    transition: transform 0.3s ease;\
+\}\
+.overlay-id-198 a:hover \{\
+    transform: translateX(5px);\
+\}\
+\
+/* --- Desktop (min 601px) --- */\
+@media (min-width: 601px) \{\
+    .overlay-id-198 .standard-overlay-close-icon::before \{\
+        font-size: 40px;\
+    \}\
+    .overlay-id-198 .overlay-close \{\
+        padding: 20px 20px 0 0;\
+    \}\
+    .overlay-id-198 .custom-overlay-close-icon img \{\
+        width: 40px;\
+    \}\
+    .overlay-id-198 \{\
+        width: 15%;\
+        border-radius: 16px;\
+        margin: 12px;\
+        height: calc(50% - 24px);\
+        padding-bottom: 12px;\
+    \}\
+    .burger-overlay-id-198.standard-overlay-burger::before \{\
+        font-size: 26px;\
+    \}\
+    .burger-overlay-id-198.custom-overlay-burger img \{\
+        width: 40px;\
+    \}\
+    .burger-overlay-id-198.overlay-burger \{\
+        padding: 20px;\
+    \}\
+\}\
+\
+/* --- Mobile (max 600px) --- */\
+@media (max-width: 600px) \{\
+    .overlay-id-198 .standard-overlay-close-icon::before \{\
+        font-size: 25px;\
+    \}\
+    .overlay-id-198 .overlay-close \{\
+        padding: 15px 15px 0 0;\
+    \}\
+    .overlay-id-198 .custom-overlay-close-icon img \{\
+        width: 30px;\
+    \}\
+    .overlay-id-198 \{\
+        width: 100%;\
+        border-radius: 16px;\
+        margin: 12px;\
+        height: calc(100% - 24px);\
+        padding-bottom: 12px;\
+    \}\
+    .burger-overlay-id-198.standard-overlay-burger::before \{\
+        font-size: 20px;\
+    \}\
+    .burger-overlay-id-198.custom-overlay-burger img \{\
+        width: 30px;\
+    \}\
+    .burger-overlay-id-198.overlay-burger \{\
+        padding: 15px;\
+    \}\
+\}\
+\
+\
+\
+\
+\
+/* ================================================\
+   Marquee - Images d\'e9filantes #4\
+   (Lay Theme)\
+   ================================================ */\
+/* --- Arrondis sur les images --- */\
+.lay-marquee.marquee-id-4 img \{\
+    border-radius: 10px;\
+\}\
+\
+\
+\
+/*  ================================================\
+    Carousel\
+    ================================================ */\
+\
+/* 1. Appliquer l'arrondi au conteneur principal */\
+.slide-inner \{\
+    border-radius: 10px !important;\
+    overflow: hidden !important;\
+    \
+    /* FIX pour le scroll : Force le navigateur \'e0 garder l'arrondi pendant le mouvement */\
+    -webkit-mask-image: -webkit-radial-gradient(white, black);\
+    -webkit-backface-visibility: hidden;\
+    backface-visibility: hidden;\
+    transform: translate3d(0, 0, 0);\
+\}\
+\
+/* 2. Appliquer l'arrondi \'e0 l'image elle-m\'eame */\
+.slide-inner img.carousel-img, \
+.lay-carousel img \{\
+    border-radius: 10px !important;\
+    display: block;\
+    /* Emp\'eache les micro-d\'e9calages d'un pixel sur les bords */\
+    border: none !important; \
+\}\
+\
+/* 3. Appliquer l'arrondi au rectangle de chargement (le placeholder gris) */\
+.slide-inner .ph \{\
+    border-radius: 10px !important;\
+    overflow: hidden !important;\
+    \
+\}\
+\
+/* 4. Fix sp\'e9cifique pour les carrousels de Lay Theme */\
+.lay-carousel-sinker, .carousel-full-container \{\
+    border-radius: 10px !important;\
+    overflow: hidden !important;\
+\}\
+\
+\
+/*  ================================================\
+    Photo en haut\
+    ================================================ */\
+\
+\
+/* 1. On applique l'arrondi \'e0 tous les \'e9l\'e9ments sauf les SVG */\
+.lay-content img:not([src*=".svg"]), \
+.lay-image-responsive:not([src*=".svg"]),\
+.lay-carousel img:not([src*=".svg"]),\
+.ph, \
+.img-element, \
+.slide-inner \{\
+    border-radius: 10px !important;\
+    overflow: hidden !important;\
+    \
+    /* Fix pour le rendu des arrondis sur Safari/Chrome mobile */\
+    isolation: isolate; \
+    -webkit-backface-visibility: hidden;\
+    backface-visibility: hidden;\
+    -webkit-mask-image: -webkit-radial-gradient(white, black);\
+    mask-image: radial-gradient(white, black); \
+\}\
+\
+/* 2. On s'assure que les SVG (logos, ic\'f4nes) restent carr\'e9s */\
+img[src*=".svg"] \{\
+    border-radius: 0 !important;\
+    -webkit-mask-image: none !important;\
+    mask-image: none !important;\
+\}\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+.icon-hover \{\
+  display: inline-block;\
+  width: 80px;\
+  cursor: pointer;\
+\}\
+.icon-hover.animating .shake-excl-1 \{\
+  animation: shake 1s ease-in-out 1;\
+  transform-origin: 57px 111px;\
+\}\
+.icon-hover.animating .shake-excl-2 \{\
+  animation: shake 1s ease-in-out 1;\
+  animation-delay: 0.08s;\
+  transform-origin: 107px 111px;\
+\}\
+.icon-hover.animating .jelly-logo \{\
+  animation: jelly 1.2s ease-in-out 1;\
+  transform-origin: 83.61px 111px;\
+\}\
+@keyframes shake \{\
+  0%, 100% \{ transform: translateX(0) rotate(0deg); \}\
+  10% \{ transform: translateX(-3px) rotate(-2deg); \}\
+  20% \{ transform: translateX(3px) rotate(2deg); \}\
+  30% \{ transform: translateX(-3px) rotate(-1.5deg); \}\
+  40% \{ transform: translateX(3px) rotate(1.5deg); \}\
+  50% \{ transform: translateX(-2px) rotate(-1deg); \}\
+  60% \{ transform: translateX(2px) rotate(1deg); \}\
+  70% \{ transform: translateX(-1px) rotate(-0.5deg); \}\
+  80%, 100% \{ transform: translateX(0) rotate(0deg); \}\
+\}\
+@keyframes jelly \{\
+  0%, 100% \{ transform: scaleX(1) scaleY(1); \}\
+  8%  \{ transform: scaleX(0.82) scaleY(1.1); \}\
+  18% \{ transform: scaleX(1.12) scaleY(0.9); \}\
+  28% \{ transform: scaleX(0.92) scaleY(1.05); \}\
+  38% \{ transform: scaleX(1.05) scaleY(0.96); \}\
+  48% \{ transform: scaleX(0.97) scaleY(1.02); \}\
+  58% \{ transform: scaleX(1.02) scaleY(0.99); \}\
+  68% \{ transform: scaleX(0.99) scaleY(1.005); \}\
+  78%, 100% \{ transform: scaleX(1) scaleY(1); \}\
+\}\
+/*text qui change*/\
+#jjj \{\
+      display: inline-block;\
+      transition: opacity 0.5s;\
+    \}\
+.jjjmobile \{\
+      display: inline-block;\
+      transition: opacity 0.5s;\
+    \}\
+\
+/* ================================================\
+   New text styles (cc-)\
+   Use gradually; existing styles stay unchanged\
+   ================================================ */\
+.cc-title, .cc-h2, .cc-h3, .cc-lead \{\
+  font-family: gtpressuraregularwebfont;\
+  color: #4200FF;\
+  font-weight: 400;\
+  line-height: 1.2;\
+  letter-spacing: 0;\
+  text-align: left;\
+  padding: 0;\
+  border-bottom: none;\
+\}\
+.cc-title \{ font-size: 60px; margin: 0 0 15px; text-transform: uppercase; \}\
+.cc-h2    \{ font-size: 40px; margin: 0 0 15px; \}\
+.cc-h3    \{ font-size: 28px; margin: 0 0 12px; \}\
+.cc-lead  \{ font-size: 30px; margin: 0 0 15px; \}\
+\
+@media (max-width: 767px) \{\
+  .cc-title \{ font-size: 32px; \}\
+  .cc-h2    \{ font-size: 26px; \}\
+  .cc-h3    \{ font-size: 22px; \}\
+  .cc-lead  \{ font-size: 22px; \}\
+\}\
+\
+}

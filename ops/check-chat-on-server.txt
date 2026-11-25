@@ -1,0 +1,50 @@
+# CHECK: are the chat files on the server the same as on the Mac?  (made 26 Oct 2026 14:37)
+# Paste this whole file into the Infomaniak SSH console. Each file prints ok / DIFF / MISSING.
+# DIFF or MISSING = upload that file again (FileZilla, Overwrite).
+cd /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be && while read h f; do if [ ! -f "$f" ]; then echo "MISSING $f"; elif [ "$(sha256sum "$f" | cut -c1-16)" = "$h" ]; then echo "ok      $f"; else echo "DIFF    $f"; fi; done <<'EOF'
+562ecc59e74563a5 chat-api/.htaccess
+6e24446ce242aaba chat-api/chat.php
+c816aaf5bca421b2 chat-api/cleanup.php
+9c56c7a38ef2e804 chat-api/lib/.htaccess
+c549f634743def9a chat-api/lib/anthropic.php
+56739e000b0a6fb7 chat-api/lib/audit.php
+8ca6b456eccb09da chat-api/lib/conversation.php
+a00a71576c71e1c5 chat-api/lib/cronlog.php
+725c0ae7d4ad0e7c chat-api/lib/ratelimit.php
+a8fe45746d291710 chat-api/lib/shop.php
+ee84e77ec754c364 chat-api/lib/signing.php
+5c0519359ca697dc chat-api/lib/turnstile.php
+b69eb61b4f13b958 chat-api/lib/vies.php
+fa28d421a28ed9b6 chat-api/logs/.htaccess
+fa28d421a28ed9b6 chat-api/requests/.htaccess
+7f829ab2edbb790f chat-api/retention.php
+38bcb48cfca1b238 chat-api/start.php
+67a486a698b34ad5 chat-api/submit.php
+eac0924bcebc73ea chat-api/system_prompt.php
+496721522bc36c24 chat/.htaccess
+512d48219291f400 chat/fonts/gt-pressura-300-italic.woff2
+2d63df7d7ef3c73f chat/fonts/gt-pressura-300.woff2
+fb520f84f76375dd chat/fonts/gt-pressura-400-italic.woff2
+1ec62ee47bf2f14a chat/fonts/gt-pressura-400.woff2
+5b60d42d0a1f4e43 chat/fonts/gt-pressura-700-italic.woff2
+9277b3f86a9a48af chat/fonts/gt-pressura-700.woff2
+b816eac40cd994cb chat/index.html
+525dc173605456f7 chat/lib/i18n.js
+855fb3a85203fc14 chat/lib/site-chrome/favicon-180.png
+89df6e544b9218f3 chat/lib/site-chrome/favicon-32.png
+4b2d9317cb3054d4 chat/lib/site-chrome/favicon-512.png
+39a435fbd5373f40 chat/lib/site-chrome/favicon.svg
+4610540c4c007b93 chat/lib/site-chrome/fonts/gt-pressura-mono-bold.woff
+990425fc45d7a724 chat/lib/site-chrome/fonts/gt-pressura-mono-regular.woff
+a32a84dc9879cb96 chat/lib/site-chrome/icons/arrow-down.svg
+b96f53e9f705dbef chat/lib/site-chrome/icons/check.svg
+2e2e4b1c666ee1d1 chat/lib/site-chrome/icons/envelope.svg
+7cbad780f03a9bf2 chat/lib/site-chrome/icons/heart.svg
+af6f3bc99a55b14b chat/lib/site-chrome/icons/map.svg
+92efc6356d314884 chat/lib/site-chrome/logo.png
+32cb4db96e6b2f72 chat/lib/site-chrome/logo.svg
+63141fca3527fef1 chat/lib/site-chrome/site-chrome.css
+b2424fbcc1d6e61c chat/lib/site-chrome/site-chrome.js
+92efc6356d314884 chat/logo.png
+9ad182a3a2d4f873 chat/maintenance.html
+EOF

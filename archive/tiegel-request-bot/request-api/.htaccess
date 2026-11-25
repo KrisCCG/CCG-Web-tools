@@ -1,0 +1,41 @@
+# /request-api/ — server-side endpoints for the Request chatbot.
+# Stop WordPress (running at the tiegel.be root) from intercepting requests
+# into this directory.
+RewriteEngine Off
+Options -Indexes
+
+# Deny direct HTTP access to secrets, the lib/ folder, and runtime state.
+# These should only ever be loaded by PHP from within this directory.
+<FilesMatch "^(secrets\.php|secrets\.example\.php|system_prompt\.php)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^lib/        - [F,L]
+    RewriteRule ^logs/       - [F,L]
+    RewriteRule ^requests/   - [F,L]
+    RewriteRule ^\.ratelimit/ - [F,L]
+</IfModule>
+
+# Security headers — same shape as calculator/.htaccess.
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options        "DENY"
+    Header set Referrer-Policy        "strict-origin-when-cross-origin"
+</IfModule>
+
+# Gate cron endpoints (cleanup.php, retention.php) behind Basic Auth so a
+# random visitor can't trigger them. The .htpasswd file lives in this
+# directory and is denied via the FilesMatch below.
+<FilesMatch "^(cleanup|retention)\.php$">
+    AuthType Basic
+    AuthName "Click Click — cron only"
+    # Absolute path on Infomaniak. Adjust to the live deploy path when uploading.
+    AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/tiegel.be/request-api/.htpasswd
+    Require valid-user
+</FilesMatch>
+
+<FilesMatch "^\.htpasswd$">
+    Require all denied
+</FilesMatch>

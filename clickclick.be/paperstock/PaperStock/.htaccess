@@ -1,0 +1,15 @@
+# Click Click — Paper Stock : staff login (HTTP Basic auth)
+#
+# The live folder is /PaperStock/  (capital P + S — /stock/ 404s).
+# AuthUserFile must be the ABSOLUTE server path to .htpasswd inside that folder.
+# This prefix is taken from the working /flyers/ gate on the same Infomaniak account.
+#
+# If the login does NOT appear after upload, the path below is wrong: upload
+# whereami.php alongside this file, open https://clickclick.be/PaperStock/whereami.php,
+# paste the line it prints over the AuthUserFile line below, re-upload, then DELETE
+# whereami.php.
+
+AuthType Basic
+AuthName "Click Click — Paper Stock"
+AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/.htpasswd-paperstock
+Require valid-user

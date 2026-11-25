@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Juridisch, privacy & voorwaarden — Click Click Graphics</title>
+<meta name="description" content="Juridische gegevens, privacybeleid en verkoopvoorwaarden van Click Click Graphics SRL, Brussel.">
+<link rel="icon" href="data:,">
+<style>
+/* GT Pressura — the Click Click brand face, and the face tiegel.be is set in.
+   Italic is load-bearing, not decoration: the "!" in the wordmark and the "!!"
+   sign-off are italic glyphs. */
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/gt-pressura-400-italic.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700.woff2) format('woff2')}
+@font-face{font-family:'GT Pressura';font-style:italic;font-weight:700;font-display:swap;src:url(fonts/gt-pressura-700-italic.woff2) format('woff2')}
+
+/* Sampled off tiegel.be; identical to the restyled shop. */
+:root{--cream:#fff5ef;--peach:#ffe5d4;--ink:#000;--ink-dim:#4a4a4a;--indigo:#4200ff;--line:#e6d6c3}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
+  font-family:'GT Pressura',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+em{font-style:italic}
+a{color:var(--indigo)}
+
+/* ── Top bar — full-bleed indigo, cream wordmark ─────────────────────────── */
+.bar{background:var(--indigo);color:var(--cream);position:sticky;top:0;z-index:5}
+/* One line, always. The bar must never wrap: the FR labels are the longest
+   (Boutique / Papier / Conditions) and used to push the nav onto a second row
+   below ~500px. Instead of wrapping, the WORDMARK steps down — full, then
+   without "Graphics", then to the bare "!!" brand mark — which buys back the
+   width the longer language needs. */
+.bar .in{max-width:1280px;margin:0 auto;padding:14px 28px;display:flex;
+  justify-content:space-between;align-items:center;gap:20px;flex-wrap:nowrap}
+.bar a{color:var(--cream);text-decoration:none}
+.mark{font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;
+  white-space:nowrap;flex:none}
+.mark .mk-min{display:none}
+.bar nav{display:flex;align-items:center;gap:22px;font-size:15px;white-space:nowrap;flex:none}
+.bar nav a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.langs{display:flex;gap:2px;background:rgba(255,245,239,.16);border-radius:999px;padding:3px}
+.langs a{padding:4px 10px;border-radius:999px;opacity:.6;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase}
+.langs a.on{background:var(--cream);color:var(--indigo);opacity:1}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px}
+
+/* ── Hero ────────────────────────────────────────────────────────────────────
+   The page title takes the same rule-above / rule-below treatment as the
+   section headings, just larger. Sentence case, no "!!" mark. */
+.hero{padding:52px 0 44px}
+hr.r{border:0;border-top:1.5px solid var(--indigo);margin:0}
+h1{color:var(--indigo);font-weight:400;line-height:1.1;letter-spacing:-.015em;
+  font-size:clamp(34px,6vw,64px);margin:0;padding:12px 0 16px;text-wrap:balance}
+/* No `max-width` in ch anywhere in the body copy: the text fills whatever
+   column it is in and reflows with the viewport, rather than sitting in a
+   fixed block with dead space beside it. In the photo sections the grid
+   column is the measure; in full-width sections the page is. */
+.sub{font-size:clamp(17px,2vw,23px);line-height:1.35;margin:24px 0 22px}
+.back{margin:0;font-size:15px}
+.back a{text-decoration:none;border-bottom:1px solid var(--indigo);padding-bottom:1px}
+
+/* Pill button. Unused by /papers/ — kept because it is a real component of
+   this look (tiegel's "Order online"), and the next page will want it. */
+.pill{display:inline-block;background:var(--indigo);color:var(--cream);text-decoration:none;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 20px;border-radius:999px;margin:0 8px 14px 0}
+.pill:hover{background:#3300c1}
+.pill.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo)}
+.pill.ghost:hover{background:var(--indigo);color:var(--cream)}
+
+/* ── Contents + section headings — tiegel's rule/heading/rule sandwich ───── */
+nav.toc{margin:0 0 56px}
+nav.toc ol{list-style:none;margin:0;padding:14px 0 0;columns:2;column-gap:44px}
+nav.toc li{margin:0 0 9px;break-inside:avoid;font-size:16px}
+nav.toc li a{text-decoration:none;border-bottom:1px solid transparent}
+nav.toc li a:hover{border-bottom-color:var(--indigo)}
+nav.toc .n{opacity:.55;font-weight:700;font-size:12px;letter-spacing:.1em;margin-right:9px}
+nav.toc .lbl{display:block;padding:14px 0 0;color:var(--indigo);font-size:12px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+section{padding:0 0 68px;scroll-margin-top:76px}
+h2{color:var(--indigo);font-weight:400;font-size:clamp(25px,3.5vw,40px);line-height:1.15;
+  letter-spacing:-.01em;margin:0;padding:14px 0 16px;display:flex;gap:.6em;align-items:baseline}
+h2 .n{font-size:.42em;opacity:.55;font-weight:700;letter-spacing:.1em;flex:none}
+
+/* ── Section body ───────────────────────────────────────────────────────── */
+.body{padding-top:26px}
+.lede{font-size:clamp(18px,2.1vw,25px);line-height:1.3;letter-spacing:-.01em;
+  margin:0 0 26px;color:var(--ink)}
+/* h3 is the small label (/papers/: "How it feels"). h3.plain is a real
+   sentence-case subheading (/legal/: "Prices", "Your artwork"). */
+h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--indigo);
+  margin:24px 0 8px}
+h3.plain{font-size:18px;letter-spacing:-.01em;text-transform:none;color:var(--ink);
+  margin:26px 0 8px}
+p,li{font-size:15.5px;line-height:1.6}
+p{margin:0 0 14px}
+sup{font-size:.68em;line-height:0;vertical-align:.45em}
+ul{padding-left:20px;margin:0 0 14px}
+li{margin-bottom:7px}
+dl{margin:0 0 18px;display:grid;grid-template-columns:210px 1fr;gap:9px 20px;font-size:15.5px}
+dt{color:var(--indigo)}
+dd{margin:0}
+.tw{overflow-x:auto;margin:0 0 18px;clear:both}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:480px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--indigo);
+  border-bottom:1.5px solid var(--indigo)}
+.note{background:var(--peach);padding:18px 22px;margin:0 0 20px;clear:both}
+.note p:last-child{margin:0}
+.note.warn{border-left:4px solid #ef3226}
+
+/* ── Photo pair ──────────────────────────────────────────────────────────────
+   Two columns: the photo pair holds the left, all prose runs down the right.
+   Explicit grid placement, NOT a float — a float plus `max-width` on <p>
+   squeezes the paragraph's line boxes to zero and drops every paragraph below
+   the image, which is exactly the bug this replaced.
+
+   The photo is a CSS background on a pseudo-element, NOT an <img>. These
+   directories ship `script-src 'none'`, so a JS onerror fallback would never
+   fire and a not-yet-uploaded photo would show a broken-image icon on a live
+   page. A background that 404s simply paints nothing and the pending label
+   underneath shows through. */
+.sec-photos .body{display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);
+  column-gap:44px;align-items:start}
+.sec-photos .body > *{grid-column:2;min-width:0}
+.sec-photos .body > .shots{grid-column:1;grid-row:1/span 99}
+.shot{margin:0 0 14px}
+.shot .frame{position:relative;aspect-ratio:4/3;background:var(--peach)}
+.shot .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:11px;line-height:1.4;color:var(--indigo);
+  letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.shot .frame::after{content:"";position:absolute;inset:0;
+  background-image:var(--shot);background-size:cover;background-position:center;
+  background-repeat:no-repeat}
+.shot figcaption{font-size:12px;line-height:1.35;padding:7px 0 0;color:var(--ink-dim)}
+/* Pairs set inline between subheadings rather than beside a column of prose. */
+.inline-shots .shots{width:100%;margin:14px 0 18px;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inline-shots .shot{margin:0}
+
+footer{background:var(--peach);margin-top:20px;padding:34px 0 40px}
+footer .in{max-width:1280px;margin:0 auto;padding:0 28px;font-size:13.5px;line-height:1.6;
+  color:var(--ink-dim)}
+.updated{color:var(--ink-dim);font-size:12.5px;margin:14px 0 0;opacity:.8}
+footer em{color:var(--indigo);font-style:italic;font-weight:700}
+
+@media(max-width:760px){
+  .sec-photos .body{display:block}
+  .shots{margin:0 0 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .shot{margin:0}
+  nav.toc ol{columns:1}
+  .bar .in{padding:11px 18px;gap:12px}
+  .mark{font-size:15px}
+  .mark .mk-long{display:none}
+  .bar nav{gap:14px;font-size:14px}
+  .wrap,footer .in{padding:0 18px}
+  dl{grid-template-columns:1fr;gap:2px 0}
+  dt{margin-top:10px}
+}
+@media(max-width:560px){
+  .bar .in{padding:10px 14px;gap:10px}
+  .bar nav{gap:10px;font-size:12.5px}
+  .langs{padding:2px}
+  .langs a{padding:3px 6px;font-size:10px;letter-spacing:.05em}
+}
+@media(max-width:460px){
+  .shots,.inline-shots .shots{grid-template-columns:1fr}
+  /* Below this the full wordmark cannot share a line with three nav labels
+     and the language pill, so it drops to the "!!" mark alone. */
+  .mark .mk-short{display:none}
+  .mark .mk-min{display:inline;font-size:20px}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="in">
+  <a class="mark" href="https://tiegel.be/" aria-label="Click Click Graphics"><span class="mk-short">Cl<em>!</em>ck Cl<em>!</em>ck</span><span class="mk-long"> Graphics</span><span class="mk-min"><em>!!</em></span></a>
+  <nav><a class="" href="https://tiegel.be/">Diensten</a><a class="" href="/shop/">Winkel</a><a class="" href="/papers/nl.html">Papier</a><a class="cur" href="nl.html">Voorwaarden</a><span class="langs"><a class="" href="index.html">EN</a><a class="" href="fr.html">FR</a><a class="on" href="nl.html">NL</a></span></nav>
+</div></header>
+
+<div class="wrap">
+<div class="hero">
+  <hr class="r"><h1>Juridisch, privacy &amp; voorwaarden</h1><hr class="r">
+  <p class="sub">Click Click Graphics SRL — Brussel</p>
+  <p class="back"><a href="/shop/">&larr; Terug naar de winkel</a></p>
+</div>
+
+<nav class="toc"><hr class="r"><span class="lbl">Op deze pagina</span><ol><li><a href="#company"><span class="n">01</span>Wie wij zijn</a></li><li><a href="#privacy"><span class="n">02</span>Privacybeleid</a></li><li><a href="#data"><span class="n">03</span>Wat wij verzamelen en waarom</a></li><li><a href="#sharing"><span class="n">04</span>Wie er verder toegang toe heeft</a></li><li><a href="#retention"><span class="n">05</span>Hoe lang wij ze bewaren</a></li><li><a href="#rights"><span class="n">06</span>Uw rechten</a></li><li><a href="#cookies"><span class="n">07</span>Cookies en tracking</a></li><li><a href="#terms"><span class="n">08</span>Verkoopvoorwaarden</a></li></ol><hr class="r"></nav>
+<section id="company" class="sec">
+<hr class="r">
+<h2><span class="n">01</span>Wie wij zijn</h2>
+<hr class="r">
+<div class="body">
+<p>Deze website en de online drukwerkshop worden beheerd door:</p>
+<dl>
+  <dt>Vennootschap</dt><dd>Click Click Graphics SRL</dd>
+  <dt>Maatschappelijke zetel</dt><dd>Rue d’Alost 7-11, 1000 Bruxelles, België</dd>
+  <dt>Ondernemings- / btw-nr.</dt><dd>BE 0732.984.161</dd>
+  <dt>E-mail</dt><dd><a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a> — algemeen<br>
+                     <a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> — bestellingen</dd>
+  <dt>Telefoon</dt><dd>+32 2 880 70 36</dd>
+</dl>
+<p>Click Click Graphics SRL is de verwerkingsverantwoordelijke voor de hieronder beschreven persoonsgegevens.</p></div>
+</section>
+<section id="privacy" class="sec">
+<hr class="r">
+<h2><span class="n">02</span>Privacybeleid</h2>
+<hr class="r">
+<div class="body">
+<p>Deze pagina is kort, omdat er weinig te vertellen valt. Wij adverteren niet, wij profileren
+niemand, en wij delen uw gegevens met niemand die niet nodig is om uw bestelling te drukken en te
+leveren.</p>
+<div class="note"><p><strong>Geen cookies, geen tracking.</strong> Deze site plaatst helemaal geen
+cookies en gebruikt geen statistiekentools. Het enige wat uw browser voor ons bewaart, is de taal
+die u koos, zodat de site in uw taal blijft. Dat verlaat uw toestel nooit en vereist geen
+toestemming — daarom ziet u geen cookiebanner.</p></div>
+<p>Lettertypes, scripts en afbeeldingen komen van onze eigen server. Er wordt geen enkele derde
+partij gecontacteerd louter omdat u een pagina bekijkt.</p></div>
+</section>
+<section id="data" class="sec">
+<hr class="r">
+<h2><span class="n">03</span>Wat wij verzamelen en waarom</h2>
+<hr class="r">
+<div class="body">
+<div class="tw"><table>
+<tr><th>Wat</th><th>Wanneer</th><th>Waarom — en rechtsgrond</th></tr>
+<tr><td>Naam, e-mail, telefoon, facturatie- en leveringsadres, btw-nummer voor vennootschappen</td>
+    <td>Bij uw bestelling</td>
+    <td>Om uw bestelling te produceren, te factureren en te leveren. <em>Uitvoering van de
+    overeenkomst; wettelijke verplichting.</em></td></tr>
+<tr><td>De bestanden die u uploadt</td><td>Bij uw bestelling</td>
+    <td>Om uw werk te drukken. Wij hergebruiken uw bestanden nooit en tonen ze niet buiten het
+    atelier. <em>Uitvoering van de overeenkomst.</em></td></tr>
+<tr><td>Betaalstatus en referentie</td><td>Bij het afrekenen</td>
+    <td>Om uw betaling te bevestigen. Wij zien of bewaren uw bankgegevens nooit. <em>Uitvoering van
+    de overeenkomst.</em></td></tr>
+<tr><td>Wat u in de chat typt, en uw contactgegevens als u die geeft</td>
+    <td>Als u de assistent gebruikt</td>
+    <td>Om een offerteaanvraag voor te bereiden en u te antwoorden. <em>Gerechtvaardigd belang bij
+    het beantwoorden van vragen.</em></td></tr>
+<tr><td>Serverlogs en een eenrichtingshash van uw IP-adres</td><td>Automatisch</td>
+    <td>Beveiliging en misbruikpreventie. De hash kan niet worden herleid tot een adres.
+    <em>Gerechtvaardigd belang.</em></td></tr>
+</table></div></div>
+</section>
+<section id="sharing" class="sec">
+<hr class="r">
+<h2><span class="n">04</span>Wie er verder toegang toe heeft</h2>
+<hr class="r">
+<div class="body">
+<p>Enkel de partijen die nodig zijn om uw bestelling uit te voeren. Elk van hen is contractueel
+verplicht gegevens uitsluitend volgens onze instructies te verwerken.</p>
+<div class="tw"><table>
+<tr><th>Wie</th><th>Wat zij ontvangen</th><th>Waar</th></tr>
+<tr><td>Mollie B.V. — betalingen</td><td>Bedrag, referentie, en wat u op hun betaalpagina invult</td>
+    <td>Nederland (EU)</td></tr>
+<tr><td>Infomaniak — hosting en versleutelde back-ups</td><td>Alles wat op de site is opgeslagen</td>
+    <td>Zwitserland (adequaatheidsbesluit)</td></tr>
+<tr><td>DPD — levering</td><td>Naam, adres en telefoon van de bestemmeling, als u levering kiest</td>
+    <td>België (EU)</td></tr>
+<tr><td>Anthropic — de chatassistent</td><td>Wat u in de chat typt. Enkel als u die gebruikt.</td>
+    <td>Verenigde Staten, onder EU-modelcontractbepalingen</td></tr>
+<tr><td>Europese Commissie (VIES)</td><td>Een btw-nummer van een vennootschap, om de geldigheid te
+    controleren</td><td>EU</td></tr>
+</table></div>
+<p>Wij delen facturatiegegevens ook met onze boekhouder en, waar de wet dat vereist, met de
+belastingadministratie. Wij verkopen nooit persoonsgegevens en gebruiken ze niet voor
+reclame.</p></div>
+</section>
+<section id="retention" class="sec">
+<hr class="r">
+<h2><span class="n">05</span>Hoe lang wij ze bewaren</h2>
+<hr class="r">
+<div class="body">
+<div class="tw"><table>
+<tr><th>Wat</th><th>Hoe lang</th><th>Daarna</th></tr>
+<tr><td>Uw drukbestanden</td><td>6 maanden na betaling</td><td>Automatisch verwijderd</td></tr>
+<tr><td>Bestellingen met uw gegevens</td><td>2 jaar na betaling</td>
+    <td>Uw persoonsgegevens worden vervangen door een markering; factuurnummer en bedrag
+    blijven</td></tr>
+<tr><td>Chatgesprekken</td><td>90 dagen</td>
+    <td>Contactgegevens verwijderd; de rest na 2 jaar gewist</td></tr>
+<tr><td>Beveiligingslogs</td><td>Maximaal 6 maanden</td><td>Automatisch verwijderd</td></tr>
+</table></div>
+<p>Deze opruimingen verlopen automatisch op onze servers. Wij bewaren niets « voor het geval
+dat ».</p>
+<p>Facturen worden apart bewaard in ons boekhoudpakket, zoals elke onderneming moet doen, en vallen
+niet onder het bovenstaande.</p></div>
+</section>
+<section id="rights" class="sec">
+<hr class="r">
+<h2><span class="n">06</span>Uw rechten</h2>
+<hr class="r">
+<div class="body">
+<p>Op grond van de AVG kunt u ons vragen om:</p>
+<ul>
+  <li>u te zeggen welke gegevens wij over u hebben, en u daarvan een kopie te bezorgen;</li>
+  <li>te corrigeren wat onjuist is;</li>
+  <li>uw gegevens te wissen, voor zover wij ze niet moeten bewaren — facturatiestukken zijn
+      onderworpen aan wettelijke bewaartermijnen;</li>
+  <li>het gebruik ervan te beperken of zich ertegen te verzetten;</li>
+  <li>ze te ontvangen in een overdraagbaar, machineleesbaar formaat.</li>
+</ul>
+<p>Schrijf naar <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a>. Wij
+antwoorden binnen de maand, en het kost u niets.</p>
+<p>Bent u niet tevreden met ons antwoord, dan kunt u klacht indienen bij de
+Gegevensbeschermingsautoriteit, Drukpersstraat 35, 1000 Brussel —
+<a href="https://www.gegevensbeschermingsautoriteit.be" rel="noopener">gegevensbeschermingsautoriteit.be</a>.</p></div>
+</section>
+<section id="cookies" class="sec">
+<hr class="r">
+<h2><span class="n">07</span>Cookies en tracking</h2>
+<hr class="r">
+<div class="body">
+<p>Wij gebruiken geen cookies. Geen statistieken, geen advertentiepixel, geen social-mediatracker,
+geen lettertype of script van derden.</p>
+<p>Uw browser bewaart één ding voor ons: de taal die u koos, zodat de site daarin opent bij uw
+volgende bezoek. Dat is een functionele voorkeur, ze blijft op uw toestel, en het wissen van uw
+browsergegevens verwijdert ze. Er is geen toestemming voor nodig, vandaar geen banner.</p></div>
+</section>
+<section id="terms" class="sec">
+<hr class="r">
+<h2><span class="n">08</span>Verkoopvoorwaarden</h2>
+<hr class="r">
+<div class="body">
+<p>Deze voorwaarden gelden voor elke bestelling via onze online shop. Door te bestellen aanvaardt u
+ze. Wij zijn Click Click Graphics SRL, Rue d’Alost 7-11, 1000 Bruxelles, BE 0732.984.161.</p>
+
+<h3 class="plain">Prijzen</h3>
+<p>Alle vermelde prijzen zijn inclusief 21 % btw. De prijs die u ziet bij het bestellen is de prijs
+die u betaalt — er komen achteraf geen toeslagen bij. Levering in België is een forfait van 15 €
+incl. btw, één keer per bestelling aangerekend, ongeacht de hoeveelheid.</p>
+
+<h3 class="plain">Bestelling en betaling</h3>
+<p>Uw bestelling is bevestigd zodra de betaling is aanvaard. Wij vragen volledige betaling vóór
+productie, omdat elk werk specifiek voor u wordt gemaakt en niet kan worden doorverkocht. De
+betaling verloopt via Mollie; wij zien of bewaren uw bankgegevens nooit.</p>
+
+<h3 class="plain">Uw bestanden</h3>
+<p><strong>U bent verantwoordelijk voor het bestand dat u aanlevert</strong> — de inhoud, de
+spelling, de kleuren, de resolutie, en uw recht om het te drukken. Wij drukken wat wij
+ontvangen.</p>
+<p>Wij controleren bestanden op duidelijke technische problemen vóór het drukken — een ontbrekende
+afloop, een zeer lage resolutie, een ongebruikelijke kleurmodus — en verwittigen u als ons iets
+opvalt. Dat is een service, geen garantie: wij kunnen niet alles opmerken en wij lezen de inhoud
+niet na.</p>
+<p>Wij werken bij voorkeur met een drukklare PDF, met 3 mm afloop, tot 100 MB per bestand. Ook JPG,
+PNG en TIFF worden aanvaard.</p>
+
+<h3 class="plain">Productietijd</h3>
+<p>Standaardproductie duurt <strong>5 werkdagen</strong>. Express duurt <strong>48 uur</strong> en is
+enkel mogelijk met afhaling — een koerier haalt geen 48 uur.</p>
+<p>Werkdagen zijn maandag tot vrijdag, Belgische feestdagen niet meegerekend. Bestellingen na 15 u
+worden vanaf de volgende werkdag geteld.</p>
+<p>Dit is de productietijd, niet de levertijd. De datum bij het bestellen is het moment waarop uw
+bestelling ons verlaat.</p>
+
+<h3 class="plain">Levering en afhaling</h3>
+<p><strong>Afhalen</strong> op Aalststraat 7-11 Rue d’Alost, 1000 Brussel – Bruxelles is gratis.</p>
+<p><strong>Levering</strong> kost een forfait van 15 € in België, via DPD. De transporttijd komt
+boven op de productie en ligt buiten onze controle: wij beloven dus geen aankomstdatum. U ontvangt
+een trackingcode zodra uw bestelling verzonden is.</p>
+<p><strong>Buiten België</strong> verzenden wij ook, maar de kostprijs hangt af van de bestemming en
+wordt manueel berekend. Vraag het ons en wij bezorgen u een prijs.</p>
+
+<h3 class="plain">Herroepingsrecht</h3>
+<div class="note warn"><p>Alles wat wij drukken wordt gemaakt volgens uw specificaties, op basis van
+uw bestand. Krachtens artikel VI.53, 3° van het Wetboek van economisch recht zijn goederen die
+volgens de specificaties van de consument zijn vervaardigd of duidelijk gepersonaliseerd zijn
+<strong>uitgesloten van het herroepingsrecht van 14 dagen</strong>.</p>
+<p><strong>Uw bestelling kan dus niet worden geannuleerd of teruggestuurd zodra de productie is
+gestart.</strong> Controleer uw bestand zorgvuldig vóór u bestelt.</p></div>
+<p>Contacteert u ons vóór wij beginnen drukken, dan doen wij altijd ons best om te helpen.</p>
+
+<h3 class="plain">Als er iets misgaat</h3>
+<p>Controleer uw bestelling bij ontvangst of afhaling en meld ons een probleem binnen
+<strong>7 kalenderdagen</strong> — mail naar
+<a href="mailto:shop@clickclickgraphics.com">shop@clickclickgraphics.com</a> met uw factuurnummer en
+een foto.</p>
+<p>Ligt de fout bij ons — een drukfout, een verkeerde specificatie, transportschade — dan herdrukken
+wij het werk op onze kosten. Dit doet geen afbreuk aan uw wettelijke rechten als consument, die wij
+niet beperken.</p>
+<p>Wij kunnen niet herdrukken voor problemen in het aangeleverde bestand: een tikfout, een
+afbeelding met lage resolutie, of kleuren die in het bestand zelf verkeerd waren.</p>
+
+<h3 class="plain">Kleur</h3>
+<p>Een scherm licht op, drukwerk niet. Kleine kleurverschillen tussen scherm en drukwerk zijn normaal
+en vormen geen gebrek. Is exacte kleur belangrijk, vraag ons dan vooraf om een proefdruk.</p>
+
+<h3 class="plain">Aansprakelijkheid</h3>
+<p>Wij zijn aansprakelijk voor schade door onze eigen fout. Onze aansprakelijkheid is beperkt tot de
+waarde van de betrokken bestelling, behalve waar de wet zo’n beperking niet toelaat — met name bij
+overlijden, lichamelijk letsel of opzet.</p>
+
+<h3 class="plain">Toepasselijk recht en geschillen</h3>
+<p>Het Belgische recht is van toepassing. Wij lossen een probleem liever rechtstreeks op: schrijf
+ons dus eerst. Consumenten kunnen zich ook richten tot de Consumentenombudsdienst, Koning Albert
+II-laan 8, 1000 Brussel. Geschillen behoren tot de bevoegdheid van de rechtbanken van Brussel.</p></div>
+</section>
+</div>
+<footer><div class="in">Click Click Graphics SRL · Rue d’Alost 7-11, 1000 Bruxelles · BE 0732.984.161 · <a href="mailto:info@clickclickgraphics.com">info@clickclickgraphics.com</a> · +32 2 880 70 36
+<p class="updated">Laatst bijgewerkt op 18 augustus 2026</p></div></footer>
+</body>
+</html>

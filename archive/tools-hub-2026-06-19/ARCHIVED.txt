@@ -1,0 +1,18 @@
+Archived 2026-08-19. Superseded — do NOT upload.
+
+This is the Jun 19 2026 copy of the internal tools hub (clickclick.be/tools/),
+kept only for reference. The live source is now version-controlled at:
+
+    ~/Desktop/Node-CCG/Clickclick-flyer-calculator/tools/
+
+Replaced by commit 1e419d0. What is wrong with this copy:
+
+  - Loads Space Grotesk from fonts.googleapis.com / fonts.gstatic.com, so every
+    visitor's IP goes to Google. The current version self-hosts GT Pressura.
+  - Links the chat as tiegel.be/smartbot/ under a "Sister brand - tiegel.be"
+    heading. That bot moved to clickclick.be/chat/, tiegel.be was never a
+    sister brand, and nothing of ours lives there any more.
+  - .htaccess lacks the woff2 MIME type and the no-cache-HTML / cache-fonts
+    rules the hub needs.
+
+logo.png is byte-identical to the current one. Nothing here is worth restoring.

@@ -1,0 +1,2 @@
+# lib/ contains PHP-only utilities. Never exposed over HTTP.
+Require all denied

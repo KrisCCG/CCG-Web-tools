@@ -1,0 +1,10 @@
+# Click Click — Paper Stock : staff login
+# IMPORTANT: set AuthUserFile to the ABSOLUTE path of .htpasswd on the server.
+# On Infomaniak shared hosting it looks something like:
+#   /home/clients/xxxxxxxx/sites/clickclick.be/stock/.htpasswd
+# (See README — your File Manager shows the full path.)
+
+AuthType Basic
+AuthName "Click Click — Paper Stock"
+AuthUserFile "/REPLACE/WITH/ABSOLUTE/PATH/TO/stock/.htpasswd"
+Require valid-user

@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fast Quote — Click Click Graphics</title>
+<meta name="description" content="Instant print quote. Flyers, cards, posters. Brussels.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fef3ea;
+    --cream-2:#f7e9dc;
+    --cream-3:#eedfc8;
+    --ink:#0a0a0a;
+    --ink-2:#2a2a2a;
+    --ink-dim:#6c645b;
+    --ink-dimmer:#9a9287;
+    --indigo:#3211fc;
+    --indigo-dark:#2408c4;
+    --indigo-hi:#5336ff;
+    --line:#e6d6c3;
+    --line-hi:#d4c2ab;
+    --red:#ef3226;
+    --green:#19a26e;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--indigo);color:var(--cream);font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;overflow-x:hidden}
+  a{color:var(--cream);text-decoration:none}
+  a:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+  em{font-style:italic}
+
+  /* ─────── Top bar (inverted: cream bg, indigo text) ─────── */
+  .topbar{background:var(--cream);color:var(--indigo);position:sticky;top:0;z-index:10;border-bottom:2px solid var(--ink)}
+  .topbar .inner{max-width:1280px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo img{display:block;height:28px;width:auto}
+  nav.main{display:flex;gap:28px;align-items:center}
+  nav.main a{color:var(--indigo);font-weight:600;font-size:15px}
+  nav.main a.cur{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+  .langs{display:flex;gap:2px;background:rgba(50,17,252,.08);border-radius:999px;padding:3px}
+  .langs button{background:transparent;border:0;color:var(--indigo);opacity:.55;font:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;padding:5px 10px;border-radius:999px;cursor:pointer;text-transform:uppercase}
+  .langs button.on{background:var(--indigo);color:var(--cream);opacity:1}
+
+  /* ─────── Shell ─────── */
+  .shell{max-width:1280px;margin:0 auto;padding:56px 28px 120px}
+
+  /* ─────── Hero (cream text on indigo) ─────── */
+  .hero{margin-bottom:56px;max-width:1000px;color:var(--cream)}
+  .hero h1{font-weight:700;font-size:clamp(44px,7vw,88px);line-height:.98;letter-spacing:-.025em;margin:0 0 20px}
+  .hero h1 em{font-style:italic;color:var(--cream)}
+  .hero h1 .bangs{display:inline-flex;align-items:center;gap:.04em;margin-left:.02em;vertical-align:baseline}
+  .hero h1 .bangs svg{height:.92em;width:auto;color:currentColor}
+  .hero p{font-size:17px;line-height:1.5;margin:0;max-width:620px;color:rgba(254,243,234,.85);font-weight:500}
+  .hero .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .hero .badges span{background:rgba(254,243,234,.1);border:1.5px solid var(--cream);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--cream)}
+  .hero .arrow{display:inline-block;margin-top:28px;color:var(--cream);font-weight:700;font-size:56px;line-height:1;text-shadow:3px 3px 0 var(--ink)}
+
+  /* ─────── Grid ─────── */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;align-items:start}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+  /* ─────── Steps (cream cards on indigo body) ─────── */
+  .step{background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:28px;margin-bottom:16px;box-shadow:5px 5px 0 var(--ink)}
+  .step .head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+  .step .num{font-weight:700;font-size:14px;color:var(--ink);background:var(--cream-3);border:1.5px solid var(--ink);border-radius:999px;padding:2px 10px;font-style:italic}
+  .step h2{font-weight:700;font-size:22px;margin:0;letter-spacing:-.01em;color:var(--ink)}
+  .step h2 em{color:var(--indigo)}
+  .step .hint{color:var(--ink-dim);font-size:13px;margin-left:auto;font-weight:500}
+
+  /* ─────── Product tiles ─────── */
+  .products{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media (max-width:640px){.products{grid-template-columns:1fr}}
+  .tile{background:var(--cream-2);border:2px solid var(--ink);border-radius:14px;padding:14px;cursor:pointer;transition:all .15s;text-align:left;color:var(--ink);font-family:inherit;position:relative;display:flex;gap:12px;align-items:center}
+  .tile:hover{background:var(--cream-3);transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+  .tile.on{background:var(--indigo);color:var(--cream);box-shadow:4px 4px 0 var(--ink)}
+  .tile .img{flex-shrink:0;width:72px;height:72px;border-radius:10px;background:var(--cream);overflow:hidden;border:1.5px solid var(--ink)}
+  .tile .img svg{width:100%;height:100%;display:block}
+  .tile .body{min-width:0;flex:1}
+  .tile h3{margin:0 0 2px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .tile p{margin:0 0 4px;font-size:12px;line-height:1.35;font-weight:500;color:var(--ink-dim)}
+  .tile.on p{color:rgba(254,243,234,.8)}
+  .tile .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:700}
+  .tile.on .tag{color:var(--cream)}
+
+  /* ─────── Quantity ─────── */
+  .qtys{display:flex;flex-wrap:wrap;gap:8px}
+  .qty{background:var(--cream-2);border:2px solid var(--ink);border-radius:999px;padding:8px 16px;font:inherit;color:var(--ink);cursor:pointer;transition:all .1s;text-align:center;font-weight:700;font-size:15px;letter-spacing:-.01em;min-width:56px}
+  .qty:hover{background:var(--cream-3);transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+  .qty.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+
+  /* ─────── Specs ─────── */
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media (max-width:640px){.specs{grid-template-columns:1fr}}
+  .field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .select{position:relative}
+  .select select{appearance:none;width:100%;background:var(--cream-2);border:2px solid var(--ink);border-radius:12px;padding:13px 36px 13px 14px;color:var(--ink);font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+  .select select:focus{outline:none;background:var(--cream-3)}
+  .select::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink);pointer-events:none;font-size:11px;font-weight:700}
+
+  .toggle-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .toggle-row button{background:var(--cream-2);border:2px solid var(--ink);border-radius:12px;padding:13px;color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .1s}
+  .toggle-row button:hover{background:var(--cream-3)}
+  .toggle-row button.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+
+  .express{display:flex;align-items:center;gap:12px;background:var(--cream-2);border:2px dashed var(--ink);border-radius:12px;padding:14px;margin-top:16px;cursor:pointer;transition:background .15s;color:var(--ink)}
+  .express:hover{background:var(--cream-3)}
+  .express .bolt{width:32px;height:32px;border-radius:999px;background:var(--ink);color:#ffd60a;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
+  .express .text{flex:1}
+  .express .text strong{display:block;font-size:14px;font-weight:700}
+  .express .text small{color:var(--ink-dim);font-size:12px;font-weight:500}
+  .express input{accent-color:var(--indigo);width:18px;height:18px}
+
+  /* ─────── Checkout ─────── */
+  .checkout .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  @media (max-width:640px){.checkout .row{grid-template-columns:1fr}}
+  .checkout .row-zip{grid-template-columns:140px 1fr}
+  @media (max-width:640px){.checkout .row-zip{grid-template-columns:1fr 1fr}}
+  .checkout input[type="email"],.checkout input[type="text"],.checkout input[type="tel"]{width:100%;background:var(--cream-2);border:2px solid var(--ink);border-radius:12px;padding:13px 14px;color:var(--ink);font:inherit;font-weight:500;font-size:14px}
+  .checkout input:focus{outline:none;background:var(--cream-3)}
+  .checkout input::placeholder{color:var(--ink-dim)}
+  .checkout .inline-check{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink)}
+  .checkout .inline-check input{width:18px;height:18px;accent-color:var(--indigo);margin:0;flex-shrink:0}
+  .checkout .section-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--ink);margin:16px 0 8px}
+  .checkout .conditional{overflow:hidden;transition:max-height .2s}
+  .receipt-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--ink-dim);font-style:italic}
+  .rules .receipt-note:first-of-type{margin-top:0}
+  .checkout .deliver{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+  @media (max-width:640px){.checkout .deliver{grid-template-columns:1fr}}
+  .deliver label{background:var(--cream-2);border:2px solid var(--ink);border-radius:12px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:background .1s;color:var(--ink)}
+  .deliver label:hover{background:var(--cream-3)}
+  .deliver label.on{background:var(--indigo);color:var(--cream);box-shadow:3px 3px 0 var(--ink)}
+  .deliver label.on small{color:rgba(254,243,234,.75)}
+  .deliver strong{font-size:14px;font-weight:700}
+  .deliver small{color:var(--ink-dim);font-size:12px;font-weight:500}
+  .deliver input{display:none}
+
+  /* ─────── Price card (inverted: cream card with ink text, stands out on indigo) ─────── */
+  .price-card{position:sticky;top:92px;background:var(--cream);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:28px;box-shadow:6px 6px 0 var(--ink)}
+  .price-card h3{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim);margin:0 0 18px}
+  .spec-list{list-style:none;margin:0;padding:18px 0;border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);margin-bottom:20px}
+  .spec-list li{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;gap:12px;font-weight:500}
+  .spec-list li .k{color:var(--ink-dim);flex-shrink:0}
+  .spec-list li .v{font-weight:700;text-align:right;color:var(--ink)}
+  .price-big .label{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:var(--ink-dim);margin-bottom:4px}
+  .price-big .amount{font-weight:700;font-size:60px;line-height:1;letter-spacing:-.03em;color:var(--indigo)}
+  .price-big .amount .cents{font-size:32px;color:var(--ink-dim);margin-left:2px;font-style:normal}
+  .price-big .per{font-size:13px;color:var(--ink-dim);margin-top:6px;font-weight:500}
+  .price-big .per strong{color:var(--ink);font-weight:700}
+  .price-big .exvat{font-size:11px;color:var(--ink-dimmer);margin-top:6px;font-weight:500}
+  .price-row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .ready{display:flex;align-items:center;padding:10px 14px;background:var(--cream-3);border:1.5px solid var(--ink);border-radius:10px;font-size:12px;font-weight:500;color:var(--ink);flex-shrink:0}
+  .ready .d{color:var(--ink-dim);line-height:1.35}
+  .ready strong{color:var(--ink);font-weight:700;display:block;font-size:16px;letter-spacing:-.01em;margin-bottom:1px}
+
+  .btn-order{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:20px;background:var(--indigo);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:4px 4px 4px 22px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s;text-transform:uppercase;letter-spacing:.03em}
+  .btn-order:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);background:var(--indigo-hi)}
+  .btn-order.disabled{background:var(--line-hi);color:var(--ink-dim);cursor:not-allowed;font-size:13px}
+  .btn-order.disabled:hover{transform:none;box-shadow:none;background:var(--line-hi)}
+  .btn-order .cart{width:40px;height:40px;border-radius:999px;background:var(--cream);color:var(--indigo);border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:18px}
+  .btn-order.disabled .cart{background:var(--cream-2);color:var(--ink-dim)}
+  .secure{text-align:center;margin-top:12px;font-size:11px;color:var(--ink-dim);font-weight:600;letter-spacing:.05em}
+
+  /* ─────── Bespoke ─────── */
+  .bespoke{margin-top:32px;padding:24px;background:var(--cream);color:var(--ink);border:2px dashed var(--ink);border-radius:20px;display:flex;align-items:center;gap:20px}
+  @media (max-width:640px){.bespoke{flex-direction:column;text-align:center}}
+  .bespoke .emoji{font-size:36px;line-height:1}
+  .bespoke .text{flex:1}
+  .bespoke h4{margin:0 0 4px;font-weight:700;font-size:17px}
+  .bespoke h4 em{color:var(--indigo)}
+  .bespoke p{margin:0;color:var(--ink-dim);font-size:14px;font-weight:500}
+  .bespoke a.mail{background:transparent;color:var(--ink);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap;border:1.5px solid var(--ink);display:inline-flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0}
+  .bespoke a.mail:hover{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px;background:var(--cream-3)}
+
+  /* ─────── Footer (cream-ish on indigo) ─────── */
+  footer{margin-top:56px;padding:28px 0 0;border-top:1.5px solid rgba(254,243,234,.2);color:rgba(254,243,234,.65);font-size:13px;line-height:1.7;font-weight:500;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  footer .privacy{color:var(--cream);font-weight:600}
+  footer .privacy::before{content:"● ";color:var(--green)}
+
+  /* ─────── Mobile compaction ─────── */
+  @media (max-width:720px){
+    .topbar .inner{padding:10px 16px;gap:12px}
+    .logo img{height:22px}
+    nav.main{gap:16px}
+    nav.main a{font-size:13px}
+    nav.main a[href="#"]:not(.cur){display:none}
+    .langs button{font-size:11px;padding:4px 8px}
+
+    .shell{padding:24px 16px 40px}
+    .hero{margin-bottom:24px}
+    .hero h1{font-size:38px;line-height:1.02;margin-bottom:12px}
+    .hero p{font-size:14px;line-height:1.45}
+    .hero .arrow{margin-top:14px;font-size:36px;text-shadow:2px 2px 0 var(--ink)}
+
+    .grid{gap:14px}
+
+    .step{padding:16px;border-radius:16px;margin-bottom:10px;box-shadow:3px 3px 0 var(--ink)}
+    .step .head{margin-bottom:12px;gap:10px}
+    .step h2{font-size:17px}
+    .step .num{font-size:12px;padding:1px 8px}
+    .step .hint{font-size:11px;flex-basis:100%;margin-left:0}
+
+    .products{gap:8px}
+    .tile{padding:10px;gap:10px;border-radius:12px}
+    .tile .img{width:52px;height:52px;border-radius:8px}
+    .tile h3{font-size:15px}
+    .tile p{font-size:11px;line-height:1.3}
+    .tile .tag{font-size:10px}
+
+    .qtys{gap:6px}
+    .qty{padding:6px 12px;font-size:13px;min-width:44px}
+
+    .specs{gap:10px}
+    .field label{font-size:10px;margin-bottom:5px}
+    .select select,.toggle-row button,.checkout input[type="email"],.checkout input[type="text"]{padding:10px 12px;font-size:13px;border-radius:10px}
+    .select select{padding-right:32px}
+
+    .express{padding:10px;margin-top:10px;gap:10px}
+    .express .bolt{width:28px;height:28px;font-size:14px}
+    .express .text strong{font-size:13px}
+    .express .text small{font-size:11px}
+
+    .checkout .row{gap:8px;margin-bottom:8px}
+    .checkout .deliver{margin:10px 0;gap:6px}
+    .deliver label{padding:10px}
+    .deliver strong{font-size:13px}
+    .deliver small{font-size:11px}
+
+    .price-card{padding:18px;border-radius:16px;box-shadow:4px 4px 0 var(--ink);position:static;top:auto}
+    .price-card h3{margin-bottom:10px;font-size:11px}
+    .spec-list{padding:12px 0;margin-bottom:14px}
+    .spec-list li{font-size:13px;padding:4px 0}
+    .price-big .amount{font-size:46px}
+    .price-big .amount .cents{font-size:26px}
+    .price-big .label{font-size:10px}
+    .price-big .per{font-size:12px;margin-top:4px}
+    .btn-order{padding:3px 3px 3px 18px;font-size:14px;margin-top:14px}
+    .btn-order .cart{width:34px;height:34px;font-size:15px}
+    .secure{font-size:10px;margin-top:10px}
+
+    .bespoke{margin-top:20px;padding:16px;gap:12px;border-radius:16px}
+    .bespoke .emoji{font-size:28px}
+    .bespoke h4{font-size:15px}
+    .bespoke p{font-size:12px}
+    .bespoke a.mail{padding:10px 16px;font-size:13px}
+
+    footer{margin-top:28px;padding-top:18px;font-size:11px;gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inner">
+    <a href="#" class="logo"><img src="logo.png" alt="Click Click Graphics"></a>
+    <nav class="main">
+      <a href="#" data-i18n="nav.services">Services</a>
+      <a href="#" data-i18n="nav.shop">Shop</a>
+      <div class="langs" role="tablist">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="nl">NL</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="shell">
+
+  <section class="hero">
+    <h1><span data-i18n="hero.title">Print quote in</span> <em data-i18n="hero.seconds">seconds</em></h1>
+    <p data-i18n="hero.tagline">Brussels print shop. Real prices — pay online — pick up or we deliver by bike in Brussels.</p>
+  </section>
+
+  <main class="grid">
+
+    <section class="flow">
+
+      <!-- 01 Product -->
+      <div class="step">
+        <div class="head">
+          <span class="num">01</span>
+          <h2><span data-i18n="step1.title">What do you want to</span> <em data-i18n="step1.titleEm">print?</em></h2>
+        </div>
+        <div class="products" role="radiogroup">
+
+          <button class="tile on" data-p="flyer">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(18 12) rotate(-8)">
+                  <rect width="38" height="54" rx="2" fill="#eedfc8"/>
+                </g>
+                <g transform="translate(24 10) rotate(-3)">
+                  <rect width="38" height="54" rx="2" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1"/>
+                </g>
+                <g transform="translate(30 8)">
+                  <rect width="38" height="54" rx="2" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <rect x="4" y="6" width="30" height="12" fill="#3211fc"/>
+                  <rect x="4" y="22" width="22" height="2" fill="#0a0a0a"/>
+                  <rect x="4" y="27" width="26" height="2" fill="#0a0a0a"/>
+                  <rect x="4" y="32" width="18" height="2" fill="#0a0a0a"/>
+                  <circle cx="28" cy="44" r="6" fill="#ef3226"/>
+                </g>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.flyer">Flyer</h3>
+              <p data-i18n="tile.flyer.desc">Party, event, pop-up.</p>
+              <span class="tag">A6 · A5</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="card">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(8 28) rotate(-10)">
+                  <rect width="50" height="32" rx="3" fill="#eedfc8"/>
+                </g>
+                <g transform="translate(16 26) rotate(-4)">
+                  <rect width="50" height="32" rx="3" fill="#f7e9dc" stroke="#0a0a0a" stroke-width="1"/>
+                </g>
+                <g transform="translate(22 24)">
+                  <rect width="50" height="32" rx="3" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <circle cx="11" cy="13" r="5" fill="#ef3226"/>
+                  <rect x="20" y="10" width="24" height="2" fill="#0a0a0a"/>
+                  <rect x="20" y="15" width="18" height="2" fill="#0a0a0a" opacity=".5"/>
+                  <rect x="6" y="22" width="22" height="1.5" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="6" y="26" width="28" height="1.5" fill="#0a0a0a" opacity=".6"/>
+                </g>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.card">Card</h3>
+              <p data-i18n="tile.card.desc">Business, wedding, invite.</p>
+              <span class="tag">BC · A7 · A6 · A5 · A4</span>
+            </div>
+          </button>
+
+          <button class="tile" data-p="poster">
+            <div class="img">
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <rect width="80" height="80" fill="#fef3ea"/>
+                <g transform="translate(28 10)">
+                  <rect width="30" height="60" rx="1" fill="#fef3ea" stroke="#0a0a0a" stroke-width="1.5"/>
+                  <rect width="30" height="28" fill="#3211fc"/>
+                  <circle cx="15" cy="14" r="8" fill="#fef3ea"/>
+                  <rect x="5" y="36" width="20" height="3" fill="#0a0a0a"/>
+                  <rect x="5" y="43" width="16" height="2" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="5" y="48" width="18" height="2" fill="#0a0a0a" opacity=".6"/>
+                  <rect x="5" y="55" width="12" height="2.5" fill="#ef3226"/>
+                </g>
+                <circle cx="43" cy="11" r="2.5" fill="#ef3226"/>
+              </svg>
+            </div>
+            <div class="body">
+              <h3 data-i18n="tile.poster">Poster</h3>
+              <p data-i18n="tile.poster.desc">Festival, gallery, club.</p>
+              <span class="tag" data-i18n="tile.poster.tag">A4 · A3 · larger on request</span>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- 02 Quantity -->
+      <div class="step">
+        <div class="head">
+          <span class="num">02</span>
+          <h2><span data-i18n="step2.title">How many</span> <em data-i18n="step2.titleEm">copies?</em></h2>
+        </div>
+        <div class="qtys" id="qtyGroup"></div>
+      </div>
+
+      <!-- 03 Specs -->
+      <div class="step">
+        <div class="head">
+          <span class="num">03</span>
+          <h2><span data-i18n="step3.title">Size &amp;</span> <em data-i18n="step3.titleEm">paper</em></h2>
+        </div>
+        <div class="specs">
+          <div class="field">
+            <label data-i18n="label.size">Size</label>
+            <div class="select"><select id="sizeSelect"></select></div>
+          </div>
+          <div class="field">
+            <label data-i18n="label.paper">Paper</label>
+            <div class="select"><select id="paperSelect"></select></div>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <label data-i18n="label.sides">Print sides</label>
+            <div class="toggle-row" id="sidesGroup">
+              <button class="on" data-sides="1" data-i18n="sides.recto">Recto only</button>
+              <button data-sides="2" data-i18n="sides.rectoVerso">Recto &amp; Verso</button>
+            </div>
+          </div>
+        </div>
+        <label class="express">
+          <input type="checkbox" id="expressChk">
+          <div class="bolt">⚡</div>
+          <div class="text">
+            <strong data-i18n="express.title">Express · ready in 48 hours</strong>
+            <small data-i18n="express.sub">+35% — for when you needed it yesterday</small>
+          </div>
+        </label>
+      </div>
+
+      <!-- 04 Your details -->
+      <div class="step checkout">
+        <div class="head">
+          <span class="num">04</span>
+          <h2><span data-i18n="step4.title">Your</span> <em data-i18n="step4.titleEm">details</em></h2>
+        </div>
+
+        <div class="row">
+          <input type="email" id="custEmail" data-i18n-placeholder="ph.email" placeholder="Email" required>
+          <input type="text" id="custName" data-i18n-placeholder="ph.name" placeholder="Full name" required>
+        </div>
+        <div class="row">
+          <input type="tel" id="custPhone" data-i18n-placeholder="ph.phone" placeholder="Phone (optional)">
+        </div>
+
+        <label class="inline-check">
+          <input type="checkbox" id="isCompany">
+          <span data-i18n="form.isCompany">This order is for a company</span>
+        </label>
+
+        <div class="conditional" id="companyBlock" hidden>
+          <div class="row">
+            <input type="text" id="custCompany" data-i18n-placeholder="ph.company" placeholder="Company name">
+            <input type="text" id="vatNumber" data-i18n-placeholder="ph.vat" placeholder="VAT number — e.g. BE0732.984.161">
+          </div>
+        </div>
+
+        <label class="section-label" data-i18n="label.address">Address</label>
+        <div class="row">
+          <input type="text" id="custAddress" data-i18n-placeholder="ph.street" placeholder="Street + number" required>
+        </div>
+        <div class="row row-zip">
+          <input type="text" id="custZip" data-i18n-placeholder="ph.zip" placeholder="Zip">
+          <input type="text" id="custCity" data-i18n-placeholder="ph.city" placeholder="City" required>
+        </div>
+
+        <label class="section-label" data-i18n="label.delivery">Delivery</label>
+        <div class="deliver">
+          <label class="on">
+            <input type="radio" name="del" checked>
+            <strong data-i18n="deliver.pickup">Pick-up — Free</strong>
+            <small data-i18n="deliver.pickupSub">Aalststraat 7-11, 1000 Brussels · Mon–Fri 9–12:30 &amp; 14–18h</small>
+          </label>
+          <label>
+            <input type="radio" name="del">
+            <strong data-i18n="deliver.ship">Delivery — €15</strong>
+            <small data-i18n="deliver.shipSub">DPD Home or by bike in Brussels</small>
+          </label>
+        </div>
+
+        <div class="conditional" id="shipBlock" hidden>
+          <label class="inline-check">
+            <input type="checkbox" id="diffShip">
+            <span data-i18n="form.diffShip">Ship to a different address</span>
+          </label>
+          <div class="conditional" id="shipFields" hidden>
+            <div class="row">
+              <input type="text" id="shipAddress" data-i18n-placeholder="ph.shipStreet" placeholder="Shipping street + number">
+            </div>
+            <div class="row row-zip">
+              <input type="text" id="shipZip" data-i18n-placeholder="ph.shipZip" placeholder="Shipping zip">
+              <input type="text" id="shipCity" data-i18n-placeholder="ph.shipCity" placeholder="Shipping city">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 05 Rules -->
+      <div class="step rules">
+        <div class="head">
+          <span class="num">05</span>
+          <h2 data-i18n="step5.title">Rules</h2>
+        </div>
+        <p class="receipt-note" id="receiptNote" data-i18n="rules.receipt">You will receive a receipt by email after payment.</p>
+        <p class="receipt-note" data-i18n="rules.upload">📁 After payment, you'll get a secure link to upload your artwork — PDF, JPG, PNG or TIFF.</p>
+        <p class="receipt-note" data-i18n="rules.bleed">⊞ Please add 3 mm bleed to your files so your print gets a perfect cut.</p>
+      </div>
+
+      <div class="bespoke">
+        <div class="text">
+          <h4><span data-i18n="bespoke.title">Need something</span> <em data-i18n="bespoke.titleEm">bespoke?</em></h4>
+          <p data-i18n="bespoke.desc">Die-cut shapes, unusual sizes, coloured paper — let's talk.</p>
+        </div>
+        <a class="mail" href="mailto:info@clickclickgraphics.com?subject=Custom%20print%20quote" data-i18n="bespoke.btn">✉ Email us</a>
+      </div>
+
+    </section>
+
+    <!-- Price card -->
+    <aside>
+      <div class="price-card">
+        <h3 data-i18n="quote.title">Your quote</h3>
+        <ul class="spec-list">
+          <li><span class="k" data-i18n="quote.product">Product</span><span class="v" id="sumProduct">Flyer</span></li>
+          <li><span class="k" data-i18n="quote.format">Format</span><span class="v" id="sumSize">A6 · 105×148 mm</span></li>
+          <li><span class="k" data-i18n="quote.paper">Paper</span><span class="v" id="sumPaper">MultiArt Silk · 170 gsm</span></li>
+          <li><span class="k" data-i18n="quote.sides">Sides</span><span class="v" id="sumSides">Recto only</span></li>
+          <li><span class="k" data-i18n="quote.quantity">Quantity</span><span class="v" id="sumQty">250</span></li>
+          <li><span class="k" data-i18n="quote.delivery">Delivery</span><span class="v" id="sumDelivery">Pick-up · Free</span></li>
+        </ul>
+        <div class="price-big">
+          <div class="label" data-i18n="quote.total">Total incl. VAT</div>
+          <div class="price-row">
+            <div class="amount" id="priceAmount">€65<span class="cents">.00</span></div>
+            <div class="ready">
+              <div class="d"><span id="readyPrefix">Ready for pick-up by</span> <strong id="readyDate">Fri 24 Apr</strong><br><span id="readyDays">5 working days</span></div>
+            </div>
+          </div>
+          <div class="per"><strong id="pricePer">€0.2600</strong> <span data-i18n="quote.perPiece">per piece</span></div>
+        </div>
+        <button class="btn-order">
+          <span>Order online</span>
+          <span class="cart">🛒</span>
+        </button>
+        <div class="secure" data-i18n="secure">Bancontact · Apple Pay · Secure checkout</div>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer>
+    <div data-i18n="footer.addr">Click Click Graphics · Aalststraat 7-11, 1000 Brussels · BE 0732.984.161</div>
+    <div class="privacy" data-i18n="footer.privacy">Privacy-friendly · No cookies · No tracking</div>
+  </footer>
+
+</div>
+
+<script type="module">
+  import { t, setLang, getLang, initLang, onLangChange } from './lib/i18n.js';
+
+  // Prices come from the server — the client never sees raw costs or the formula.
+  // Uses same-origin in production; falls back to the live endpoint for local dev.
+  const CALC_URL = (location.hostname === 'localhost' || location.hostname.startsWith('127.'))
+    ? 'https://clickclick.be/calculator/calc.php'
+    : '/calculator/calc.php';
+
+  // Last successful price (kept across in-flight fetches so the UI doesn't flicker)
+  let lastPrice = null;
+  let priceReady = false;
+
+  const PRODUCTS = {
+    flyer: {
+      label: 'Flyer',
+      sizes: [
+        {k:'A6', v:'A6 · 105×148 mm', mult:1.0},
+        {k:'A5', v:'A5 · 148×210 mm', mult:1.7},
+      ],
+      papers: [
+        {k:'ms115', v:'MultiArt Silk · 115 gsm'},
+        {k:'ms130', v:'MultiArt Silk · 130 gsm'},
+        {k:'ms170', v:'MultiArt Silk · 170 gsm'},
+      ],
+      defaultPaperIdx: 1,
+      qtys: [250, 500, 1000, 2500],
+      hint: "From 250 — flyers don't make sense below that",
+      days: 5,
+    },
+    card: {
+      label: 'Card',
+      sizes: [
+        {k:'BC', v:'Business Card · 85×55 mm', mult:1.0},
+        {k:'A7', v:'A7 · 74×105 mm', mult:1.3},
+        {k:'A6', v:'A6 · 105×148 mm', mult:1.8},
+        {k:'A5', v:'A5 · 148×210 mm', mult:2.5},
+        {k:'A4', v:'A4 · 210×297 mm', mult:3.5},
+      ],
+      papers: [
+        {k:'ms400', v:'MultiArt Silk · 400 gsm', mult:1.5},
+        {k:'ms350', v:'MultiArt Silk · 350 gsm', mult:1.35},
+        {k:'ms300', v:'MultiArt Silk · 300 gsm', mult:1.2},
+        {k:'ms250', v:'MultiArt Silk · 250 gsm', mult:1.1},
+        {k:'bt300', v:'Biotop · 300 gsm', mult:1.25},
+        {k:'bt250', v:'Biotop · 250 gsm', mult:1.15},
+        {k:'rs300', v:'Recystar · 300 gsm', mult:1.22},
+        {k:'rs250', v:'Recystar · 250 gsm', mult:1.12},
+      ],
+      qtys: [20, 50, 100, 250, 500, 1000],
+      hint: "From 20 — small luxury runs welcome",
+      base: 0.10, days: 5,
+    },
+    poster: {
+      label: 'Poster',
+      sizes: [
+        {k:'A3', v:'A3 · 297×420 mm', mult:1.0},
+        {k:'A4', v:'A4 · 210×297 mm', mult:0.62},
+      ],
+      papers: [
+        {k:'ms115', v:'MultiArt Silk · 115 gsm'},
+        {k:'ms130', v:'MultiArt Silk · 130 gsm'},
+        {k:'ms170', v:'MultiArt Silk · 170 gsm'},
+      ],
+      defaultPaperIdx: 2,
+      qtys: [10, 25, 50, 100],
+      hint: "A3 here — A2 and larger → request quote",
+      days: 5,
+    },
+  };
+
+  const state = {
+    product: 'flyer', sizeIdx: 0, paperIdx: PRODUCTS.flyer.defaultPaperIdx ?? 0,
+    qty: 250, sides: 1, express: false, delivery: 'pickup',
+    // customer form
+    custName: '', custEmail: '', custPhone: '',
+    isCompany: false, custCompany: '', vatNumber: '',
+    custAddress: '', custZip: '', custCity: '',
+    diffShip: false, shipAddress: '', shipZip: '', shipCity: '',
+  };
+
+  const PAY_URL = 'https://clickclick.be/calculator/pay.php';
+
+  const $ = sel => document.querySelector(sel);
+  const qtyGroup = $('#qtyGroup'), sizeSelect = $('#sizeSelect'), paperSelect = $('#paperSelect');
+
+  const fmtEUR = n => n.toLocaleString('fr-BE',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(',', '.');
+  const fmtPiece = n => n.toLocaleString('fr-BE',{minimumFractionDigits:4,maximumFractionDigits:4}).replace(',', '.');
+
+  function renderProductOptions(){
+    const p = PRODUCTS[state.product];
+    qtyGroup.innerHTML = p.qtys.map(q =>
+      `<button class="qty${q===state.qty?' on':''}" data-q="${q}">${q}</button>`).join('');
+    sizeSelect.innerHTML = p.sizes.map((s,i) =>
+      `<option value="${i}"${i===state.sizeIdx?' selected':''}>${s.v}</option>`).join('');
+    paperSelect.innerHTML = p.papers.map((pp,i) =>
+      `<option value="${i}"${i===state.paperIdx?' selected':''}>${pp.v}</option>`).join('');
+  }
+
+  // Snapshot of last fetched price. computePrice() is synchronous — it just returns
+  // whatever the server last told us. fetchPrice() (async) updates lastPrice then re-renders.
+  function computePrice(){
+    return lastPrice;
+  }
+
+  let inflight = null;
+  let pendingTimer = null;
+
+  function buildCalcParams() {
+    const p = PRODUCTS[state.product];
+    const size = p.sizes[state.sizeIdx].k;
+    return new URLSearchParams({
+      product:   state.product,
+      paper_key: p.papers[state.paperIdx].k,
+      size,
+      qty:       String(state.qty),
+      sides:     state.sides === 2 ? 'double' : 'single',
+      express:   state.express ? '1' : '0',
+      delivery:  state.delivery,
+    });
+  }
+
+  async function fetchPrice() {
+    if (inflight) inflight.abort?.();
+    const ctrl = new AbortController();
+    inflight = ctrl;
+    try {
+      const params = buildCalcParams();
+      const res = await fetch(`${CALC_URL}?${params.toString()}`, { signal: ctrl.signal });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || 'calc failed');
+      if (ctrl !== inflight) return; // a newer request superseded us
+      lastPrice = {
+        inclVat:      json.inclVat,
+        exVat:        json.exVat,
+        perPieceIncl: json.perPieceIncl,
+        perPieceEx:   json.perPieceEx,
+      };
+      priceReady = true;
+      renderSummary();
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.error('calc.php error:', err);
+      priceReady = false;
+      lastPrice = null;
+      renderSummary();
+    } finally {
+      if (ctrl === inflight) inflight = null;
+    }
+  }
+
+  function schedulePriceFetch() {
+    clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(fetchPrice, 180);
+  }
+
+  function renderSummary(){
+    const p = PRODUCTS[state.product], s = p.sizes[state.sizeIdx], pp = p.papers[state.paperIdx];
+    $('#sumProduct').textContent = t('product.' + state.product);
+    $('#sumSize').textContent = s.v;
+    $('#sumPaper').textContent = pp.v;
+    $('#sumSides').textContent = t(state.sides===1 ? 'sides.recto' : 'sides.rectoVerso');
+    $('#sumQty').textContent = state.qty;
+    $('#sumDelivery').textContent = t(state.delivery==='pickup' ? 'quote.deliveryPickup' : 'quote.deliveryShip');
+    const price = computePrice();
+    if (!price) {
+      $('#priceAmount').innerHTML = `<span style="font-size:28px;opacity:.6">…</span>`;
+      $('#pricePer').textContent = '';
+    } else {
+      const whole = Math.floor(price.inclVat);
+      const cents = Math.round((price.inclVat - whole) * 100).toString().padStart(2,'0');
+      $('#priceAmount').innerHTML = `€${whole}<span class="cents">.${cents}</span>`;
+      $('#pricePer').textContent = `€${fmtPiece(price.perPieceIncl)}`;
+    }
+    const days = state.express ? 2 : p.days;
+    const d = new Date();
+    let added = 0;
+    while(added < days){ d.setDate(d.getDate()+1); if(d.getDay()!==0 && d.getDay()!==6) added++; }
+    const localeMap = { en: 'en-GB', fr: 'fr-BE', nl: 'nl-BE' };
+    $('#readyDate').textContent = d.toLocaleDateString(localeMap[getLang()] || 'en-GB', {weekday:'short', day:'numeric', month:'short'});
+    $('#readyDays').textContent = state.express ? t('ready.express') : t('ready.days', {n: days});
+    $('#readyPrefix').textContent = t(state.delivery === 'pickup' ? 'ready.pickup' : 'ready.ship');
+    if (typeof updateOrderButton === 'function') updateOrderButton();
+  }
+
+  const rerender = () => { renderProductOptions(); renderSummary(); };
+
+  // Invalidate last price when specs change — the display will go to "…" until the fetch returns.
+  function invalidatePrice() {
+    lastPrice = null;
+    priceReady = false;
+    schedulePriceFetch();
+  }
+
+  document.querySelector('.products').addEventListener('click', e=>{
+    const btn = e.target.closest('.tile'); if(!btn) return;
+    document.querySelectorAll('.products .tile').forEach(t=>t.classList.remove('on'));
+    btn.classList.add('on');
+    state.product = btn.dataset.p;
+    state.sizeIdx = 0;
+    state.paperIdx = PRODUCTS[state.product].defaultPaperIdx ?? 0;
+    state.qty = PRODUCTS[state.product].qtys[0];
+    state.sides = 1; state.express = false;
+    document.getElementById('expressChk').checked = false;
+    document.querySelectorAll('#sidesGroup button').forEach((b,i)=>b.classList.toggle('on', i===0));
+    invalidatePrice(); rerender();
+  });
+  qtyGroup.addEventListener('click', e=>{
+    const btn = e.target.closest('.qty'); if(!btn) return;
+    state.qty = parseInt(btn.dataset.q, 10); invalidatePrice(); rerender();
+  });
+  sizeSelect.addEventListener('change', e=>{ state.sizeIdx = parseInt(e.target.value,10); invalidatePrice(); renderSummary(); });
+  paperSelect.addEventListener('change', e=>{ state.paperIdx = parseInt(e.target.value,10); invalidatePrice(); renderSummary(); });
+  document.getElementById('sidesGroup').addEventListener('click', e=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    document.querySelectorAll('#sidesGroup button').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    state.sides = parseInt(btn.dataset.sides, 10); invalidatePrice(); renderSummary();
+  });
+  document.getElementById('expressChk').addEventListener('change', e=>{ state.express = e.target.checked; invalidatePrice(); renderSummary(); });
+  document.querySelectorAll('.deliver label').forEach((lbl, i)=>{
+    lbl.addEventListener('click', ()=>{
+      document.querySelectorAll('.deliver label').forEach(l=>l.classList.remove('on'));
+      lbl.classList.add('on');
+      state.delivery = i===0 ? 'pickup' : 'dpd';
+      invalidatePrice(); renderSummary();
+    });
+  });
+  document.querySelectorAll('.langs button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.langs button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      if (b.dataset.lang) setLang(b.dataset.lang);
+    });
+  });
+
+  // Initialise language (from localStorage / browser) and re-render dynamic bits on change.
+  initLang();
+  document.querySelectorAll('.langs button').forEach(b => b.classList.toggle('on', b.dataset.lang === getLang()));
+  onLangChange(() => { renderSummary(); updateOrderButton(); updateReceiptNote(); });
+  // Re-render already covers summary; no price refetch needed on lang change.
+
+  // ────────── Customer form wiring ──────────
+  const textFields = ['custName','custEmail','custPhone','custCompany','vatNumber','custAddress','custZip','custCity','shipAddress','shipZip','shipCity'];
+  textFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', e => {
+      state[id] = e.target.value.trim();
+      updateOrderButton();
+      updateReceiptNote();
+    });
+  });
+
+  document.getElementById('isCompany').addEventListener('change', e => {
+    state.isCompany = e.target.checked;
+    document.getElementById('companyBlock').hidden = !state.isCompany;
+    updateOrderButton();
+    updateReceiptNote();
+  });
+
+  document.getElementById('diffShip').addEventListener('change', e => {
+    state.diffShip = e.target.checked;
+    document.getElementById('shipFields').hidden = !state.diffShip;
+    updateOrderButton();
+  });
+
+  function updateShipBlockVisibility() {
+    const showShip = state.delivery === 'dpd';
+    document.getElementById('shipBlock').hidden = !showShip;
+    if (!showShip) {
+      state.diffShip = false;
+      document.getElementById('diffShip').checked = false;
+      document.getElementById('shipFields').hidden = true;
+    }
+  }
+
+  function isFormValid() {
+    if (!state.custName || !state.custEmail || !state.custAddress || !state.custCity) return false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.custEmail)) return false;
+    if (state.delivery === 'dpd' && state.diffShip) {
+      if (!state.shipAddress || !state.shipCity) return false;
+    }
+    return true;
+  }
+
+  function updateOrderButton() {
+    const btn = document.querySelector('.btn-order');
+    if (!btn) return;
+    const label = btn.querySelector('span:first-child');
+    if (isFormValid()) {
+      btn.classList.remove('disabled');
+      const price = computePrice();
+      label.textContent = price
+        ? t('btn.pay', { amount: price.inclVat.toFixed(2).replace('.', ',') })
+        : t('btn.order');
+    } else {
+      btn.classList.add('disabled');
+      label.textContent = t('btn.fillRequired');
+    }
+  }
+
+  function updateReceiptNote() {
+    const note = document.getElementById('receiptNote');
+    if (!note) return;
+    note.textContent = t(state.isCompany ? 'rules.receiptCo' : 'rules.receipt');
+  }
+
+  function buildSpecs() {
+    const p = PRODUCTS[state.product];
+    const size = p.sizes[state.sizeIdx].v;
+    const paper = p.papers[state.paperIdx].v;
+    const sides = state.sides === 2 ? 'Recto & Verso' : 'Recto only';
+    const parts = [
+      p.label, size, paper, 'Full colour (CMYK)', sides,
+      `${state.qty} copies`,
+    ];
+    if (state.express) parts.push('Express 48h');
+    if (state.isCompany && state.vatNumber) parts.push(`VAT: ${state.vatNumber}`);
+    parts.push(state.delivery === 'dpd' ? 'Delivery €15' : 'Pick-up');
+    return parts.join(' · ');
+  }
+
+  function submitOrder() {
+    if (!isFormValid()) return;
+    const price = computePrice();
+    if (!price) return;
+    const params = new URLSearchParams({
+      simpay_amount:    String(Math.round(price.inclVat * 100)),
+      specs:            buildSpecs(),
+      payment:          'bancontact',
+      customer_name:    state.custName,
+      customer_email:   state.custEmail,
+      customer_phone:   state.custPhone,
+      customer_company: state.isCompany ? state.custCompany : '',
+      customer_address: state.custAddress,
+      customer_zip:     state.custZip,
+      customer_city:    state.custCity,
+      delivery:         state.delivery === 'dpd' ? 'yes' : 'no',
+      receipt_email:    'shop@clickclickgraphics.com',
+      doc_type:         state.isCompany ? 'invoice' : 'receipt',
+    });
+    if (state.isCompany && state.vatNumber) params.set('vat', state.vatNumber);
+    if (state.delivery === 'dpd' && state.diffShip) {
+      params.set('ship_address', state.shipAddress);
+      params.set('ship_zip',     state.shipZip);
+      params.set('ship_city',    state.shipCity);
+    }
+    window.top.location.href = `${PAY_URL}?${params.toString()}`;
+  }
+
+  document.querySelector('.btn-order').addEventListener('click', e => {
+    e.preventDefault();
+    submitOrder();
+  });
+
+  // keep the ship block + button state in sync with delivery changes
+  document.querySelectorAll('.deliver label').forEach(lbl => {
+    lbl.addEventListener('click', () => {
+      setTimeout(() => { updateShipBlockVisibility(); updateOrderButton(); }, 0);
+    });
+  });
+
+  updateShipBlockVisibility();
+  updateOrderButton();
+  updateReceiptNote();
+
+  rerender();
+
+  // First price load (not debounced — fire immediately on page open)
+  fetchPrice();
+</script>
+
+</body>
+</html>

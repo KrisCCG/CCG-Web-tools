@@ -1,0 +1,19 @@
+# Stop WordPress from intercepting requests inside /tools/
+RewriteEngine Off
+DirectoryIndex index.html
+Options -Indexes
+
+# ─── Internal-only password gate ───────────────────────────────────────────
+# Reuses the SAME login as /flyers/ (no new .htpasswd needed).
+# AuthUserFile MUST be the absolute path on the Infomaniak host — if the remote
+# site root differs, copy the exact path from flyers/.htaccess line 12.
+AuthType Basic
+AuthName "Click Click — internal tools"
+AuthUserFile /home/clients/bb59b9bb68f9d5f0bbd421f23f3ae8ed/sites/clickclick.be/flyers/.htpasswd
+Require valid-user
+
+# Don't let search engines index the hub
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow"
+  Header always set X-Content-Type-Options "nosniff"
+</IfModule>

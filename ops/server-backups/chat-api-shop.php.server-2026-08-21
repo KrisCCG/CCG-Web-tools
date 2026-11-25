@@ -1,0 +1,248 @@
+<?php
+/**
+ * Click Click online shop — pricing query helper.
+ *
+ * The shop's pricing endpoint lives at clickclick.be/calculator/calc.php —
+ * the same host this bot now runs on. It accepts GET or POST with:
+ * product (flyer/card/poster), paper_key (ms/bt/rs + gsm),
+ * size (BC/A7..A3), qty, sides, express, delivery (pickup/dpd).
+ *
+ * On success calc.php returns:
+ *   { ok: true, inclVat, exVat, perPieceIncl, perPieceEx, qty, versions, totalPieces }
+ * On failure:
+ *   { ok: false, error: "..." }
+ *
+ * NB (verified against the live endpoint, 17 Aug 2026): calc.php does NOT
+ * return readyDate or readyDays — the flyers frontend computes those itself.
+ * The two fields read below therefore always fall back to '' and 0. Harmless,
+ * but don't build on them, and never let the bot quote a lead time from here.
+ *
+ * delivery='dpd' adds a flat EUR 15 incl. VAT to the total (per order, not per
+ * item, no scaling with qty) and changes no date.
+ *
+ * This helper does the cURL call from PHP server-to-server (no CORS),
+ * validates the response, and returns a normalised dict ready to send
+ * back to the frontend as a "shop_quote" payload.
+ *
+ * NB: both URLs stay absolute on purpose. SHOP_CALC_URL is fetched by cURL,
+ * which cannot resolve a relative path; SHOP_BASE_URL may end up in an email,
+ * where a relative link would break. Now that the bot and the shop share a
+ * host this is a loopback request — correct, but still a real HTTP round
+ * trip. Collapsing it into a local include is a separate refactor.
+ */
+
+const SHOP_CALC_URL  = 'https://clickclick.be/calculator/calc.php';
+const SHOP_BASE_URL  = 'https://clickclick.be/flyers/';
+const SHOP_TIMEOUT_S = 6;
+
+/**
+ * Shop catalog constants — must match calc.php's allowedX lists.
+ * Used by the bot's tool-call validator to short-circuit obviously
+ * out-of-catalog requests before we even hit the network.
+ */
+const SHOP_PRODUCTS  = ['flyer', 'card', 'poster'];
+const SHOP_SIZES     = ['BC', 'A7', 'A6', 'A5', 'A4', 'A3'];
+const SHOP_SIDES     = ['single', 'double'];
+const SHOP_DELIVERY  = ['pickup', 'dpd'];
+/**
+ * Which papers the SHOP UI actually offers per product. Must mirror
+ * flyers/index.html PRODUCTS[x].papers exactly — if these drift, the bot can
+ * quote a combination the shop cannot display, and the customer silently ends
+ * up on the product's default paper. Keep in sync when the shop's list changes.
+ */
+const SHOP_PAPER_BY_PRODUCT = [
+    'flyer'  => ['ms115', 'ms130', 'ms170', 'bt120', 'bt160', 'rs135'],
+    'card'   => ['ms400', 'ms350', 'ms300', 'ms250', 'bt300', 'bt250', 'rs300', 'rs250'],
+    'poster' => ['ms115', 'ms130', 'ms170', 'bt120', 'bt160', 'rs135'],
+];
+
+// Every paper the shop stocks, across all products. Kept as the first cheap
+// check; SHOP_PAPER_BY_PRODUCT above is the one that actually decides.
+// Anything else -> not in shop -> route to team.
+const SHOP_PAPER_STOCK = [
+    // Multiart Silk
+    'ms115' => true, 'ms130' => true, 'ms170' => true, 'ms250' => true,
+    'ms300' => true, 'ms350' => true, 'ms400' => true,
+    // Biotop Next (minimum 120)
+    'bt120' => true, 'bt160' => true, 'bt250' => true, 'bt300' => true,
+    // Recystar. NB: rs170 was listed here but calc.php returns "paper not in
+    // catalog" for it on every product — it has no entry in the pricing xlsx,
+    // so it could never be quoted. Removed 17 Aug 2026. If Recystar 170 should
+    // be sellable, add it to the xlsx first, then here and in the shop's lists.
+    'rs135' => true, 'rs250' => true, 'rs300' => true,
+];
+
+/**
+ * Validate a bot-supplied input set against the shop catalog.
+ * Returns null if valid, or a short reason string explaining why not.
+ *
+ * Note: MUTATES $in to apply safe defaults for fields the bot may have
+ * skipped (delivery, sides, express). Tool descriptions tell the bot to
+ * include these, but Haiku in particular sometimes omits them — and a
+ * sane fallback is better than a hard rejection that leaves the customer
+ * staring at a blank chat.
+ */
+function shop_validate(array &$in): ?string {
+    if (!in_array($in['product']   ?? '', SHOP_PRODUCTS, true)) return 'product not in shop catalog';
+    if (!in_array($in['size']      ?? '', SHOP_SIZES,    true)) return 'size not in shop catalog';
+    $pk = $in['paper_key'] ?? '';
+    if (!isset(SHOP_PAPER_STOCK[$pk])) return 'paper not in shop catalog';
+    // Paper must be offered FOR THIS PRODUCT, not merely in stock somewhere.
+    // calc.php will happily price a flyer on Biotop 250, but the shop UI has
+    // no such option — the deep link then silently falls back to the product's
+    // default paper and the customer orders something we never quoted. Reject
+    // here so the bot routes the request to the team instead. (Found 17 Aug
+    // 2026: "card on Biotop 250" arrived in the shop as MultiArt Silk 130.)
+    if (!in_array($pk, SHOP_PAPER_BY_PRODUCT[$in['product']] ?? [], true)) {
+        return 'paper not available for this product in the shop';
+    }
+    $qty = (int) ($in['qty'] ?? 0);
+    if ($qty < 1 || $qty > 10000)     return 'qty out of range (1-10000)';
+
+    // Defaults for fields the bot may have skipped.
+    if (!in_array($in['sides']     ?? '', SHOP_SIDES,    true)) {
+        $in['sides'] = ($in['product'] === 'card') ? 'double' : 'single';
+    }
+    if (!in_array($in['delivery']  ?? '', SHOP_DELIVERY, true)) {
+        $in['delivery'] = 'pickup';
+    }
+    if (!isset($in['express']) || !is_bool($in['express'])) {
+        $in['express'] = !empty($in['express']);  // coerce truthy → bool
+    }
+    return null;
+}
+
+/**
+ * Call calc.php and return the parsed shop_quote dict.
+ * Always returns an array with an `ok` boolean. Never throws.
+ */
+function shop_get_quote(array $in): array {
+    $err = shop_validate($in);
+    if ($err !== null) {
+        return ['ok' => false, 'error' => $err];
+    }
+
+    $params = [
+        'product'   => $in['product'],
+        'paper_key' => $in['paper_key'],
+        'size'      => $in['size'],
+        'qty'       => (int) $in['qty'],
+        'sides'     => $in['sides'],
+        'express'   => !empty($in['express']) ? '1' : '0',
+        'delivery'  => $in['delivery'] ?? 'pickup',
+    ];
+
+    $url = SHOP_CALC_URL . '?' . http_build_query($params);
+    $ch  = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => SHOP_TIMEOUT_S,
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_USERAGENT      => 'clickclick-chat/1.0',
+        CURLOPT_HTTPHEADER     => ['Accept: application/json'],
+    ]);
+    $raw  = curl_exec($ch);
+    $http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
+    curl_close($ch);
+
+    if ($raw === false || $http >= 500) {
+        return ['ok' => false, 'error' => "shop unreachable ({$cerr})"];
+    }
+    $data = json_decode($raw, true);
+    if (!is_array($data)) {
+        return ['ok' => false, 'error' => 'shop returned unparseable response'];
+    }
+    if (empty($data['ok'])) {
+        return ['ok' => false, 'error' => (string) ($data['error'] ?? 'shop rejected the request')];
+    }
+
+    return [
+        'ok'           => true,
+        'inclVat'      => (float) ($data['inclVat']      ?? 0),
+        'exVat'        => (float) ($data['exVat']        ?? 0),
+        'perPieceIncl' => (float) ($data['perPieceIncl'] ?? 0),
+        'qty'          => (int)   ($data['qty']          ?? $in['qty']),
+        'readyDate'    => (string)($data['readyDate']    ?? ''),
+        'readyDays'    => (int)   ($data['readyDays']    ?? 0),
+        'summary'      => shop_summary_line($in),
+        'shopUrl'      => shop_deep_link($in),
+        // Echo the conversation language back so the frontend can render
+        // the shop card's labels in the same language the bot is speaking,
+        // independent of the user's UI language-switcher state.
+        'lang'         => in_array($in['lang'] ?? '', ['fr','nl','en'], true) ? $in['lang'] : null,
+    ];
+}
+
+/**
+ * Build a one-line human summary of the spec for the UI card.
+ */
+function shop_summary_line(array $in): string {
+    $paperLabel = shop_paper_label($in['paper_key']);
+    $bits = [
+        $in['product'],
+        $in['size'],
+        $in['qty'] . ' ' . ($in['sides'] === 'double' ? 'recto/verso' : 'recto'),
+        $paperLabel,
+    ];
+    if (!empty($in['express']))                 $bits[] = 'express';
+    if (($in['delivery'] ?? '') === 'dpd')      $bits[] = 'delivery';
+    return implode(' · ', $bits);
+}
+
+function shop_paper_label(string $pk): string {
+    $weight = (int) substr($pk, 2);
+    $name = match (substr($pk, 0, 2)) {
+        'ms'    => 'Multiart Silk',
+        'bt'    => 'Biotop Next',
+        'rs'    => 'Recystar',
+        default => 'paper',
+    };
+    return "{$name} {$weight} g/m²";
+}
+
+/**
+ * Deep-link into the shop with prefill query params. The shop's frontend
+ * (flyers/index.html applyUrlPrefill) reads these on load.
+ *
+ * Spec params are required; contact params are optional — included only
+ * when the bot has collected the value, so we don't pollute the URL with
+ * empty strings.
+ */
+function shop_deep_link(array $in): string {
+    $params = [
+        'product'   => $in['product'],
+        'paper_key' => $in['paper_key'],
+        'size'      => $in['size'],
+        'qty'       => (int) $in['qty'],
+        'sides'     => $in['sides'],
+        'express'   => !empty($in['express']) ? '1' : '0',
+        'delivery'  => $in['delivery'] ?? 'pickup',
+    ];
+
+    // Language — forces the shop UI into the same locale the chatbot was
+    // speaking, so the customer keeps reading in their language after the
+    // handoff.
+    $lang = $in['lang'] ?? '';
+    if (in_array($lang, ['fr', 'nl', 'en'], true)) {
+        $params['lang'] = $lang;
+    }
+
+    // Contact info — optional. The bot includes these when known.
+    $contact_map = [
+        'contact_name'    => 'custName',
+        'contact_email'   => 'custEmail',
+        'contact_phone'   => 'custPhone',
+        'contact_company' => 'custCompany',
+        'contact_vat'     => 'vatNumber',
+        'contact_address' => 'custAddress',
+        'contact_zip'     => 'custZip',
+        'contact_city'    => 'custCity',
+    ];
+    foreach ($contact_map as $botKey => $shopKey) {
+        $val = trim((string) ($in[$botKey] ?? ''));
+        if ($val !== '') $params[$shopKey] = $val;
+    }
+
+    return SHOP_BASE_URL . '?' . http_build_query($params);
+}

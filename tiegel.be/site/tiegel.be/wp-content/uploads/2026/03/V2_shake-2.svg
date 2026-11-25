@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 167.22 221.99">
+  <defs>
+    <style>
+      .cls-2 { fill: #4200ff; }
+
+      @keyframes shake {
+        0%, 18%, 100% { transform: translateX(0) rotate(0deg); }
+        2%  { transform: translateX(-3px) rotate(-2deg); }
+        4%  { transform: translateX(3px) rotate(2deg); }
+        6%  { transform: translateX(-3px) rotate(-1.5deg); }
+        8%  { transform: translateX(3px) rotate(1.5deg); }
+        10% { transform: translateX(-2px) rotate(-1deg); }
+        12% { transform: translateX(2px) rotate(1deg); }
+        14% { transform: translateX(-1px) rotate(-0.5deg); }
+        16% { transform: translateX(0) rotate(0deg); }
+      }
+
+      /* Pause par défaut */
+      .excl-1 {
+        animation: shake 3s ease-in-out infinite;
+        animation-play-state: paused;
+        transform-origin: 57px 111px;
+      }
+      .excl-2 {
+        animation: shake 3s ease-in-out infinite;
+        animation-delay: 0.08s;
+        animation-play-state: paused;
+        transform-origin: 107px 111px;
+      }
+
+      /* Lance au survol du SVG */
+      svg:hover .excl-1,
+      svg:hover .excl-2 {
+        animation-play-state: running;
+      }
+    </style>
+  </defs>
+  <g>
+    <g class="excl-1">
+      <path class="cls-2" d="M57.45,42.3c.42-2.95,2.95-5.06,5.9-5.06h22.13c2.95,0,4.64,2.11,4,5.06l-19.39,90.61c-.42,2.95-3.16,5.06-6.11,5.06h-22.13c-2.95,0-4.42-2.11-3.79-5.06l19.39-90.61Z"/>
+      <path class="cls-2" d="M27.1,180.53l5.27-24.44c.42-2.32,2.74-4.21,5.06-4.21h25.08c2.32,0,3.79,1.9,3.37,4.21l-5.27,24.44c-.42,2.32-2.74,4.21-5.06,4.21h-25.08c-2.32,0-3.79-1.9-3.37-4.21"/>
+    </g>
+    <g class="excl-2">
+      <path class="cls-2" d="M108.03,42.3c.42-2.95,2.95-5.06,5.9-5.06h22.13c2.95,0,4.64,2.11,4,5.06l-19.39,90.61c-.42,2.95-3.16,5.06-6.11,5.06h-22.13c-2.95,0-4.42-2.11-3.79-5.06l19.39-90.61Z"/>
+      <path class="cls-2" d="M77.68,180.53l5.27-24.44c.42-2.32,2.74-4.21,5.06-4.21h25.08c2.32,0,3.79,1.9,3.37,4.21l-5.27,24.44c-.42,2.32-2.74,4.21-5.06,4.21h-25.08c-2.32,0-3.79-1.9-3.37-4.21"/>
+    </g>
+  </g>
+</svg>
